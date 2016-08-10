@@ -4,9 +4,13 @@ module.exports = {
 		sourceType: 'module'
 	},
 	extends: 'standard',
+	plugins: [
+		'html'
+	],
 	env: {
 		node: true,
-		browser: true
+		browser: true,
+		es6: true
 	},
 	rules: {
 		indent: ['error', 'tab'],
