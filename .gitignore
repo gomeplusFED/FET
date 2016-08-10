@@ -16,3 +16,4 @@ npm-debug.log
 
 # custom
 dist/
+app/

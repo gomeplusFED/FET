@@ -1,9 +1,12 @@
 {
   "name": "fet",
-  "version": "1.0.0",
+  "app-name": "FE-Tools",
+  "version": "0.0.1",
   "description": "前端工具集",
+  "main": "src/main/app.babel.js",
   "scripts": {
-    "dev": "node build/dev.babel.js --env=dev"
+    "dev": "node build/dev.babel.js --env=dev",
+    "package": "node pack/pack.babel.js"
   },
   "author": "",
   "dependencies": {

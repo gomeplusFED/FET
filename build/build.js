@@ -1,4 +1,4 @@
-/*global  rm:true*/
+/*global rm:true*/
 import 'shelljs/global';
 
 import path from 'path';
@@ -10,12 +10,6 @@ import baseConfig from '../config/base.config.js';
 import webpackConfig from '../config/webpack.build.config.js';
 
 import env from '../config/env.config.js';
-
-console.log(
-	'  Tip:\n' +
-	'  Built files are meant to be served over an HTTP server.\n' +
-	'  Opening index.html over file:// won\'t work.\n'
-);
 
 const spinner = ora(`building for ${env}...`);
 spinner.start();
