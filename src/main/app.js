@@ -1,7 +1,5 @@
 import { app, BrowserWindow } from 'electron';
 
-import env from '../../config/env.config.js';
-
 let mainWindow;
 
 function createWindow() {
