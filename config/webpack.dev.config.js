@@ -20,7 +20,7 @@ webpackConfig = merge(baseWebpackConfig, {
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NoErrorsPlugin(),
 		new HtmlWebpackPlugin({
-			title: '前端工具集',
+			title: 'FE-Tools',
 			filename: 'index.html',
 			template: 'view/index.html',
 			inject: true,

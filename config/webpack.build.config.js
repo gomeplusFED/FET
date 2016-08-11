@@ -21,7 +21,7 @@ webpackConfig = merge(baseWebpackConfig, {
 		})
 	},
 	output: {
-		path: baseConfig.build.assetsRoot,
+		path: baseConfig.webpack.assetsRoot,
 		publicPath: './',
 		filename: 'static/js/[name].[chunkhash].js',
 		chunkFilename: 'static/js/[id].[chunkhash].js'
@@ -43,7 +43,7 @@ webpackConfig = merge(baseWebpackConfig, {
 			chunks: ['vendor']
 		}),
 		new HtmlWebpackPlugin({
-			title: '前端工具集',
+			title: 'FE-Tools',
 			filename: 'index.html',
 			template: 'view/index.html',
 			inject: true,

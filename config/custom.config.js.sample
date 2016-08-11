@@ -1,0 +1,5 @@
+export default {
+	electron: {
+		path: 'you electron path, such as: /Applications/Electron.app/Contents/MacOS/Electron'
+	}
+};

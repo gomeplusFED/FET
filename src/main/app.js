@@ -1,15 +1,25 @@
 import { app, BrowserWindow } from 'electron';
 
+import env from '../../config/env.config.js';
+
 let mainWindow;
 
 function createWindow() {
-	mainWindow = new BrowserWindow({ width: 800, height: 600 });
+	mainWindow = new BrowserWindow({
+		width: 282,
+		height: 717,
+		resizable: false,
+		maximizable: false,
+		fullscreen: false,
+		fullscreenable: false,
+		icon: '../../icon/icon.png'
+	});
 
 	mainWindow.loadURL('http://localhost:5757/');
 
 	mainWindow.webContents.openDevTools();
 
-	// 引入开发者工具
+	// 引入开发者工具 (引入后恢复并注释掉)
 	// BrowserWindow.addDevToolsExtension('your dev tool path');
 
 	mainWindow.on('closed', function() {

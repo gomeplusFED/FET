@@ -1,4 +1,6 @@
+/* eslint-disable */
 import path from 'path';
+import { exec } from 'child_process';
 
 import express from 'express';
 import webpack from 'webpack';
@@ -9,9 +11,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import baseConfig from '../config/base.config.js';
 import webpackConfig from '../config/webpack.dev.config.js';
 
-// import { openUrl } from '../support/common.js';
-
-const port = baseConfig.server.port || 5657;
+const port = baseConfig.webpack.port || 5657;
 
 const app = express();
 const compiler = webpack(webpackConfig);
@@ -25,8 +25,7 @@ const devMiddleware = webpackDevMiddleware(compiler, {
 });
 
 devMiddleware.waitUntilValid(() => {
-	console.log(1111);
-	// openUrl('http://localhost:' + port);
+
 });
 
 const hotMiddleware = webpackHotMiddleware(compiler);
@@ -41,7 +40,7 @@ compiler.plugin('compilation', (compilation) => {
 app.use(devMiddleware);
 app.use(hotMiddleware);
 
-const staticPath = path.join(baseConfig.build.assetsPublicPath, baseConfig.build.assetsSubDirectory);
+const staticPath = path.join(baseConfig.webpack.assetsPublicPath, baseConfig.webpack.assetsSubDirectory);
 app.use(staticPath, express.static('./static'));
 
 app.listen(port, (err) => {
@@ -49,5 +48,4 @@ app.listen(port, (err) => {
 		console.log(err);
 		return;
 	}
-	console.log('Listening at http://localhost:' + port + '\n');
 });

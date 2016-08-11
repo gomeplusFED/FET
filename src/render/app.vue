@@ -1,5 +1,5 @@
 <template>
-	<h1>起步123</h1>
+	<h1>起步</h1>
 </template>
 <script>
 export default {

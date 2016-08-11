@@ -17,3 +17,4 @@ npm-debug.log
 # custom
 dist/
 app/
+config/custom.config.js

@@ -1,12 +1,14 @@
 {
-  "name": "fet",
+  "name": "fet-tools",
   "app-name": "FE-Tools",
   "version": "0.0.1",
   "description": "前端工具集",
   "main": "src/main/app.babel.js",
   "scripts": {
-    "dev": "node build/dev.babel.js --env=dev",
-    "package": "node pack/pack.babel.js"
+    "dev:render": "node script/render.dev.babel.js --env=dev",
+    "dev:main": "node script/main.dev.babel.js --env=dev",
+    "build:render": "node script/render.build.babel.js --env=production",
+    "build:main": "node script/main.build.babel.js --env=production"
   },
   "author": "",
   "dependencies": {
@@ -22,8 +24,8 @@
     "babel-plugin-transform-runtime": "^6.12.0",
     "babel-preset-es2015": "^6.13.2",
     "babel-preset-stage-2": "^6.13.0",
+    "chalk": "^1.1.3",
     "css-loader": "^0.23.1",
-    "electron-devtools-installer": "^2.0.1",
     "electron-packager": "^7.5.1",
     "eslint": "^3.2.2",
     "eslint-config-standard": "^5.3.5",

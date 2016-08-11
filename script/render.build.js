@@ -1,4 +1,4 @@
-/*global rm:true*/
+/* eslint-disable */
 import 'shelljs/global';
 
 import path from 'path';
@@ -11,10 +11,10 @@ import webpackConfig from '../config/webpack.build.config.js';
 
 import env from '../config/env.config.js';
 
-const spinner = ora(`building for ${env}...`);
+const spinner = ora(`Building for ${env}...`);
 spinner.start();
 
-const assetsPath = path.join(baseConfig.build.assetsRoot, './');
+const assetsPath = path.join(baseConfig.webpack.assetsRoot, './');
 rm('-rf', assetsPath);
 
 webpack(webpackConfig, function(err, stats) {

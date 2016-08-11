@@ -3,4 +3,4 @@ require('babel-core/register')({
 	presets: ['es2015', 'stage-2']
 });
 
-require('./pack.js');
+require('./main.build.js');

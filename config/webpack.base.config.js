@@ -13,8 +13,8 @@ export default {
 		app: './src/render/app.js'
 	},
 	output: {
-		path: baseConfig.build.assetsRoot,
-		publicPath: baseConfig.build.assetsPublicPath,
+		path: baseConfig.webpack.assetsRoot,
+		publicPath: baseConfig.webpack.assetsPublicPath,
 		filename: '[name].js'
 	},
 	module: {
