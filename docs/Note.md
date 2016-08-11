@@ -5,30 +5,25 @@ Note
 
 * 全局安装 electron-download
 
-* 执行
+	```bash
+	npm install electron-download -g -d
+	```
+
+* 下载 electron 包
 
 	```bash
 	ELECTRON_MIRROR="https://npm.taobao.org/mirrors/electron/" electron-download --version=1.3.2
 	```
 
-	开始下载
-
 * 解压安装
 
-	下载好的文件包在 `~/.electon` 目录下，解压后得到 `electron.app` ，拷贝到应用程序文件夹下。
+	下载好的文件包在 `~/.electon` 目录下，解压后得到 `electron.app/electron.exe` ，打开 electron 应用后可以看到 electron 的安装路径。
 
-	解压命令：`unzip electron-v1.3.2-darwin-x64.zip`
+* 配置 electron 路径
 
-	应用程序路径：`/Applications`
+	将本项目 config 文件夹下的 custom.config.js.sample 拷贝一份，名为 custom.config.js，将 path 字段替换为你的 electron 安装路径。
 
-* 做软链
-
-	```bash
-	ln -s /Applications/Electron.app/Contents/MacOS/Electron /usr/local/bin/electron
-	```
-
-	这样，`electron` 命令就可以全局使用了，如果提示 `electron` 文件已存在，需删除。 `rm -rf /usr/local/bin/electron` 再做软链操作。
-
+	注意：win下需要把 \ 替换为 /
 
 ### vue 开发者工具的引入
 
