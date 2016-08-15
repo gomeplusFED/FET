@@ -26,7 +26,9 @@ if (!argv.platform || !argv.arch) {
 rm('-rf', path.join(__dirname, '../app/'));
 rm('-rf', path.join(__dirname, '../dist/main'))
 
-// 移除 dist/main 目录
+if (!test('-e', path.join(__dirname, '../dist'))) {
+	mkdir(path.join(__dirname, '../dist'));
+}
 if (!test('-e', path.join(__dirname, '../dist/main'))) {
 	mkdir(path.join(__dirname, '../dist/main'));
 }
