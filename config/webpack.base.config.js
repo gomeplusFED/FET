@@ -67,6 +67,7 @@ export default {
 	eslint: {
 		formatter: require('eslint-friendly-formatter')
 	},
+	target: 'electron-renderer',
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env': JSON.stringify(env)

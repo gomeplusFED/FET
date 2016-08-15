@@ -1,12 +1,13 @@
 /*global  process.env:true*/
-/*eslint no-undef: "error"*/
 import Vue from 'vue';
 
 import Router from 'vue-router';
-Vue.use(Router);
-
 import VueAjax from 'vue-resource';
+import VueElectron from 'vue-electron';
+
 Vue.use(VueAjax);
+Vue.use(Router);
+Vue.use(VueElectron);
 
 import App from './app.vue';
 

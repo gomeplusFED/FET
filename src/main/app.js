@@ -10,7 +10,8 @@ function createWindow() {
 		resizable: false,
 		maximizable: false,
 		fullscreen: false,
-		fullscreenable: false
+		fullscreenable: false,
+		frame: false
 	});
 
 	// mainWindow.loadURL('file://' + path.join(__dirname, '../../dist/render/index.html'));
