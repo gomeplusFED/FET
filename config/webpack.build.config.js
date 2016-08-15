@@ -6,10 +6,10 @@ import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
-import env from '../env.config.js';
+import env from './env.config.js';
 import baseConfig from './webpack.common.js';
-import { cssExtractLoaders } from '../../support/common.js';
-import FormatHtmlPlugin from '../../support/formatHtml.js';
+import { cssExtractLoaders } from '../support/common.js';
+import FormatHtmlPlugin from '../support/formatHtml.js';
 import baseWebpackConfig from './webpack.base.config.js';
 
 let webpackConfig = {};

@@ -8,8 +8,8 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
-import baseConfig from '../config/render/webpack.common.js';
-import webpackConfig from '../config/render/webpack.dev.config.js';
+import baseConfig from '../config/webpack.common.js';
+import webpackConfig from '../config/webpack.dev.config.js';
 
 const port = baseConfig.port || 5657;
 

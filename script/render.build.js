@@ -5,15 +5,15 @@ import path from 'path';
 
 import webpack from 'webpack';
 
-import baseConfig from '../config/render/webpack.common.js';
-import webpackConfig from '../config/render/webpack.build.config.js';
+import baseConfig from '../config/webpack.common.js';
+import webpackConfig from '../config/webpack.build.config.js';
 
 import env from '../config/env.config.js';
 
 const assetsPath = path.join(baseConfig.assetsRoot, './');
 rm('-rf', assetsPath);
 
-console.log(`\nBuilding for ${env}...\n`);
+console.log(`\nBuilding staic resource for ${env}...\n`);
 
 webpack(webpackConfig, function(err, stats) {
 	if (err) throw err;

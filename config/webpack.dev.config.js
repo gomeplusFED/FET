@@ -5,7 +5,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 import baseWebpackConfig from './webpack.base.config.js';
 
-import { cssExtractLoaders } from '../../support/common.js';
+import { cssExtractLoaders } from '../support/common.js';
 
 Object.keys(baseWebpackConfig.entry).forEach((name) => {
 	baseWebpackConfig.entry[name] = ['./support/server.client.js'].concat(baseWebpackConfig.entry[name]);

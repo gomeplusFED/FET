@@ -4,9 +4,9 @@ import webpack from 'webpack';
 
 import baseConfig from './webpack.common.js';
 
-import env from '../env.config.js';
+import env from './env.config.js';
 
-const rootPath = path.join(__dirname, '../../');
+const rootPath = path.join(__dirname, '../');
 
 export default {
 	entry: {

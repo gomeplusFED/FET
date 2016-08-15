@@ -14,7 +14,7 @@ function createWindow() {
 		icon: path.join(__dirname, '../icon/icon.png')
 	});
 
-	// mainWindow.loadURL(path.join(__dirname, '../../dist/render/index.html'));
+	// mainWindow.loadURL('file://' + path.join(__dirname, '../../dist/render/index.html'));
 	mainWindow.loadURL('http://localhost:5757');
 
 	mainWindow.webContents.openDevTools();
