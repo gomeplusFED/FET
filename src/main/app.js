@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron';
+import path from 'path';
 
 let mainWindow;
 
@@ -10,10 +11,11 @@ function createWindow() {
 		maximizable: false,
 		fullscreen: false,
 		fullscreenable: false,
-		icon: '../../icon/icon.png'
+		icon: path.join(__dirname, '../icon/icon.png')
 	});
 
-	mainWindow.loadURL('http://localhost:5757/');
+	// mainWindow.loadURL(path.join(__dirname, '../../dist/render/index.html'));
+	mainWindow.loadURL('http://localhost:5757');
 
 	mainWindow.webContents.openDevTools();
 

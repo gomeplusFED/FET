@@ -15,6 +15,7 @@ node_modules/
 npm-debug.log
 
 # custom
-dist/
+dist/main/
+dist/render/
 app/
 config/custom.config.js

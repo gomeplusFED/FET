@@ -6,10 +6,10 @@ import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
-import env from './env.config.js';
-import baseConfig from './base.config.js';
-import { cssExtractLoaders } from '../support/common.js';
-import FormatHtmlPlugin from '../support/formatHtml.js';
+import env from '../env.config.js';
+import baseConfig from './webpack.common.js';
+import { cssExtractLoaders } from '../../support/common.js';
+import FormatHtmlPlugin from '../../support/formatHtml.js';
 import baseWebpackConfig from './webpack.base.config.js';
 
 let webpackConfig = {};
@@ -21,7 +21,7 @@ webpackConfig = merge(baseWebpackConfig, {
 		})
 	},
 	output: {
-		path: baseConfig.webpack.assetsRoot,
+		path: baseConfig.assetsRoot,
 		publicPath: './',
 		filename: 'static/js/[name].[chunkhash].js',
 		chunkFilename: 'static/js/[id].[chunkhash].js'
@@ -34,7 +34,7 @@ webpackConfig = merge(baseWebpackConfig, {
 			name: 'vendor',
 			minChunks: (module, count) => {
 				return (
-					module.resource && /\.js$/.test(module.resource) && module.resource.indexOf(path.join(__dirname, '../node_modules')) === 0
+					module.resource && /\.js$/.test(module.resource) && module.resource.indexOf(path.join(__dirname, '../../node_modules')) === 0
 				);
 			}
 		}),

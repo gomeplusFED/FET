@@ -2,19 +2,19 @@ import path from 'path';
 
 import webpack from 'webpack';
 
-import baseConfig from './base.config.js';
+import baseConfig from './webpack.common.js';
 
-import env from './env.config.js';
+import env from '../env.config.js';
 
-const rootPath = path.join(__dirname, '../');
+const rootPath = path.join(__dirname, '../../');
 
 export default {
 	entry: {
 		app: './src/render/app.js'
 	},
 	output: {
-		path: baseConfig.webpack.assetsRoot,
-		publicPath: baseConfig.webpack.assetsPublicPath,
+		path: baseConfig.assetsRoot,
+		publicPath: baseConfig.assetsPublicPath,
 		filename: '[name].js'
 	},
 	module: {
@@ -57,12 +57,12 @@ export default {
 		}]
 	},
 	resolve: {
-		extensions: ['', '.js', '.vue'],
-		alias: {
-			utils: path.join(rootPath, './src/util/'),
-			store: path.join(rootPath, './src/vuex/'),
-			actions: path.join(rootPath, './src/vuex/actions/')
-		}
+		extensions: ['', '.js', '.vue']
+		// alias: {
+		// 	utils: path.join(rootPath, './src/util/'),
+		// 	store: path.join(rootPath, './src/vuex/'),
+		// 	actions: path.join(rootPath, './src/vuex/actions/')
+		// }
 	},
 	eslint: {
 		formatter: require('eslint-friendly-formatter')

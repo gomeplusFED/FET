@@ -1,12 +1,20 @@
 {
 	"name": "fet-tools",
+	"app-name": "FE-Tools",
+	"version": "0.0.1",
 	"description": "前端工具集",
 	"scripts": {
-		"install-dep": "/bin/bash ./script/install.sh",
 		"dev:render": "node script/render.dev.babel.js --env=dev",
 		"dev:main": "node script/main.dev.babel.js --env=dev",
 		"build:render": "node script/render.build.babel.js --env=production",
 		"build:main": "node script/main.build.babel.js --env=production"
+	},
+	"dependencies": {
+		"babel-runtime": "^6.11.6",
+		"vue": "^1.0.26",
+		"vue-resource": "^0.9.3",
+		"vue-router": "^0.7.13",
+		"vuex": "^1.0.0-rc.2"
 	},
 	"devDependencies": {
 		"babel-core": "^6.13.2",

@@ -4,21 +4,18 @@ import 'shelljs/global';
 import path from 'path';
 
 import webpack from 'webpack';
-import ora from 'ora';
 
-import baseConfig from '../config/base.config.js';
-import webpackConfig from '../config/webpack.build.config.js';
+import baseConfig from '../config/render/webpack.common.js';
+import webpackConfig from '../config/render/webpack.build.config.js';
 
 import env from '../config/env.config.js';
 
-const spinner = ora(`Building for ${env}...`);
-spinner.start();
-
-const assetsPath = path.join(baseConfig.webpack.assetsRoot, './');
+const assetsPath = path.join(baseConfig.assetsRoot, './');
 rm('-rf', assetsPath);
 
+console.log(`\nBuilding for ${env}...\n`);
+
 webpack(webpackConfig, function(err, stats) {
-	spinner.stop();
 	if (err) throw err;
 	process.stdout.write(stats.toString({
 		colors: true,

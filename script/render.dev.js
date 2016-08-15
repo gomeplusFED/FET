@@ -8,10 +8,10 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
-import baseConfig from '../config/base.config.js';
-import webpackConfig from '../config/webpack.dev.config.js';
+import baseConfig from '../config/render/webpack.common.js';
+import webpackConfig from '../config/render/webpack.dev.config.js';
 
-const port = baseConfig.webpack.port || 5657;
+const port = baseConfig.port || 5657;
 
 const app = express();
 const compiler = webpack(webpackConfig);
@@ -40,7 +40,7 @@ compiler.plugin('compilation', (compilation) => {
 app.use(devMiddleware);
 app.use(hotMiddleware);
 
-const staticPath = path.join(baseConfig.webpack.assetsPublicPath, baseConfig.webpack.assetsSubDirectory);
+const staticPath = path.join(baseConfig.assetsPublicPath, baseConfig.assetsSubDirectory);
 app.use(staticPath, express.static('./static'));
 
 app.listen(port, (err) => {
