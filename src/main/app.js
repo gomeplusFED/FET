@@ -10,8 +10,7 @@ function createWindow() {
 		resizable: false,
 		maximizable: false,
 		fullscreen: false,
-		fullscreenable: false,
-		icon: path.join(__dirname, '../icon/icon.png')
+		fullscreenable: false
 	});
 
 	// mainWindow.loadURL('file://' + path.join(__dirname, '../../dist/render/index.html'));

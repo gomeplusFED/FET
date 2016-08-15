@@ -1,50 +1,83 @@
 /* eslint-disable */
 import 'shelljs/global';
+
+import fs from 'fs';
 import path from 'path';
+
 import minimist from 'minimist';
-import packageJson from '../src/package.json';
 import packager from 'electron-packager';
-import ora from 'ora';
 import chalk from 'chalk';
+import ora from 'ora';
+import { js as jsbeautify } from 'js-beautify';
+
+import pkinfo from '../package.json';
 
 const argv = minimist(process.argv.slice(2));
 
 if (!argv.platform || !argv.arch) {
 	console.log(chalk.red.bold('\nError: ') + 'should bring argv. help msg as folllow\n');
 	console.log(chalk.cyan.bold('Usage: ') + chalk.green('npm run build:main -- --platform=' + chalk.magenta.bold('<platform>') + ' --arch=' + chalk.magenta.bold('<arch>') + '\n\n') +
-				chalk.magenta.bold('platform:') + ' 	darwin | linux | win32\n' +
-				chalk.magenta.bold('arch:') + ' 		ia32 | x64\n');
+		chalk.magenta.bold('platform:') + ' 	darwin | linux | win32\n' +
+		chalk.magenta.bold('arch:') + ' 		ia32 | x64\n');
 	exit(1);
 }
 
-let options = {};
+// 移除 app 产出目录
+rm('-rf', path.join(__dirname, '../app/'));
+rm('-rf', path.join(__dirname, '../dist/main'))
+
+// 移除 dist/main 目录
+if (!test('-e', path.join(__dirname, '../dist/main'))) {
+	mkdir(path.join(__dirname, '../dist/main'));
+}
+
+// 生成生产环境 package.json
+let requiredField = ['name', 'app-name', 'version', 'description', 'dependencies', 'license'];
+let proPackageJson = {};
+requiredField.forEach((item) => {
+	proPackageJson[item] = pkinfo[item];
+});
+proPackageJson.main = './main/app.babel.js';
+fs.writeFileSync(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson)), 'utf-8');
+
+// 移动 src/main 下文件
+cp(path.join(__dirname, '../src/main/*'), path.join(__dirname, '../dist/main/'));
+
+let buildOptions = {};
 
 let iconMap = {
-	darwin: path.join(__dirname, '../src/icon/icon.icns'),
-	win32: path.join(__dirname, '../src/icon/icon.ico'),
+	darwin: path.join(__dirname, '../icon/icon.icns'),
+	win32: path.join(__dirname, '../icon/icon.ico'),
 	linux: ''
 };
 
-rm('-rf', path.join(__dirname, '../app/'));
+buildOptions.name = pkinfo['app-name'];
+buildOptions.dir = path.join(__dirname, '../dist');
+buildOptions.platform = argv.platform;
+buildOptions.arch = argv.arch;
+buildOptions.version = '1.3.2';
+buildOptions['app-version'] = pkinfo.version;
+// buildOptions.ignore = 'app';
+buildOptions.overwrite = true;
+buildOptions.icon = iconMap[argv.platform];
+buildOptions.out = path.join(__dirname, '../app');
 
-options.name = packageJson['app-name'];
-options.platform = argv.platform;
-options.arch = argv.arch;
-options.dir = path.join(__dirname, '../src');
-options.version = '1.3.2';
-options['app-version'] = packageJson.version;
-options.ignore = 'render';
-options.icon = iconMap[options.platform];
-options.out = path.join(__dirname, '../app');
 
-console.log(`\nPackaging ${options.name} v${options['app-version']} for ${options.platform} ${options.arch} ... \n`);
+// 安装依赖
+let installSpinner = ora('Installing node modules ...').start();
+exec('cd ' + path.join(__dirname, '../dist') + ' && npm install', () => {
+	console.log('\n\nInstalled!\n');
+	installSpinner.stop();
 
-packager(options, (e, path) => {
-	if (e) {
-		console.log(e);
-		return;
-	}
-	console.log(chalk.green.bold('\nbuild success\n'));
+	// let packageSpinner = ora(`Packaging ${buildOptions.name} v${buildOptions['app-version']} for ${buildOptions.platform} ${buildOptions.arch} ...`).start();
 
-	console.log('app in ' + path[0] + '\n');
+	console.log((`Packaging ${buildOptions.name} v${buildOptions['app-version']} for ${buildOptions.platform} ${buildOptions.arch} ...`));
+	// 打包
+	packager(buildOptions, (e, path) => {
+		if (e) {
+			throw e;
+		}
+		// packageSpinner.stop();
+		console.log(chalk.green.bold('\nbuild success'));
+	});
 });

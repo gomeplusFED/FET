@@ -2,7 +2,7 @@
 import 'shelljs/global';
 
 import path from 'path';
-
+import chalk from 'chalk';
 import webpack from 'webpack';
 
 import baseConfig from '../config/webpack.common.js';
@@ -13,7 +13,7 @@ import env from '../config/env.config.js';
 const assetsPath = path.join(baseConfig.assetsRoot, './');
 rm('-rf', assetsPath);
 
-console.log(`\nBuilding staic resource for ${env}...\n`);
+console.log(chalk.cyan.bold(`\nBuilding staic resource for ${env}...\n`));
 
 webpack(webpackConfig, function(err, stats) {
 	if (err) throw err;
