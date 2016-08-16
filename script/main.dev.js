@@ -6,7 +6,7 @@ import webpack from 'webpack';
 import customConfig from '../config/custom.config.js';
 
 if (!test('-e',`${customConfig.electron.path}`)) {
-	console.log(chalk.red.bold('\nError: electron path not exist.\n'))
+	console.log(chalk.red.bold('\nError: electron path not exist.\n'));
 	console.log('pleause check you electron path. (set in ' + chalk.magenta('config/custom.config.js') + ')\n');
 	exit(1);
 }
