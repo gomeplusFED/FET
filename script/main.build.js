@@ -40,10 +40,18 @@ requiredField.forEach((item) => {
 	proPackageJson[item] = pkinfo[item];
 });
 proPackageJson.main = './main/app.babel.js';
+
+// delete vue production dependencies
+Object.keys(proPackageJson.dependencies).forEach((item) =>{
+	if (/vue/.test(item)) {
+		delete proPackageJson.dependencies[item];
+	}
+})
+
 fs.writeFileSync(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson)), 'utf-8');
 
-// 移动 src/main 下文件
-cp(path.join(__dirname, '../src/main/*'), path.join(__dirname, '../dist/main/'));
+// 拷贝 src/main 下文件
+cp('-rf', path.join(__dirname, '../src/main/'), path.join(__dirname, '../dist/'));
 
 let buildOptions = {};
 
@@ -67,13 +75,14 @@ buildOptions.out = path.join(__dirname, '../app');
 
 // 安装依赖
 let installSpinner = ora('Installing node modules ...').start();
-exec('cd ' + path.join(__dirname, '../dist') + ' && npm install', () => {
+exec('cd ' + path.join(__dirname, '../dist') + ' && npm install -s', () => {
 	console.log('\n\nInstalled!\n');
 	installSpinner.stop();
 
 	// let packageSpinner = ora(`Packaging ${buildOptions.name} v${buildOptions['app-version']} for ${buildOptions.platform} ${buildOptions.arch} ...`).start();
 
 	console.log((`Packaging ${buildOptions.name} v${buildOptions['app-version']} for ${buildOptions.platform} ${buildOptions.arch} ...`));
+
 	// 打包
 	packager(buildOptions, (e, path) => {
 		if (e) {

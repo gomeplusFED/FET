@@ -13,10 +13,7 @@ import App from './app.vue';
 
 import { routeConfig } from './config/route.config.js';
 
-const router = new Router({
-	saveScrollPosition: false,
-	linkActiveClass: 'active'
-});
+const router = new Router();
 
 // load all router
 routeConfig(router);

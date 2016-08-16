@@ -4,6 +4,7 @@ import { exec } from 'child_process';
 
 import express from 'express';
 import webpack from 'webpack';
+import chalk from 'chalk';
 
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
@@ -25,7 +26,7 @@ const devMiddleware = webpackDevMiddleware(compiler, {
 });
 
 devMiddleware.waitUntilValid(() => {
-
+	console.log(chalk.cyan.bold('\nwebpack-dev-server listening on port '+ baseConfig.port +' ...\n'));
 });
 
 const hotMiddleware = webpackHotMiddleware(compiler);
