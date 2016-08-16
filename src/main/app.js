@@ -1,5 +1,7 @@
 import { app, BrowserWindow } from 'electron';
-import path from 'path';
+
+import pathConfig from './config/path.config.js';
+import env from './config/env.config.js';
 
 let mainWindow;
 
@@ -14,13 +16,15 @@ function createWindow() {
 		frame: false
 	});
 
-	// mainWindow.loadURL('file://' + path.join(__dirname, '../../dist/render/index.html'));
-	mainWindow.loadURL('http://localhost:5757');
+	if (env === 'dev') {
+		mainWindow.loadURL(pathConfig.renderPath.dev);
+		mainWindow.webContents.openDevTools();
 
-	mainWindow.webContents.openDevTools();
-
-	// 引入开发者工具 (引入后恢复并注释掉)
-	// BrowserWindow.addDevToolsExtension('your dev tool path');
+		// 引入开发者工具 (引入后注释掉)
+		// BrowserWindow.addDevToolsExtension('your dev tool path');
+	} else {
+		mainWindow.loadURL(pathConfig.renderPath.production);
+	}
 
 	mainWindow.on('closed', function() {
 		mainWindow = null;

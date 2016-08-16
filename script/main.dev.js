@@ -11,6 +11,6 @@ if (!test('-e',`${customConfig.electron.path}`)) {
 	exit(1);
 }
 
-console.log(chalk.cyan.bold('\nProcessing start electron main process ... \n'));
+console.log(chalk.cyan.bold('\nProcessing start electron dev main process ... \n'));
 
 exec(`${customConfig.electron.path} src/main/app.babel.js --debug=${customConfig.electron.port} --env=dev`);

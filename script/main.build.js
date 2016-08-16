@@ -8,6 +8,7 @@ import minimist from 'minimist';
 import packager from 'electron-packager';
 import chalk from 'chalk';
 import ora from 'ora';
+import asar from 'asar';
 import { js as jsbeautify } from 'js-beautify';
 
 import pkinfo from '../package.json';
@@ -29,9 +30,6 @@ rm('-rf', path.join(__dirname, '../dist/main'))
 if (!test('-e', path.join(__dirname, '../dist'))) {
 	mkdir(path.join(__dirname, '../dist'));
 }
-if (!test('-e', path.join(__dirname, '../dist/main'))) {
-	mkdir(path.join(__dirname, '../dist/main'));
-}
 
 // 生成生产环境 package.json
 let requiredField = ['name', 'app-name', 'version', 'description', 'dependencies', 'license'];
@@ -39,11 +37,21 @@ let proPackageJson = {};
 requiredField.forEach((item) => {
 	proPackageJson[item] = pkinfo[item];
 });
-proPackageJson.main = './main/app.babel.js';
+proPackageJson.main = './main.asar/app.babel.js';
+
+// delete vue production dependencies
+Object.keys(proPackageJson.dependencies).forEach((item) => {
+	if (/vue/.test(item)) {
+		delete proPackageJson.dependencies[item];
+	}
+})
+
 fs.writeFileSync(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson)), 'utf-8');
 
-// 移动 src/main 下文件
-cp(path.join(__dirname, '../src/main/*'), path.join(__dirname, '../dist/main/'));
+// 生成 asar 文件
+asar.createPackage(path.join(__dirname, '../src/main'), path.join(__dirname, '../dist/main.asar'), () => {
+
+})
 
 let buildOptions = {};
 
@@ -67,13 +75,14 @@ buildOptions.out = path.join(__dirname, '../app');
 
 // 安装依赖
 let installSpinner = ora('Installing node modules ...').start();
-exec('cd ' + path.join(__dirname, '../dist') + ' && npm install', () => {
+exec('cd ' + path.join(__dirname, '../dist') + ' && npm install -s', () => {
 	console.log('\n\nInstalled!\n');
 	installSpinner.stop();
 
 	// let packageSpinner = ora(`Packaging ${buildOptions.name} v${buildOptions['app-version']} for ${buildOptions.platform} ${buildOptions.arch} ...`).start();
 
 	console.log((`Packaging ${buildOptions.name} v${buildOptions['app-version']} for ${buildOptions.platform} ${buildOptions.arch} ...`));
+
 	// 打包
 	packager(buildOptions, (e, path) => {
 		if (e) {
