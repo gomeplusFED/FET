@@ -40,3 +40,5 @@ app.on('activate', function() {
 		createWindow();
 	}
 });
+
+app.dock.setIcon(path.join(__dirname,'../../icon/FET.png'));
