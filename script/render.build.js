@@ -4,6 +4,8 @@ import 'shelljs/global';
 import path from 'path';
 import chalk from 'chalk';
 import webpack from 'webpack';
+import ora from 'ora';
+import asar from 'asar';
 
 import baseConfig from '../config/webpack.common.js';
 import webpackConfig from '../config/webpack.build.config.js';
@@ -13,10 +15,12 @@ import env from '../config/env.config.js';
 const assetsPath = path.join(baseConfig.assetsRoot, './');
 rm('-rf', assetsPath);
 
-console.log(chalk.cyan.bold(`\nBuilding staic resource for ${env}...\n`));
+const buildSpinner = ora(`Building staic resource for ${env}...`).start();
+const asraSpinner = ora('Building asra file ...');
 
 webpack(webpackConfig, function(err, stats) {
 	if (err) throw err;
+	buildSpinner.stop();
 	process.stdout.write(stats.toString({
 		colors: true,
 		modules: false,
@@ -24,4 +28,10 @@ webpack(webpackConfig, function(err, stats) {
 		chunks: false,
 		chunkModules: false
 	}) + '\n');
+	asraSpinner.start();
+	asar.createPackage(path.join(__dirname, '../dist/render'), path.join(__dirname, '../dist/render.asar'), () => {
+		asraSpinner.stop();
+		rm('-rf', assetsPath);
+		console.log(chalk.green.bold('\nAll done.\n'));
+	})
 });

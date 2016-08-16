@@ -1,5 +1,3 @@
-import path from 'path';
-
 import { app, BrowserWindow } from 'electron';
 
 import pathConfig from './config/path.config.js';

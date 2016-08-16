@@ -8,6 +8,7 @@ import minimist from 'minimist';
 import packager from 'electron-packager';
 import chalk from 'chalk';
 import ora from 'ora';
+import asar from 'asar';
 import { js as jsbeautify } from 'js-beautify';
 
 import pkinfo from '../package.json';
@@ -29,9 +30,6 @@ rm('-rf', path.join(__dirname, '../dist/main'))
 if (!test('-e', path.join(__dirname, '../dist'))) {
 	mkdir(path.join(__dirname, '../dist'));
 }
-if (!test('-e', path.join(__dirname, '../dist/main'))) {
-	mkdir(path.join(__dirname, '../dist/main'));
-}
 
 // 生成生产环境 package.json
 let requiredField = ['name', 'app-name', 'version', 'description', 'dependencies', 'license'];
@@ -39,10 +37,10 @@ let proPackageJson = {};
 requiredField.forEach((item) => {
 	proPackageJson[item] = pkinfo[item];
 });
-proPackageJson.main = './main/app.babel.js';
+proPackageJson.main = './main.asar/app.babel.js';
 
 // delete vue production dependencies
-Object.keys(proPackageJson.dependencies).forEach((item) =>{
+Object.keys(proPackageJson.dependencies).forEach((item) => {
 	if (/vue/.test(item)) {
 		delete proPackageJson.dependencies[item];
 	}
@@ -50,8 +48,10 @@ Object.keys(proPackageJson.dependencies).forEach((item) =>{
 
 fs.writeFileSync(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson)), 'utf-8');
 
-// 拷贝 src/main 下文件
-cp('-rf', path.join(__dirname, '../src/main/'), path.join(__dirname, '../dist/'));
+// 生成 asar 文件
+asar.createPackage(path.join(__dirname, '../src/main'), path.join(__dirname, '../dist/main.asar'), () => {
+
+})
 
 let buildOptions = {};
 
