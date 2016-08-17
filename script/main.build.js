@@ -60,7 +60,6 @@ buildOptions.platform = '';
 buildOptions.arch = '';
 buildOptions.version = '1.3.2';
 buildOptions['app-version'] = pkinfo.version;
-// buildOptions.ignore = 'app';
 buildOptions.overwrite = true;
 buildOptions.icon = '';
 buildOptions.out = path.join(__dirname, '../app');
@@ -95,14 +94,11 @@ const installModule = function() {
 
 const packageApp = function() {
 	return new Promise((resolve, reject) => {
-		// console.log((`Packaging ${buildOptions.name} v${buildOptions['app-version']} for ${buildOptions.platform} ${buildOptions.arch} ...`));
-
 		// 打包
 		packager(buildOptions, (e, path) => {
 			if (e) {
 				reject(e);
 				throw e;
-				// return;
 			}
 			console.log(chalk.green.bold('\nbuild success'));
 			resolve();
