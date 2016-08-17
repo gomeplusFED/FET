@@ -22,8 +22,7 @@
   "scripts": {
     "dev:render": "node script/render.dev.babel.js --env=dev",
     "dev:main": "node script/main.dev.babel.js --env=dev",
-    "build:render": "node script/render.build.babel.js --env=production",
-    "build:main": "node script/main.build.babel.js --env=production"
+    "build": "node script/main.build.babel.js --env=production"
   },
   "repository": {
     "type": "git",

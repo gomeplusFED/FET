@@ -68,7 +68,7 @@ buildOptions.out = path.join(__dirname, '../app');
 const buildStatic = function() {
 	return new Promise((resolve, reject) => {
 		let spinner = ora('Building staic resource ...').start();
-		exec('npm run build:render', () => {
+		exec(`node ${path.join(__dirname, '../script/render.build.babel.js')} --env=production`, () => {
 			spinner.stop();
 			resolve();
 		})
