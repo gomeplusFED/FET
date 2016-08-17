@@ -6,6 +6,7 @@ import path from 'path';
 
 import minimist from 'minimist';
 import packager from 'electron-packager';
+import builder, { Platform } from 'electron-builder';
 import chalk from 'chalk';
 import ora from 'ora';
 import asar from 'asar';
@@ -19,32 +20,32 @@ let distPath = path.join(__dirname, '../dist');
 let distMainPath = path.join(__dirname, '../dist/main');
 
 // 移除 app 产出目录
-rm('-rf', appPath);
+// rm('-rf', appPath);
 
-if (!test('-e', distPath)) {
-	mkdir(distPath);
-}
+// if (!test('-e', distPath)) {
+// 	mkdir(distPath);
+// }
 
-// 生成生产环境 package.json
-let excludeField = ['scripts', 'devDependencies'];
-let proPackageJson = {};
+// // 生成生产环境 package.json
+// let excludeField = ['scripts', 'devDependencies'];
+// let proPackageJson = {};
 
-Object.keys(pkinfo).forEach((item) => {
-	if (excludeField.indexOf(item) === -1) {
-		proPackageJson[item] = pkinfo[item];
-	}
-});
+// Object.keys(pkinfo).forEach((item) => {
+// 	if (excludeField.indexOf(item) === -1) {
+// 		proPackageJson[item] = pkinfo[item];
+// 	}
+// });
 
-proPackageJson.main = './main.asar/app.babel.js';
+// proPackageJson.main = './main.asar/app.babel.js';
 
-// delete vue production dependencies
-Object.keys(proPackageJson.dependencies).forEach((item) => {
-	if (/vue/.test(item)) {
-		delete proPackageJson.dependencies[item];
-	}
-})
+// // delete vue production dependencies
+// Object.keys(proPackageJson.dependencies).forEach((item) => {
+// 	if (/vue/.test(item)) {
+// 		delete proPackageJson.dependencies[item];
+// 	}
+// })
 
-fs.writeFileSync(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson)), 'utf-8');
+// fs.writeFileSync(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson)), 'utf-8');
 
 let buildOptions = {};
 
@@ -106,6 +107,14 @@ const packageApp = function() {
 	})
 };
 
+const generateInstaller = function() {
+	return new Promise((resolve, reject) => {
+		builder.build({
+			targets: Platform.MAC.createTarget()
+		})
+	})
+}
+
 const run = function() {
 	buildStatic()
 		.then(() => {
@@ -117,19 +126,19 @@ const run = function() {
 		})
 }
 
-inquirer.prompt([{
-	type: 'list',
-	name: 'platform',
-	message: 'which platform?',
-	choices: ['darwin', 'linux', 'win32', 'all']
-}, {
-	type: 'list',
-	name: 'arch',
-	message: 'which arch?',
-	choices: ['ia32', 'x64', 'all']
-}]).then((answers) => {
-	buildOptions.platform = answers.platform;
-	buildOptions.arch = answers.arch;
-	buildOptions.icon = iconMap[answers.platform];
-	run();
-})
+// inquirer.prompt([{
+// 	type: 'list',
+// 	name: 'platform',
+// 	message: 'which platform?',
+// 	choices: ['darwin', 'linux', 'win32', 'all']
+// }, {
+// 	type: 'list',
+// 	name: 'arch',
+// 	message: 'which arch?',
+// 	choices: ['ia32', 'x64', 'all']
+// }]).then((answers) => {
+// 	buildOptions.platform = answers.platform;
+// 	buildOptions.arch = answers.arch;
+// 	buildOptions.icon = iconMap[answers.platform];
+// 	run();
+// })
