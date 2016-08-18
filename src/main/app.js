@@ -1,8 +1,7 @@
-import { app, BrowserWindow, ipcMain} from 'electron';
-
+import { app, BrowserWindow, ipcMain } from 'electron';
 import pathConfig from './config/path.config.js';
 import env from './config/env.config.js';
-import path from 'path'
+import path from 'path';
 
 let mainWindow;
 
@@ -47,11 +46,11 @@ app.on('activate', function() {
 	}
 });
 
-app.dock.setIcon(path.join(__dirname,'../../icon/FETN.png'));
+app.dock.setIcon(path.join(__dirname, '../../icon/FETN.png'));
 
-ipcMain.on('minimizing',(event, arg) => {
+ipcMain.on('minimizing', (event, arg) => {
 	app.hide();
 });
-ipcMain.on('close',(event, arg) => {
+ipcMain.on('close', (event, arg) => {
 	app.quit();
 });
