@@ -7,7 +7,18 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title><%= htmlWebpackPlugin.options.title %></title>
 </head>
-
+<style type="text/css">
+	html,body{
+		margin: 0;
+		padding: 0;
+	}
+	::-webkit-scrollbar
+	{
+		width: 0;
+		height: 16px;
+		background-color: rgba(0,0,0,0);
+	}
+</style>
 <body style="-webkit-app-region: drag">
 	<div id="app"></div>
 	<!-- built files will be auto injected -->
