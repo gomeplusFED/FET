@@ -7,7 +7,6 @@ import path from 'path'
 let mainWindow;
 
 function createWindow() {
-	console.log('createWindow');
 	mainWindow = new BrowserWindow({
 		width: 282,
 		height: 717,

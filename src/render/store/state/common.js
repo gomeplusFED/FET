@@ -8,8 +8,8 @@ export default {
 	},
 	confirmConfig: {
 		show: false,
-		title: '弹出对话框',
-		msg: '提示信息',
+		title: 'DIALOG',
+		msg: '19904:0818/135727:ERROR:CONSOLE(6427)] "No script with passed id.", source: chrome-devtools://devtools/bundled/inspector.js (6427)',
 		apply: 'func',
 		cancle: 'func'
 	}
