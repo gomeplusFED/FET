@@ -32,6 +32,5 @@ webpack(webpackConfig, function(err, stats) {
 	asar.createPackage(path.join(__dirname, '../dist/render'), path.join(__dirname, '../dist/render.asar'), () => {
 		asraSpinner.stop();
 		rm('-rf', assetsPath);
-		console.log(chalk.green.bold('\nAll done.\n'));
 	})
 });
