@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain} from 'electron';
+import { app, BrowserWindow, ipcMain, dialog} from 'electron';
 
 import pathConfig from './config/path.config.js';
 import env from './config/env.config.js';
@@ -46,7 +46,7 @@ app.on('activate', function() {
 	}
 });
 
-app.dock.setIcon(path.join(__dirname,'../../icon/FETN.png'));
+app.dock.setIcon(path.join(__dirname,'../../icon/icon.png'));
 
 ipcMain.on('minimizing',(event, arg) => {
 	app.hide();
@@ -54,3 +54,4 @@ ipcMain.on('minimizing',(event, arg) => {
 ipcMain.on('close',(event, arg) => {
 	app.quit();
 });
+console.log(dialog);
