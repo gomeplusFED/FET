@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 import { app, BrowserWindow, ipcMain, dialog} from 'electron';
 
-=======
-import { app, BrowserWindow, ipcMain } from 'electron';
->>>>>>> cafbb735c132be58f241994131e2f63cf5276177
 import pathConfig from './config/path.config.js';
 import env from './config/env.config.js';
 import path from 'path';
