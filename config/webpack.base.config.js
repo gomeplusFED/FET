@@ -48,7 +48,7 @@ export default {
 				name: 'static/img/[name].[hash:7].[ext]'
 			}
 		}, {
-			test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+			test: /\.(woff2?|eot|ttf|otf|woff)(\?.*)?$/,
 			loader: 'url',
 			query: {
 				limit: 10000,

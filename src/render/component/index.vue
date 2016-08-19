@@ -1,12 +1,11 @@
 <template>
 	<div class="blue">
-		<div class="man">123</div>
 		<m-top-menu :model="services"></m-top-menu>
 		<m-introduction></m-introduction>
 		<m-plugin :model="services"></m-plugin>
 	</div>
 </template>
-<style scoped>
+<style lang="scss">
 @import '../assets/sass/app.scss';
 .blue {
 	background-image: linear-gradient(to bottom, #00A3E1 0, #06DCE9 100%);

@@ -1,5 +1,5 @@
 <template>
-	<div class="switchAm">
+	<div class="switchAm" style="-webkit-app-region: drag">
 		<div class="close">
 			<div class="closeB" @click="close()"></div>
 			<div class="closeC"></div>
@@ -8,9 +8,7 @@
 			<div class="minB" @click="minimizing()"></div>
 		</div>
 		<div class="menu">
-			<div class="menuC"></div>
-			<div class="menuC"></div>
-			<div class="menuC"></div>
+			<i class="iconfont">&#x33;</i>
 		</div>
 	</div>
 </template>
@@ -19,6 +17,7 @@
 	width: 100%;
 	overflow: hidden;
 	padding: 16px 0 10px 0;
+	webkit-app-region: drag;
 }
 
 .minB,

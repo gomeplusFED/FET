@@ -5,7 +5,6 @@ import fs from 'fs';
 import path from 'path';
 
 import minimist from 'minimist';
-import packager from 'electron-packager';
 import builder, { Platform } from 'electron-builder';
 import chalk from 'chalk';
 import ora from 'ora';
