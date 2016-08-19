@@ -10,7 +10,6 @@ Vue.use(Router);
 Vue.use(VueElectron);
 
 import App from './app.vue';
-import Main from './component/main/index.vue';
 
 import { routeConfig } from './config/route.config.js';
 const router = new Router();
@@ -18,7 +17,4 @@ const router = new Router();
 // load all router
 routeConfig(router);
 
-router.redirect({
-	'*': '/main'
-});
 router.start(App, '#app');

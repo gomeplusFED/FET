@@ -1,9 +1,12 @@
-import Main from '../component/main/index.vue';
+import Index from '../component/index.vue';
 export const routeConfig = (router) => {
 	router.map({
-		'/main': {
-			name: 'Main',
-			component: Main
+		'/': {
+			name: 'Index',
+			component: Index
 		}
+	});
+	router.redirect({
+		'*': '/'
 	});
 };
