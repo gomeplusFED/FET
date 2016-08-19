@@ -5,7 +5,6 @@ import path from 'path';
 import chalk from 'chalk';
 import webpack from 'webpack';
 import ora from 'ora';
-import asar from 'asar';
 
 import baseConfig from '../config/webpack.common.js';
 import webpackConfig from '../config/webpack.build.config.js';
@@ -29,8 +28,4 @@ webpack(webpackConfig, function(err, stats) {
 		chunkModules: false
 	}) + '\n');
 	asraSpinner.start();
-	asar.createPackage(path.join(__dirname, '../dist/render'), path.join(__dirname, '../dist/render.asar'), () => {
-		asraSpinner.stop();
-		rm('-rf', assetsPath);
-	})
 });

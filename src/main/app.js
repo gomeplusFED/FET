@@ -46,8 +46,6 @@ app.on('activate', function() {
 	}
 });
 
-app.dock.setIcon(path.join(__dirname, '../../icon/FETN.png'));
-
 ipcMain.on('minimizing', (event, arg) => {
 	app.hide();
 });

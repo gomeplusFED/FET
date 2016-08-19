@@ -9,7 +9,6 @@ import packager from 'electron-packager';
 import builder, { Platform } from 'electron-builder';
 import chalk from 'chalk';
 import ora from 'ora';
-import asar from 'asar';
 import inquirer from 'inquirer';
 import { js as jsbeautify } from 'js-beautify';
 
@@ -20,50 +19,34 @@ let distPath = path.join(__dirname, '../dist');
 let distMainPath = path.join(__dirname, '../dist/main');
 
 // 移除 app 产出目录
-// rm('-rf', appPath);
+rm('-rf', appPath);
 
-// if (!test('-e', distPath)) {
-// 	mkdir(distPath);
-// }
+if (!test('-e', distPath)) {
+	mkdir(distPath);
+}
 
-// // 生成生产环境 package.json
-// let excludeField = ['scripts', 'devDependencies'];
-// let proPackageJson = {};
+// 生成生产环境 package.json
+let excludeField = ['scripts', 'devDependencies', 'build', 'directories'];
+let proPackageJson = {};
 
-// Object.keys(pkinfo).forEach((item) => {
-// 	if (excludeField.indexOf(item) === -1) {
-// 		proPackageJson[item] = pkinfo[item];
-// 	}
-// });
+Object.keys(pkinfo).forEach((item) => {
+	if (excludeField.indexOf(item) === -1) {
+		proPackageJson[item] = pkinfo[item];
+	}
+});
 
-// proPackageJson.main = './main.asar/app.babel.js';
+proPackageJson.main = './main/app.babel.js';
 
-// // delete vue production dependencies
-// Object.keys(proPackageJson.dependencies).forEach((item) => {
-// 	if (/vue/.test(item)) {
-// 		delete proPackageJson.dependencies[item];
-// 	}
-// })
+// delete vue production dependencies
+Object.keys(proPackageJson.dependencies).forEach((item) => {
+	if (/vue/.test(item)) {
+		delete proPackageJson.dependencies[item];
+	}
+})
 
-// fs.writeFileSync(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson)), 'utf-8');
+fs.writeFileSync(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson)), 'utf-8');
 
-let buildOptions = {};
-
-let iconMap = {
-	darwin: path.join(__dirname, '../icon/icon.icns'),
-	win32: path.join(__dirname, '../icon/icon.ico'),
-	linux: ''
-};
-
-buildOptions.name = pkinfo['app-name'];
-buildOptions.dir = path.join(__dirname, '../dist');
-buildOptions.platform = '';
-buildOptions.arch = '';
-buildOptions.version = '1.3.2';
-buildOptions['app-version'] = pkinfo.version;
-buildOptions.overwrite = true;
-buildOptions.icon = '';
-buildOptions.out = path.join(__dirname, '../app');
+let packExec = '';
 
 const buildStatic = function() {
 	return new Promise((resolve, reject) => {
@@ -75,9 +58,9 @@ const buildStatic = function() {
 	})
 }
 
-const buildAsar = function() {
+const copyMainFile = function() {
 	return new Promise((resolve, reject) => {
-		asar.createPackage(path.join(__dirname, '../src/main'), path.join(__dirname, '../dist/main.asar'), () => {
+		exec(`cp -rf ${ path.join(__dirname, '../src/main')} ${path.join(__dirname, '../dist')}`, () => {
 			resolve();
 		})
 	})
@@ -94,31 +77,17 @@ const installModule = function() {
 };
 
 const packageApp = function() {
-	return new Promise((resolve, reject) => {
-		// 打包
-		packager(buildOptions, (e, path) => {
-			if (e) {
-				reject(e);
-				throw e;
-			}
+	return new Promise((resovel, reject) => {
+		exec(packExec, (code, stdout, stderr) => {
 			console.log(chalk.green.bold('\nbuild success'));
-			resolve();
-		});
-	})
-};
-
-const generateInstaller = function() {
-	return new Promise((resolve, reject) => {
-		builder.build({
-			targets: Platform.MAC.createTarget()
 		})
 	})
-}
+};
 
 const run = function() {
 	buildStatic()
 		.then(() => {
-			return buildAsar();
+			return copyMainFile();
 		}).then(() => {
 			return installModule();
 		}).then(() => {
@@ -126,19 +95,17 @@ const run = function() {
 		})
 }
 
-// inquirer.prompt([{
-// 	type: 'list',
-// 	name: 'platform',
-// 	message: 'which platform?',
-// 	choices: ['darwin', 'linux', 'win32', 'all']
-// }, {
-// 	type: 'list',
-// 	name: 'arch',
-// 	message: 'which arch?',
-// 	choices: ['ia32', 'x64', 'all']
-// }]).then((answers) => {
-// 	buildOptions.platform = answers.platform;
-// 	buildOptions.arch = answers.arch;
-// 	buildOptions.icon = iconMap[answers.platform];
-// 	run();
-// })
+inquirer.prompt([{
+	type: 'list',
+	name: 'platform',
+	message: 'which platform?',
+	choices: ['mac', 'linux', 'win', 'all']
+}, {
+	type: 'list',
+	name: 'arch',
+	message: 'which arch?',
+	choices: ['ia32', 'x64', 'all']
+}]).then((answers) => {
+	packExec = `./node_modules/.bin/build --platform=${answers.platform} --arch=${answers.arch}`;
+	run();
+})
