@@ -41,7 +41,7 @@ Object.keys(proPackageJson.dependencies).forEach((item) => {
 	if (/vue/.test(item)) {
 		delete proPackageJson.dependencies[item];
 	}
-})
+});
 
 fs.writeFileSync(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson)), 'utf-8');
 
@@ -55,7 +55,7 @@ const buildStatic = function() {
 			resolve();
 		})
 	})
-}
+};
 
 const copyMainFile = function() {
 	return new Promise((resolve, reject) => {
@@ -92,7 +92,7 @@ const run = function() {
 		}).then(() => {
 			return packageApp();
 		})
-}
+};
 
 inquirer.prompt([{
 	type: 'list',
@@ -107,4 +107,4 @@ inquirer.prompt([{
 }]).then((answers) => {
 	packExec = `./node_modules/.bin/build --platform=${answers.platform} --arch=${answers.arch}`;
 	run();
-})
+});

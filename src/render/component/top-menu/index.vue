@@ -8,9 +8,7 @@
 			<div class="minB" @click="minimizing()"></div>
 		</div>
 		<div class="menu">
-			<div class="menuC"></div>
-			<div class="menuC"></div>
-			<div class="menuC"></div>
+			<i class="iconfont">&#x33;</i>
 		</div>
 	</div>
 </template>

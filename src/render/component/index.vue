@@ -12,6 +12,9 @@
 	background-repeat: repeat-x;
 	height: 717px;
 }
+.man{
+	color:white;
+}
 </style>
 <script>
 import store from '../store/index.js';
