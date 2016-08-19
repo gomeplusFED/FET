@@ -46,7 +46,7 @@ app.on('activate', function() {
 	}
 });
 
-app.dock.setIcon(path.join(__dirname,'../../icon/icon.png'));
+app.dock.setIcon(path.join(__dirname,'./assets/img/icon.png'));
 
 ipcMain.on('minimizing', (event, arg) => {
 	app.hide();

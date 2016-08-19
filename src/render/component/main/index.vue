@@ -2,7 +2,7 @@
 	<div class="blue">
 		<m-switch :model="services"></m-switch>
 		<div class="logo">
-			<img src="../../../../icon/icon.png">
+			<img src="../../assets/img/icon.png">
 			<div class="desc">
 				<span class="fontB">Tools of front end</span><br/>
 				<span class="fontS">工具集合，集成多项前端自动化、<br>可视化工具</span>
