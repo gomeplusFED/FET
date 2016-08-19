@@ -12,7 +12,7 @@ Note
 * 下载 electron 包
 
 	```bash
-	ELECTRON_MIRROR="https://npm.taobao.org/mirrors/electron/" electron-download --version=1.3.2
+	(set )ELECTRON_MIRROR="https://npm.taobao.org/mirrors/electron/" electron-download --version=1.3.2
 	```
 
 * 解压安装
