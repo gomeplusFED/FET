@@ -56,8 +56,11 @@ export default {
 			}
 		}]
 	},
+	vue: {
+		sass: 'css!sass'
+	},
 	resolve: {
-		extensions: ['', '.js', '.vue']
+		extensions: ['', '.js', '.vue', '.scss']
 		// alias: {
 		// 	utils: path.join(rootPath, './src/util/'),
 		// 	store: path.join(rootPath, './src/vuex/'),

@@ -6,6 +6,9 @@
 		<m-confirm></m-confirm>
 	</div>
 </template>
+<style scoped>
+	@import './assets/sass/app.scss';
+</style>
 <script>
 import { remote } from 'electron';
 import store from './store/index.js';
