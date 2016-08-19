@@ -63,6 +63,7 @@
 		"js-beautify": "^1.6.3",
 		"json-loader": "^0.5.4",
 		"minimist": "^1.2.0",
+		"node-sass": "^3.8.0",
 		"ora": "^0.3.0",
 		"sass": "^0.5.0",
 		"sass-loader": "^4.0.0",
