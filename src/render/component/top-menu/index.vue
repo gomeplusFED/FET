@@ -1,5 +1,5 @@
 <template>
-	<div class="switchAm">
+	<div class="switchAm" style="-webkit-app-region: drag">
 		<div class="close">
 			<div class="closeB" @click="close()"></div>
 			<div class="closeC"></div>
@@ -19,6 +19,7 @@
 	width: 100%;
 	overflow: hidden;
 	padding: 16px 0 10px 0;
+	webkit-app-region: drag;
 }
 
 .minB,

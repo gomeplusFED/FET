@@ -1,11 +1,1 @@
-html,body{
-  margin: 0;
-  padding: 0;
-  -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
-}
-::-webkit-scrollbar
-{
-  width: 0;
-  height: 16px;
-  background-color: rgba(0,0,0,0);
-}
+@import './reset.scss';
