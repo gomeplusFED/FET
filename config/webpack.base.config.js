@@ -56,9 +56,6 @@ export default {
 			}
 		}]
 	},
-	vue: {
-		sass: 'css!sass'
-	},
 	resolve: {
 		extensions: ['', '.js', '.vue', '.scss']
 		// alias: {
