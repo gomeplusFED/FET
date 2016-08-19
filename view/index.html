@@ -11,6 +11,7 @@
 	html,body{
 		margin: 0;
 		padding: 0;
+		-webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
 	}
 	::-webkit-scrollbar
 	{
@@ -19,7 +20,7 @@
 		background-color: rgba(0,0,0,0);
 	}
 </style>
-<body>
+<body ondragstart="return false">
 	<div id="app"></div>
 	<!-- built files will be auto injected -->
 </body>
