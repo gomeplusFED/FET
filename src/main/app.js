@@ -1,4 +1,5 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog} from 'electron';
+
 import pathConfig from './config/path.config.js';
 import env from './config/env.config.js';
 import path from 'path';
@@ -6,7 +7,6 @@ import path from 'path';
 let mainWindow;
 
 function createWindow() {
-	console.log('createWindow');
 	mainWindow = new BrowserWindow({
 		width: 282,
 		height: 717,
