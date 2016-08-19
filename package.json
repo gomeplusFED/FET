@@ -83,7 +83,7 @@
 		"asar": false,
 		"dmg": {
 			"title": "FE-Tools",
-			"icon": "./icon/icon.icns",
+			"icon": "./build/icon.icns",
 			"contents": [{
 				"x": 448,
 				"y": 200,
@@ -98,8 +98,8 @@
 		},
 		"win": {
 			"target": "squirrel",
-			"loadingGif": ".icon/installing.gif",
-			"icon": "./icon/icon.ico"
+			"loadingGif": "./build/installing.gif",
+			"icon": "./build/icon.ico"
 		}
 	},
 	"directories": {
