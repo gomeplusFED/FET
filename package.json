@@ -81,18 +81,17 @@
 		"productName": "FE-Tools",
 		"copyright": "Copyright © 2016 gomeplusFED",
 		"dmg": {
-			"title": "FE-Tools",
+			"title": "FE-Tool",
 			"icon": "./build/icon.icns",
 			"background": "./build/background.png",
-			"icon-size": 128,
 			"contents": [{
 				"x": 460,
-				"y": 210,
+				"y": 250,
 				"type": "link",
 				"path": "/Applications"
 			}, {
 				"x": 150,
-				"y": 210,
+				"y": 250,
 				"type": "file"
 			}]
 		},
