@@ -1,5 +1,6 @@
 <template>
 	<div class="blue">
+		<div class="man">123</div>
 		<m-top-menu :model="services"></m-top-menu>
 		<m-introduction></m-introduction>
 		<m-plugin :model="services"></m-plugin>
@@ -11,6 +12,9 @@
 	background-image: linear-gradient(to bottom, #00A3E1 0, #06DCE9 100%);
 	background-repeat: repeat-x;
 	height: 717px;
+}
+.man{
+	color:white;
 }
 </style>
 <script>
