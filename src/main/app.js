@@ -6,16 +6,23 @@ import path from 'path';
 
 let mainWindow;
 
+let browserOptions = {
+	width: 282,
+	height: 717,
+	resizable: false,
+	maximizable: false,
+	fullscreen: false,
+	fullscreenable: false
+};
+
+if (process.platform === 'win32') {
+	browserOptions.frame = false;
+} else if (process.platform === 'darwin') {
+	browserOptions.titleBarStyle = 'hidden';
+};
+
 function createWindow() {
-	mainWindow = new BrowserWindow({
-		width: 282,
-		height: 717,
-		resizable: false,
-		maximizable: false,
-		fullscreen: false,
-		fullscreenable: false,
-		frame: false
-	});
+	mainWindow = new BrowserWindow(browserOptions);
 
 	if (env === 'dev') {
 		mainWindow.loadURL(pathConfig.renderPath.dev);
