@@ -99,10 +99,6 @@
           "type": "file"
         }
       ]
-    },
-    "win": {
-      "loadingGif": "./build/installing.gif",
-      "icon": "./build/icon.ico"
     }
   },
   "directories": {
