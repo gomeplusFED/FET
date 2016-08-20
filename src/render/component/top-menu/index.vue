@@ -1,13 +1,13 @@
 <template>
 	<div class="top-menu">
-		<ul class="menu-list" v-if="platform === 'win32'">
+		<ul class="menu-list">
 			<li>
 				<p class="hide">菜单</p><i class="iconfont icon-menu"></i>
 			</li>
-			<li>
+			<li v-show="platform === 'win32'">
 				<p class="hide">最小化</p><i class="iconfont icon-min"></i>
 			</li>
-			<li>
+			<li v-show="platform === 'win32'">
 				<p class="hide">关闭</p><i class="iconfont icon-close01"></i>
 			</li>
 		</ul>
