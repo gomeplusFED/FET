@@ -1,6 +1,6 @@
 <template>
 	<div class="top-menu">
-		<ul class="menu-list">
+		<ul class="menu-list" v-if="platform === 'win32'">
 			<li>
 				<p class="hide">菜单</p><i class="iconfont icon-menu"></i>
 			</li>
@@ -59,8 +59,10 @@ import {
 
 export default {
 	name: 'top-menu',
-	methods: {
-
+	data() {
+		return {
+			platform: process.platform
+		};
 	}
 };
 </script>

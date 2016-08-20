@@ -2,7 +2,7 @@
 	<div class="blue">
 		<m-top-menu></m-top-menu>
 		<m-introduction></m-introduction>
-		<m-plugin :model="services"></m-plugin>
+		<m-plugin></m-plugin>
 	</div>
 </template>
 <style lang="less">
@@ -26,28 +26,6 @@ export default {
 		'm-top-menu': TopMenu,
 		'm-introduction': Introduction,
 		'm-plugin': Plugin
-	},
-	data() {
-		return {
-			services: {
-				'data': [{
-					'title': 'host文件配置服务',
-					'url': ''
-				}, {
-					'title': '本地代理服务',
-					'url': ''
-				}, {
-					'title': '静态资源服务',
-					'url': ''
-				}, {
-					'title': 'AMP',
-					'url': 'http://10.69.205.26:9090/#!/main/api/edit/57452f88b32735983f8a9eae'
-				}]
-			}
-		};
-	},
-	methods: {
-
 	}
 };
 </script>
