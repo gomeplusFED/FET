@@ -1,6 +1,5 @@
 import path from 'path';
-import { Tray, BrowserWindow } from 'electron';
-console.log(Tray);
+import { BrowserWindow, Tray, Menu } from 'electron';
 
 import pathConfig from '../config/path.config.js';
 import env from '../config/env.config.js';
@@ -23,9 +22,36 @@ if (process.platform === 'win32') {
 	browserOptions.titleBarStyle = 'hidden';
 };
 
-export default function createWindow() {
+function initTray(win, app) {
+	appIcon = new Tray(path.join(__dirname, '../assets/img/icon.png'));
+	appIcon.on('click', () => {
+		(win.isVisible()) ? win.hide() : win.show();
+	});
+	var contextMenu = Menu.buildFromTemplate([
+		{
+			label: '打开主面板',
+			click: () => {
+				(win.isVisible()) ? win.hide() : win.show();
+			}
+		},
+		{ label: '设置' },
+		{
+			label: '退出',
+			click: () => {
+				app.quit();
+			}
+		}
+	]);
+	appIcon.setToolTip('FE-Tools');
+	appIcon.setContextMenu(contextMenu);
+}
+
+export default function createWindow(app) {
 	mainWindow = new BrowserWindow(browserOptions);
-	// appIcon = new Tray(path.join(__dirname, '../assets/img/icon.png'));
+
+	if (process.platform === 'win32') {
+		initTray(mainWindow, app);
+	}
 
 	if (env === 'dev') {
 		mainWindow.loadURL(pathConfig.renderPath.dev);

@@ -7,7 +7,7 @@
 			<li v-show="platform === 'win32'" @click="minimize()">
 				<p class="hide">最小化</p><i class="iconfont icon-min"></i>
 			</li>
-			<li v-show="platform === 'win32'" @click="closeWindow()">
+			<li v-show="platform === 'win32'" @click="hideWindow()">
 				<p class="hide">关闭</p><i class="iconfont icon-close01"></i>
 			</li>
 		</ul>
@@ -35,7 +35,7 @@
 	display: inline-block;
 	vertical-align: middle;
 	cursor: pointer;
-	font-size: 12px;
+	font-size: 0;
 	margin: 0 5px;
 	-webkit-app-region: no-drag;
 	color: rgba(255, 255, 255, 0.7);
@@ -47,6 +47,7 @@
 }
 
 .menu-list li i {
+	font-size: 14px;
 	display: inline-block;
 	vertical-align: middle;
 }
@@ -67,10 +68,10 @@ export default {
 	},
 	methods: {
 		minimize() {
-			currentWindow.hide();
+			currentWindow.minimize();
 		},
-		closeWindow() {
-
+		hideWindow() {
+			currentWindow.hide();
 		}
 	}
 };
