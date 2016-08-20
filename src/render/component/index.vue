@@ -1,12 +1,12 @@
 <template>
 	<div class="blue">
-		<m-top-menu :model="services"></m-top-menu>
+		<m-top-menu></m-top-menu>
 		<m-introduction></m-introduction>
 		<m-plugin :model="services"></m-plugin>
 	</div>
 </template>
 <style lang="less">
-@import '../assets/sass/app.less';
+@import '../assets/css/app.less';
 .blue {
 	background-image: linear-gradient(to bottom, #00A3E1 0, #06DCE9 100%);
 	background-repeat: repeat-x;

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow } from 'electron';
 
 import pathConfig from './config/path.config.js';
 import env from './config/env.config.js';
@@ -44,12 +44,4 @@ app.on('activate', function() {
 	if (mainWindow === null) {
 		createWindow();
 	}
-});
-app.dock.setIcon(path.join(__dirname, './assets/img/icon.png'));
-
-ipcMain.on('minimizing', (event, arg) => {
-	app.hide();
-});
-ipcMain.on('close', (event, arg) => {
-	app.quit();
 });

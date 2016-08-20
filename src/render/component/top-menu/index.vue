@@ -1,101 +1,66 @@
 <template>
-	<div class="switchAm" style="-webkit-app-region: drag">
-		<div class="close">
-			<div class="closeB" @click="close()"></div>
-			<div class="closeC"></div>
-		</div>
-		<div class="min">
-			<div class="minB" @click="minimizing()"></div>
-		</div>
-		<div class="menu">
-			<i class="iconfont icon-menu"></i>
-		</div>
+	<div class="top-menu">
+		<ul class="menu-list">
+			<li>
+				<p class="hide">菜单</p><i class="iconfont icon-menu"></i>
+			</li>
+			<li>
+				<p class="hide">最小化</p><i class="iconfont icon-min"></i>
+			</li>
+			<li>
+				<p class="hide">关闭</p><i class="iconfont icon-close01"></i>
+			</li>
+		</ul>
 	</div>
 </template>
 <style scoped>
-.switchAm {
-	width: 100%;
-	overflow: hidden;
-	padding: 16px 0 10px 0;
-	webkit-app-region: drag;
-}
-
-.minB,
-.closeB {
-	width: 15px;
-	height: 15px;
-	position: absolute;
-	cursor: pointer;
-}
-
-.minB {
-	top: -7px;
-	left: -2px;
-}
-
-.closeB {
-	top: -7px;
-	left: -2px;
-	transform: rotate(45deg);
-}
-
-.min,
-.close,
-.closeC {
-	width: 10px;
-	height: 2px;
-	background-color: white;
+.top-menu {
 	position: relative;
+	height: 24px;
+	-webkit-app-region: drag;
+	background-color: rgba(255, 255, 255, 0.1);
 }
 
-.min,
-.close {
-	float: right;
-}
-
-.closeC {
-	transform: rotate(90deg);
-}
-
-.min {
-	margin: 0 8px 0 15px;
-}
-
-.close {
-	margin: 0 10px 0 4px;
-	transform: rotate(45deg);
-}
-
-.menu {
-	float: right;
-	width: 16px;
-	margin: -4px 0 0 0;
-	cursor: pointer;
-}
-
-.menuC {
+.menu-list {
+	display: block;
 	width: 100%;
-	height: 2px;
-	background-color: white;
-	margin: 0 0 3px 0;
+	font-size: 0;
+	text-align: right;
+	padding-right: 2px;
+	box-sizing: border-box;
+}
+
+.menu-list li {
+	line-height: 24px;
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+	font-size: 12px;
+	margin: 0 5px;
+	-webkit-app-region: no-drag;
+	color: rgba(255, 255, 255, 0.7);
+	transition: all ease 0.2s;
+}
+
+.menu-list li:hover {
+	color: #fff;
+}
+
+.menu-list li i {
+	display: inline-block;
+	vertical-align: middle;
 }
 </style>
-<script type="text/ecmascript-6">
+<script>
 import {
 	remote,
 	ipcRenderer
 } from 'electron';
+
 export default {
-	name: 'switchAm',
+	name: 'top-menu',
 	methods: {
-		minimizing() {
-			ipcRenderer.send('minimizing', 'minimizing');
-			console.log('minimizing');
-		},
-		close() {
-			ipcRenderer.send('close', 'close');
-			console.log('close');
-		}
+
 	}
 };
 </script>
