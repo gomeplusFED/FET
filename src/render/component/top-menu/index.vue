@@ -4,10 +4,10 @@
 			<li>
 				<p class="hide">菜单</p><i class="iconfont icon-menu"></i>
 			</li>
-			<li v-show="platform === 'win32'">
+			<li v-show="platform === 'win32'" @click="minimize()">
 				<p class="hide">最小化</p><i class="iconfont icon-min"></i>
 			</li>
-			<li v-show="platform === 'win32'">
+			<li v-show="platform === 'win32'" @click="closeWindow()">
 				<p class="hide">关闭</p><i class="iconfont icon-close01"></i>
 			</li>
 		</ul>
@@ -53,9 +53,10 @@
 </style>
 <script>
 import {
-	remote,
-	ipcRenderer
+	remote
 } from 'electron';
+
+const currentWindow = remote.getCurrentWindow();
 
 export default {
 	name: 'top-menu',
@@ -63,6 +64,14 @@ export default {
 		return {
 			platform: process.platform
 		};
+	},
+	methods: {
+		minimize() {
+			currentWindow.hide();
+		},
+		closeWindow() {
+
+		}
 	}
 };
 </script>
