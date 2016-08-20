@@ -1,9 +1,12 @@
-import { BrowserWindow } from 'electron';
+import path from 'path';
+import { Tray, BrowserWindow } from 'electron';
+console.log(Tray);
 
 import pathConfig from '../config/path.config.js';
 import env from '../config/env.config.js';
 
 let mainWindow = null;
+let appIcon = null;
 
 let browserOptions = {
 	width: 282,
@@ -22,6 +25,7 @@ if (process.platform === 'win32') {
 
 export default function createWindow() {
 	mainWindow = new BrowserWindow(browserOptions);
+	// appIcon = new Tray(path.join(__dirname, '../assets/img/icon.png'));
 
 	if (env === 'dev') {
 		mainWindow.loadURL(pathConfig.renderPath.dev);
