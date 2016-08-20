@@ -1,5 +1,5 @@
 <template>
-	<div class="blue">
+	<div class="app">
 		<m-top-menu></m-top-menu>
 		<m-introduction></m-introduction>
 		<m-plugin></m-plugin>
@@ -7,7 +7,7 @@
 </template>
 <style lang="less">
 @import '../assets/css/app.less';
-.blue {
+.app {
 	background-image: linear-gradient(to bottom, #00A3E1 0, #06DCE9 100%);
 	background-repeat: repeat-x;
 	height: 717px;
