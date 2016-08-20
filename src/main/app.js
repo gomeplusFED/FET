@@ -4,6 +4,8 @@ import createWindow from './window/create.js';
 
 app.on('ready', createWindow);
 
-app.on('activate', () => {
-	createWindow();
+app.on('activate', (ev, hasVisibleWindows) => {
+	if (!hasVisibleWindows) {
+		createWindow();
+	}
 });
