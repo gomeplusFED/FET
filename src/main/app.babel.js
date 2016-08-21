@@ -1,7 +1,4 @@
 // babel entrance
-require('babel-core/register')({
-	presets: ['es2015', 'stage-2'],
-	ignore: ['electron.asar']
-});
+require('babel-core/register')();
 
 require('./app.js');

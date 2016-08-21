@@ -15,7 +15,6 @@ import pkinfo from '../package.json';
 
 let appPath = path.join(__dirname, '../app');
 let distPath = path.join(__dirname, '../dist');
-let distMainPath = path.join(__dirname, '../dist/main');
 
 // 移除 app 产出目录
 rm('-rf', appPath);
@@ -105,6 +104,6 @@ inquirer.prompt([{
 	message: 'which arch?',
 	choices: ['ia32', 'x64', 'all']
 }]).then((answers) => {
-	packExec = `./node_modules/.bin/build --platform=${answers.platform} --arch=${answers.arch}`;
+	packExec = answers.platform === 'win' ? `.\\node_modules\\.bin\\build --platform=${answers.platform} --arch=${answers.arch}` : `./node_modules/.bin/build --platform=${answers.platform} --arch=${answers.arch}`;
 	run();
 });
