@@ -1,6 +1,4 @@
 // babel entrance
-require('babel-core/register')({
-	presets: ['es2015', 'stage-2']
-});
+require('babel-core/register')();
 
 require('./render.build.js');
