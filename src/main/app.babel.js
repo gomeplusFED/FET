@@ -1,7 +1,7 @@
 // babel entrance
 require('babel-core/register')({
 	'presets': ['es2015', 'stage-2'],
-	'ignore': ['*.asar'],
+	'ignore': ['electron.asar'],
 	'plugins': ['transform-runtime']
 });
 
