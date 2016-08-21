@@ -22,7 +22,8 @@
   "scripts": {
     "dev:render": "node script/render.dev.babel.js --env=dev",
     "dev:main": "node script/main.dev.babel.js --env=dev",
-    "build": "node script/main.build.babel.js --env=production"
+    "build": "node script/main.build.babel.js --env=production",
+    "asar": "node script/asar.build.babel.js --env=production"
   },
   "repository": {
     "type": "git",
@@ -43,6 +44,7 @@
     "vuex": "^1.0.0-rc.2"
   },
   "devDependencies": {
+    "asar": "^0.12.1",
     "babel-loader": "^6.2.4",
     "chalk": "^1.1.3",
     "css-loader": "^0.23.1",

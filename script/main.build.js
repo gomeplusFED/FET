@@ -5,11 +5,10 @@ import fs from 'fs';
 import path from 'path';
 
 import minimist from 'minimist';
-import builder, { Platform } from 'electron-builder';
-import chalk from 'chalk';
-import ora from 'ora';
 import inquirer from 'inquirer';
 import { js as jsbeautify } from 'js-beautify';
+
+import { buildStatic, copyMainFile, installModule, packageApp } from '../support/build.process.js';
 
 import pkinfo from '../package.json';
 
@@ -46,42 +45,6 @@ fs.writeFileSync(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.s
 
 let packExec = '';
 
-const buildStatic = function() {
-	return new Promise((resolve, reject) => {
-		let spinner = ora('Building staic resource ...').start();
-		exec(`node ${path.join(__dirname, '../script/render.build.babel.js')} --env=production`, () => {
-			spinner.stop();
-			resolve();
-		})
-	})
-};
-
-const copyMainFile = function() {
-	return new Promise((resolve, reject) => {
-		exec(`cp -rf ${ path.join(__dirname, '../src/main')} ${path.join(__dirname, '../dist')}`, () => {
-			resolve();
-		})
-	})
-};
-
-const installModule = function() {
-	return new Promise((resolve, reject) => {
-		let installSpinner = ora('Installing node modules ...').start();
-		exec('cd ' + path.join(__dirname, '../dist') + ' && npm install', () => {
-			installSpinner.stop();
-			resolve();
-		});
-	})
-};
-
-const packageApp = function() {
-	return new Promise((resovel, reject) => {
-		exec(packExec, (code, stdout, stderr) => {
-			console.log(chalk.green.bold('\nbuild success'));
-		})
-	})
-};
-
 const run = function() {
 	buildStatic()
 		.then(() => {
@@ -89,7 +52,7 @@ const run = function() {
 		}).then(() => {
 			return installModule();
 		}).then(() => {
-			return packageApp();
+			return packageApp(packExec);
 		})
 };
 
