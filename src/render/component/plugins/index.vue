@@ -4,6 +4,7 @@
 			<h2>插件列表</h2>
 		</div>
 		<div class="plugin">
+			<p>456</p>
 			<p>123123</p>
 			<p>123123</p>
 			<p>123123</p>
@@ -60,7 +61,7 @@
 			<p>123123</p>
 			<p>123123</p>
 			<p>123123</p>
-
+			<p>123</p>
 			<!-- <div class="service" v-for="item in model.data" :model="model" data-url={{item.url}} @click="openUrl($event)">{{item.title}}</div> -->
 		</div>
 	</div>
@@ -73,6 +74,8 @@
 	position: relative;
 	height: 100%;
 	overflow: hidden;
+	display: flex;
+	flex-direction: column;
 }
 
 .tools {
@@ -99,7 +102,7 @@
 .plugin {
 	padding-top: 30px;
 	overflow: auto;
-	height: 100%;
+	flex: 1;
 }
 
 </style>
