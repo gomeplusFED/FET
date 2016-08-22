@@ -1,16 +1,21 @@
 /* eslint-disable */
 import 'shelljs/global';
 
+import fs from 'fs';
 import path from 'path';
 
 import asar from 'asar';
 
 import ora from 'ora';
 import chalk from 'chalk';
+import { js as jsbeautify } from 'js-beautify';
+
+import pkgInfo from '../package.json';
 
 let srcMainPath = path.join(__dirname, '../src/main');
 let distPath = path.join(__dirname, '../dist');
 
+// 打包 render 资源
 export const buildStatic = function() {
 	return new Promise((resolve, reject) => {
 		let spinner = ora('Building staic resource ...').start();
@@ -21,6 +26,7 @@ export const buildStatic = function() {
 	})
 };
 
+// 拷贝 src/main 文件夹到 dist 目录
 export const copyMainFile = function() {
 	return new Promise((resolve, reject) => {
 		exec(`cp -rf ${ srcMainPath} ${distPath}`, () => {
@@ -29,6 +35,34 @@ export const copyMainFile = function() {
 	})
 };
 
+// 生成生产环境的 package.json
+export const generatePorductionPackageJson = function() {
+	return new Promise((resolve, reject) => {
+		let excludeField = ['scripts', 'devDependencies', 'build', 'directories'];
+		let proPackageJson = {};
+
+		Object.keys(pkgInfo).forEach((item) => {
+			if (excludeField.indexOf(item) === -1) {
+				proPackageJson[item] = pkgInfo[item];
+			}
+		});
+
+		proPackageJson.main = './main/app.babel.js';
+
+		// delete vue production dependencies
+		Object.keys(proPackageJson.dependencies).forEach((item) => {
+			if (/vue/.test(item)) {
+				delete proPackageJson.dependencies[item];
+			}
+		});
+
+		fs.writeFile(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson)), 'utf-8', function() {
+			resolve();
+		});
+	})
+};
+
+// 安装生产环境依赖
 export const installModule = function() {
 	return new Promise((resolve, reject) => {
 		let installSpinner = ora('Installing node modules ...').start();
@@ -53,6 +87,22 @@ export const buildAsar = function() {
 		asar.createPackage(distPath, path.join(__dirname, '../asar/app.asar'), function() {
 			console.log(chalk.green.bold('\ncreate asar success'));
 			resolve();
+		})
+	})
+};
+
+export const injectAppInfo = function() {
+	return new Promise((resolve, reject) => {
+		let result = {};
+		let requiredFied = ['name', 'version', 'description', 'author', 'homepage', 'license'];
+		requiredFied.forEach((item) => {
+			result[item] = pkgInfo[item];
+			fs.writeFile(path.join(srcMainPath, './config/info.config.js'), jsbeautify(`export default ${JSON.stringify(result)};`, {
+				'indent_with_tabs': true,
+				'indent_size': 4,
+			}).replace(/\"/g, `'`) + '\n', (err) => {
+				resolve();
+			});
 		})
 	})
 };

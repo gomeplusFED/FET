@@ -1,6 +1,12 @@
-import { buildStatic, copyMainFile, installModule, buildAsar } from '../support/build.process.js';
+import { generatePorductionPackageJson, buildStatic, copyMainFile, installModule, buildAsar, injectAppInfo } from '../support/build.process.js';
 
 buildStatic()
+	.then(() => {
+		return generatePorductionPackageJson();
+	})
+	.then(() => {
+		return injectAppInfo();
+	})
 	.then(() => {
 		return copyMainFile();
 	}).then(() => {

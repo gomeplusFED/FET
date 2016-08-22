@@ -22,6 +22,7 @@ if (process.platform === 'win32') {
 	browserOptions.titleBarStyle = 'hidden';
 };
 
+// win 托盘
 function initTray(win, app) {
 	appIcon = new Tray(path.join(__dirname, '../assets/img/icon.png'));
 	appIcon.on('click', () => {
