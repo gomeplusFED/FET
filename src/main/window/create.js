@@ -67,4 +67,5 @@ export default function createWindow(app) {
 	mainWindow.on('closed', function() {
 		mainWindow = null;
 	});
+	return mainWindow;
 }

@@ -2,12 +2,14 @@ import { app } from 'electron';
 
 import createWindow from './window/create.js';
 
+let mainWindow = null;
+
 app.on('ready', () => {
-	createWindow(app);
+	mainWindow = createWindow(app);
 });
 
 app.on('activate', (ev, hasVisibleWindows) => {
-	if (!hasVisibleWindows) {
-		createWindow(app);
+	if (mainWindow !== null) {
+		(mainWindow.isVisible()) ? null : mainWindow.show();
 	}
 });
