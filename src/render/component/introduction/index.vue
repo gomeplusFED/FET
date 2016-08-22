@@ -16,7 +16,7 @@
 
 img {
 	width: 20%;
-	margin: 20px 0 0 8%;
+	margin: 30px 0 0 8%;
 	float: left;
 }
 
@@ -25,7 +25,7 @@ img {
 	color: white;
 	font-size: 14px;
 	margin: 20px 0 0 0;
-	padding: 0 0 50px 0;
+	padding: 0 0 35px 0;
 	display: block;
 	float: left;
 }
@@ -37,10 +37,11 @@ img {
 
 .fontB {
 	font-size: 16px;
+	margin-top: 8px;
 }
 
 .fontS {
 	font-size: 10px;
-	margin: -10px 0 0 0;
+	margin: -20px 0 0 0;
 }
 </style>

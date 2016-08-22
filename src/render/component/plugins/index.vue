@@ -38,7 +38,7 @@
 .mods {
 	width: 90%;
 	margin: 0 0 0 5%;
-	height: 528px;
+	height: 545px;
 	overflow-y: scroll;
 	/*border-bottom: 1px solid black;*/
 }
