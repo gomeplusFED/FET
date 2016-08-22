@@ -23,6 +23,7 @@ import TopMenu from './top-menu/index.vue';
 import Introduction from './introduction/index.vue';
 import Plugin from './plugins/index.vue';
 import ButtomMenu from './buttom-menu/index.vue';
+
 export default {
 	name: 'Index',
 	store: store,

@@ -60,7 +60,7 @@ import {
 const currentWindow = remote.getCurrentWindow();
 
 export default {
-	name: 'top-menu',
+	name: 'TopMenu',
 	data() {
 		return {
 			platform: process.platform
