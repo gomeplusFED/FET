@@ -9,7 +9,5 @@ app.on('ready', () => {
 });
 
 app.on('activate', (ev, hasVisibleWindows) => {
-	if (mainWindow !== null) {
-		(mainWindow.isVisible()) ? null : mainWindow.show();
-	}
+	(mainWindow.isVisible()) ? null : mainWindow.show();
 });
