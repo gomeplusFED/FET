@@ -1,9 +1,26 @@
-import Index from '../component/index.vue';
+import index from '../component/index.vue';
+import settingIndex from '../component/setting/index.vue';
+
 export const routeConfig = (router) => {
 	router.map({
 		'/': {
-			name: 'Index',
-			component: Index
+			name: 'index',
+			component: index
+		},
+		'/setting': {
+			name: 'settingIndex',
+			component: settingIndex,
+			subRoutes: {
+				'/plugin': {
+					name: 'pluginSetting'
+				},
+				'/skin': {
+					name: 'skinSetting'
+				},
+				'/normal': {
+					name: 'normalSetting'
+				}
+			}
 		}
 	});
 	router.redirect({
