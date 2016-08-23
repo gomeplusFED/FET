@@ -31,7 +31,7 @@ function initTray(win, app) {
 	var contextMenu = Menu.buildFromTemplate([{
 		label: '打开主面板',
 		click: () => {
-			(win.isVisible()) ? win.hide() : win.show();
+			(win.isVisible()) ? null : win.show();
 		}
 	}, {
 		label: '设置'
