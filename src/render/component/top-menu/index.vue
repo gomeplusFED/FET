@@ -1,7 +1,7 @@
 <template>
 	<div class="top-menu">
 		<ul class="menu-list">
-			<li>
+			<li @click="menuShow()">
 				<p class="hide">菜单</p><i class="iconfont icon-menu" style="font-size: 20px;"></i>
 			</li>
 			<li v-show="platform === 'win32'" @click="minimize()">
@@ -57,6 +57,8 @@ import {
 	remote
 } from 'electron';
 
+import store from '../../store/index.js';
+import actions from '../../store/actions/index.js';
 const currentWindow = remote.getCurrentWindow();
 
 export default {
@@ -66,12 +68,25 @@ export default {
 			platform: process.platform
 		};
 	},
+	vuex: {
+		getters: {
+			menuConfig() {
+				return store.state.menuConfig;
+			}
+		}
+	},
 	methods: {
 		minimize() {
 			currentWindow.minimize();
 		},
 		hideWindow() {
 			currentWindow.hide();
+		},
+		menuShow() {
+			let show = !this.menuConfig.show;
+			actions.menu(store, {
+				show: show
+			});
 		}
 	}
 };

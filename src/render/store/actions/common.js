@@ -16,3 +16,7 @@ export const alert = (store, params) => {
 export const confirm = (store, params) => {
 	store.dispatch('CONFIRM', params);
 };
+
+export const menu = (store, params) => {
+	store.dispatch('MENU', params);
+};

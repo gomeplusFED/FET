@@ -4,6 +4,7 @@
 		<m-introduction></m-introduction>
 		<m-plugin></m-plugin>
 		<m-bottom-menu></m-bottom-menu>
+		<m-menu></m-menu>
 	</div>
 </template>
 <style lang="less">
@@ -24,6 +25,7 @@ import TopMenu from './top-menu/index.vue';
 import Introduction from './introduction/index.vue';
 import Plugin from './plugins/index.vue';
 import ButtomMenu from './buttom-menu/index.vue';
+import Menu from './top-menu/menu.vue';
 
 export default {
 	name: 'Index',
@@ -32,7 +34,8 @@ export default {
 		'm-top-menu': TopMenu,
 		'm-introduction': Introduction,
 		'm-plugin': Plugin,
-		'm-bottom-menu': ButtomMenu
+		'm-bottom-menu': ButtomMenu,
+		'm-menu': Menu
 	}
 };
 </script>
