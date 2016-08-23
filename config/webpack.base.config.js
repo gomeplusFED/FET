@@ -57,12 +57,12 @@ export default {
 		}]
 	},
 	resolve: {
-		extensions: ['', '.js', '.vue', '.scss']
-		// alias: {
-		// 	utils: path.join(rootPath, './src/util/'),
-		// 	store: path.join(rootPath, './src/vuex/'),
-		// 	actions: path.join(rootPath, './src/vuex/actions/')
-		// }
+		extensions: ['', '.js', '.vue', '.scss'],
+		alias: {
+			utils: path.join(rootPath, './src/render/util/'),
+			store: path.join(rootPath, './src/render/store/'),
+			actions: path.join(rootPath, './src/render/store/actions/')
+		}
 	},
 	eslint: {
 		formatter: require('eslint-friendly-formatter')
