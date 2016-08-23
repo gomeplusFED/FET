@@ -18,7 +18,7 @@
 	position: relative;
 	height: 24px;
 	-webkit-app-region: drag;
-	background-color: rgba(255, 255, 255, 0);
+	background-color: rgba(255, 255, 255, 0.3);
 }
 
 .menu-list {
