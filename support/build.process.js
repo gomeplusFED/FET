@@ -73,6 +73,7 @@ export const installModule = function() {
 	})
 };
 
+// 打包成按章程序
 export const packageApp = function(packExec) {
 	return new Promise((resovel, reject) => {
 		exec(packExec, (code, stdout, stderr) => {
@@ -82,6 +83,7 @@ export const packageApp = function(packExec) {
 	})
 };
 
+// 打包 asar 文件，可供更新
 export const buildAsar = function() {
 	return new Promise((resolve, reject) => {
 		asar.createPackage(distPath, path.join(__dirname, '../asar/app.asar'), function() {
@@ -91,6 +93,7 @@ export const buildAsar = function() {
 	})
 };
 
+//注入 app 的相关信息，会在开发或者打包之前写 src/main/config/info.config.js 文件
 export const injectAppInfo = function() {
 	return new Promise((resolve, reject) => {
 		let result = {};
