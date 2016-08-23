@@ -2,7 +2,7 @@
 	<div class="top-menu">
 		<ul class="menu-list">
 			<li>
-				<p class="hide">菜单</p><i class="iconfont icon-menu"></i>
+				<p class="hide">菜单</p><i class="iconfont icon-menu" style="font-size: 20px;"></i>
 			</li>
 			<li v-show="platform === 'win32'" @click="minimize()">
 				<p class="hide">最小化</p><i class="iconfont icon-min"></i>

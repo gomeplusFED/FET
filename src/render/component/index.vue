@@ -9,8 +9,9 @@
 <style lang="less">
 @import '../assets/css/app.less';
 .app {
-	background-image: linear-gradient(to bottom, #00A3E1 0, #06DCE9 100%);
-	background-repeat: repeat-x;
+	/*background-image: linear-gradient(to bottom, #00A3E1 0, #06DCE9 100%);*/
+	background: url('../assets/img/background.png') center center no-repeat;
+	background-size: 100% 100%;
 	height: 717px;
 	display: flex;
 	flex-direction: column;
