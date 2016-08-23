@@ -23,15 +23,15 @@ if (process.platform === 'win32') {
 };
 
 // win 托盘
-function initTray(win, app) {
+function initTray() {
 	appIcon = new Tray(path.join(__dirname, './assets/img/icon.png'));
 	appIcon.on('click', () => {
-		(win.isVisible()) ? win.hide() : win.show();
+		(mainWindow.isVisible()) ? mainWindow.hide() : mainWindow.show();
 	});
 	var contextMenu = Menu.buildFromTemplate([{
 		label: '打开主面板',
 		click: () => {
-			(win.isVisible()) ? win.hide() : win.show();
+			(mainWindow.isVisible()) ? null : mainWindow.show();
 		}
 	}, {
 		label: '设置'
@@ -45,11 +45,11 @@ function initTray(win, app) {
 	appIcon.setContextMenu(contextMenu);
 }
 
-const createWindow = function(app) {
+const createWindow = function() {
 	mainWindow = new BrowserWindow(browserOptions);
 
 	if (process.platform === 'win32') {
-		initTray(mainWindow, app);
+		initTray();
 	}
 
 	if (env === 'dev') {
