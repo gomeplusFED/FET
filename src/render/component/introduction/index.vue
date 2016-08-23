@@ -1,47 +1,34 @@
 <template>
-	<div class="logo">
+	<div class="intro-con">
 		<img src="../../assets/img/icon.png">
-		<div class="desc">
-			<span class="fontB">Tools of front end</span>
-			<br/>
-			<span class="fontS">工具集合，集成多项前端自动化、<br>可视化工具</span>
+		<div class="intro">
+			<h2>FE-Tools</h2>
+			<p>前端工具集合</p>
 		</div>
 	</div>
 </template>
 <style scoped>
-.logo {
+.intro-con {
 	width: 100%;
 	overflow: hidden;
+	font-size: 0;
+	padding: 10px 15px;
+	box-sizing: border-box;
 }
 
 img {
-	width: 20%;
-	margin: 30px 0 0 8%;
-	float: left;
+	width: 50px;
+	display: inline-block;
+	vertical-align: middle;
 }
-
-.desc {
-	text-align: left;
-	color: white;
+.intro {
+	display: inline-block;vertical-align: middle;color: #fff;
+	padding-left: 20px;box-sizing: border-box;
+}
+.intro h2 {
+	font-size: 16px;font-weight: normal;
+}
+.intro p {
 	font-size: 14px;
-	margin: 20px 0 0 0;
-	padding: 0 0 35px 0;
-	display: block;
-	float: left;
-}
-
-.desc span {
-	margin-left: 15px;
-	display: block;
-}
-
-.fontB {
-	font-size: 16px;
-	margin-top: 8px;
-}
-
-.fontS {
-	font-size: 10px;
-	margin: -20px 0 0 0;
 }
 </style>

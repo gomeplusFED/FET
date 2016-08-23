@@ -18,7 +18,7 @@
 	position: relative;
 	height: 24px;
 	-webkit-app-region: drag;
-	background-color: rgba(255, 255, 255, 0.1);
+	background-color: rgba(255, 255, 255, 0);
 }
 
 .menu-list {
@@ -60,7 +60,7 @@ import {
 const currentWindow = remote.getCurrentWindow();
 
 export default {
-	name: 'top-menu',
+	name: 'TopMenu',
 	data() {
 		return {
 			platform: process.platform
