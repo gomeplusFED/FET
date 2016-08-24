@@ -5,6 +5,7 @@
 <style lang="less" scoped>
 </style>
 <script>
+import '../../window/setting.js';
 export default {
 	name: 'settingIndex',
 	data() {

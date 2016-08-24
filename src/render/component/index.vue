@@ -17,7 +17,9 @@
 }
 </style>
 <script>
-import store from '../store/index.js';
+import '../window/main.js';
+
+import store from 'store';
 
 import TopMenu from './top-menu/index.vue';
 import Introduction from './introduction/index.vue';
