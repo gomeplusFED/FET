@@ -19,3 +19,4 @@ config/custom.config.js
 dist/
 app/
 asar/
+temp/
