@@ -1,12 +1,12 @@
 <template>
 	<div class="menu-con" v-show="show" transition="fade">
 		<div class="menu absolute-center">
-			<div class="menu-item plugin">
+			<div class="menu-item plugin" @click="goPlugin()">
 				<div class="absolute-center">
 					<i class="iconfont icon-chatouplug"></i><span>插件</span>
 				</div>
 			</div>
-			<div class="menu-item skin" target="_blank" @click="skin()">
+			<div class="menu-item skin" target="_blank">
 				<div class="absolute-center">
 					<i class="iconfont icon-skin"></i><span>换肤</span>
 				</div>
@@ -127,13 +127,23 @@
 }
 </style>
 <script>
+import { createWindow } from '../../util/window.js';
 export default {
 	name: 'TopContextMenu',
 	props: ['show'],
 	methods: {
-		skin() {
-			console.log('skin');
-			window.open('#!/settingIndex', '美信客服平台IM');
+		goPlugin() {
+			createWindow({
+				route: 'settingIndex',
+				size: {
+					width: 'auto',
+					height: 'auto'
+				},
+				postition: {
+					X: 'auto',
+					Y: 'auto'
+				}
+			});
 		}
 	}
 };
