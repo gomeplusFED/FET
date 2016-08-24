@@ -1,14 +1,16 @@
-import { remote } from 'electron';
+import { remote, screen } from 'electron';
 
 const currentWindow = remote.getCurrentWindow();
 const BrowserWindow = remote.BrowserWindow;
 const app = remote.app;
 
 export const createWindow = (params = {}) => {
-	// console.log(app.getAppPath());
-	// let win = new BrowserWindow({
+	if (params.path === '') {
+		return;
+	}
+	let wholePath = currentWindow.getURL() + params.path;
+	let win = new BrowserWindow({
 
-	// });
-	// win.loadURL();
-	console.log(currentWindow.getURL());
+	});
+	win.loadURL(wholePath);
 };

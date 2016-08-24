@@ -1,22 +1,22 @@
 <template>
 	<div class="menu-con" v-show="show" transition="fade">
 		<div class="menu absolute-center">
-			<div class="menu-item plugin" @click="goPlugin()">
+			<div class="menu-item plugin" @click="newWin('setting/plugin')">
 				<div class="absolute-center">
 					<i class="iconfont icon-chatouplug"></i><span>插件</span>
 				</div>
 			</div>
-			<div class="menu-item skin" target="_blank">
+			<div class="menu-item skin" @click="newWin('setting/skin')">
 				<div class="absolute-center">
 					<i class="iconfont icon-skin"></i><span>换肤</span>
 				</div>
 			</div>
-			<div class="menu-item normal">
+			<div class="menu-item normal" @click="newWin('setting/normal')">
 				<div class="absolute-center">
 					<i class="iconfont icon-set"></i><span>设置</span>
 				</div>
 			</div>
-			<div class="menu-item about">
+			<div class="menu-item about" @click="newWin('setting/about')">
 				<div class="absolute-center">
 					<i class="iconfont icon-caidan"></i><span>关于</span>
 				</div>
@@ -127,23 +127,40 @@
 }
 </style>
 <script>
-import { createWindow } from '../../util/window.js';
+import {
+	remote
+} from 'electron';
+
+const currentWindow = remote.getCurrentWindow();
+const BrowserWindow = remote.BrowserWindow;
+
 export default {
 	name: 'TopContextMenu',
 	props: ['show'],
 	methods: {
-		goPlugin() {
-			createWindow({
-				route: 'settingIndex',
-				size: {
-					width: 'auto',
-					height: 'auto'
-				},
-				postition: {
-					X: 'auto',
-					Y: 'auto'
+		newWin(path) {
+			let wholePath = currentWindow.getURL() + path;
+			let allWindows = BrowserWindow.getAllWindows();
+			let settingWin = null;
+			allWindows.forEach((item) => {
+				if (/\/setting\//.test(item.getURL())) {
+					settingWin = item;
+					settingWin.show();
+					settingWin.focus();
 				}
 			});
+			if (settingWin === null) {
+				settingWin = new BrowserWindow({
+					center: true,
+					resizable: false,
+					frame: false,
+					width: 600,
+					height: 600,
+					fullscreen: false,
+					fullscreenable: false
+				});
+				settingWin.loadURL(wholePath);
+			}
 		}
 	}
 };

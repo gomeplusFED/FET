@@ -1,18 +1,3 @@
 <template>
-	<div>666</div>
+	<h1>Skin Setting</h1>
 </template>
-<style lang="less" scoped>
-</style>
-<script>
-import store from '../../store/index.js';
-export default {
-	name: 'settingSkin',
-	vuex: {
-		getters: {
-			menuConfig() {
-				return store.state.menuConfig;
-			}
-		}
-	}
-};
-</script>

@@ -9,7 +9,7 @@ Vue.use(VueAjax);
 Vue.use(Router);
 Vue.use(VueElectron);
 
-import Index from './component/index.vue';
+import App from './app.vue';
 
 // shortcut module
 import './shortcut/index.js';
@@ -20,4 +20,4 @@ const router = new Router();
 // load all router
 routeConfig(router);
 
-router.start(Index, '#app');
+router.start(App, '#app');

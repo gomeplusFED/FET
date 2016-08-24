@@ -1,18 +1,19 @@
 <template>
-	<div>index</div>
+	<h1>test</h1>
+	<router-view></router-view>
 </template>
 <style lang="less" scoped>
 </style>
 <script>
-import store from '../../store/index.js';
 export default {
 	name: 'settingIndex',
-	vuex: {
-		getters: {
-			menuConfig() {
-				return store.state.menuConfig;
-			}
-		}
+	data() {
+		return {
+			test: 'test'
+		};
+	},
+	ready() {
+
 	}
 };
 </script>

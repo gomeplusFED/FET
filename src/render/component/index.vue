@@ -1,14 +1,13 @@
 <template>
-	<div class="app">
+	<div class="main-con">
 		<m-top-menu></m-top-menu>
 		<m-introduction></m-introduction>
 		<m-plugin></m-plugin>
 		<m-bottom-menu></m-bottom-menu>
 	</div>
 </template>
-<style lang="less">
-@import '../assets/css/app.less';
-.app {
+<style scoped>
+.main-con {
 	background-image: url('../assets/img/menu-bg.jpg');
 	background-repeat: no-repeat;
 	background-size: cover;
