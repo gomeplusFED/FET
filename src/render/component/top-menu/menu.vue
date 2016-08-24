@@ -3,7 +3,7 @@
 		<div class="index"><i class="iconfont icon-caidan"></i></div>
 		<div class="normal"><i class="iconfont icon-set"></i></div>
 		<div class="plugin"><i class="iconfont icon-chatouplug"></i></div>
-		<div class="skin"><i class="iconfont icon-skin"></i></div>
+		<div class="skin" target="_blank" @click="skin()"><i class="iconfont icon-skin"></i></div>
 	</div>
 </template>
 <style lang="less" scoped>
@@ -30,6 +30,7 @@
 	line-height: 50px;
 	text-align: center;
 	color:white;
+	cursor: pointer;
 }
 .index{
 	background-color: #495f6d;
@@ -59,6 +60,13 @@ export default {
 			menuConfig() {
 				return store.state.menuConfig;
 			}
+		}
+	},
+	methods: {
+		skin() {
+			console.log('skin');
+			window.open('#!/settingIndex', '美信客服平台IM');
+//			this.$route.router.go('/settingIndex');
 		}
 	}
 };
