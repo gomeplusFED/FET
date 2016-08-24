@@ -14,6 +14,7 @@
 	font-size: 0;
 	padding: 10px 15px;
 	box-sizing: border-box;
+	background-color: rgba(255,255,255,0.3);
 }
 
 img {
