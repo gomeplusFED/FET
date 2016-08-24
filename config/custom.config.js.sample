@@ -1,5 +1,6 @@
 export default {
 	electron: {
-		path: 'you electron path, such as: /Applications/Electron.app/Contents/MacOS/Electron'
+		path: 'you electron path, such as: /Applications/Electron.app/Contents/MacOS/Electron',
+		debugPort: 5858
 	}
 };
