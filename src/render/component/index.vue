@@ -4,15 +4,14 @@
 		<m-introduction></m-introduction>
 		<m-plugin></m-plugin>
 		<m-bottom-menu></m-bottom-menu>
-		<m-menu></m-menu>
 	</div>
 </template>
 <style lang="less">
 @import '../assets/css/app.less';
 .app {
-	/*background-image: linear-gradient(to bottom, #00A3E1 0, #06DCE9 100%);*/
-	background: url('../assets/img/background.png') center center no-repeat;
-	background-size: 100% 100%;
+	background-image: url('../assets/img/menu-bg.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
 	height: 717px;
 	display: flex;
 	flex-direction: column;

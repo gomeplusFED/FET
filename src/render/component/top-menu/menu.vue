@@ -1,72 +1,139 @@
 <template>
-	<div class="menu" :class="{'menu':true,'animation':menuConfig.show}" v-show="menuConfig.show">
-		<div class="index"><i class="iconfont icon-caidan"></i></div>
-		<div class="normal"><i class="iconfont icon-set"></i></div>
-		<div class="plugin"><i class="iconfont icon-chatouplug"></i></div>
-		<div class="skin" target="_blank" @click="skin()"><i class="iconfont icon-skin"></i></div>
+	<div class="menu-con" v-show="show" transition="fade">
+		<div class="menu absolute-center">
+			<div class="menu-item plugin">
+				<div class="absolute-center">
+					<i class="iconfont icon-chatouplug"></i><span>插件</span>
+				</div>
+			</div>
+			<div class="menu-item skin" target="_blank" @click="skin()">
+				<div class="absolute-center">
+					<i class="iconfont icon-skin"></i><span>换肤</span>
+				</div>
+			</div>
+			<div class="menu-item normal">
+				<div class="absolute-center">
+					<i class="iconfont icon-set"></i><span>设置</span>
+				</div>
+			</div>
+			<div class="menu-item about">
+				<div class="absolute-center">
+					<i class="iconfont icon-caidan"></i><span>关于</span>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
-<style lang="less" scoped>
-.menu{
-	width: 60%;
-	margin-left: 20%;
+<style scoped>
+.menu-con {
 	position: fixed;
-	top:300px;
-	left:0;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: center;
+	width: 100%;
+	height: 100%;
+	background-image: url('../../assets/img/menu-bg.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	z-index: 999;
 }
-.animation{
+
+.menu {
+	width: 180px;
+	z-index: 999;
+	font-size: 0;
+}
+
+.animation {
 	animation: myfirst 1s;
 }
-.index,.normal,.plugin,.skin{
-	height: 50px;
-	width: 50px;
-	border-radius: 100%;
+
+.menu-item {
+	height: 80px;
+	width: 80px;
 	background-color: black;
-	margin: 4px;
-	line-height: 50px;
-	text-align: center;
-	color:white;
+	margin: 5px;
+	color: white;
 	cursor: pointer;
+	display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 14px;
+	position: relative;
+	box-sizing: border-box;
+	border-radius: 50%;
 }
-.index{
-	background-color: #495f6d;
+
+.menu-item span,
+.menu-item i {
+	display: block;
 }
-.normal{
-	background-color: #e5e5cb;
+
+.menu-item span {
+	font-size: 12px;
 }
-.plugin{
+
+.plugin {
 	background-color: #e26c60;
+	animation: plugin ease 0.3s;
 }
-.skin{
+
+.skin {
 	background-color: #86c1a3;
+	animation: skin ease 0.3s;
 }
-@keyframes myfirst
-{
-	0%   {top: 200px;}
-	20%  {top: 350px;}
-	100% {top: 300px;}
+
+.normal {
+	background-color: #e5e5cb;
+	animation: normal-ani ease 0.3s;
+}
+
+.about {
+	background-color: #495f6d;
+	animation: about ease 0.3s;
+}
+
+@keyframes plugin {
+	0% {
+		transform: translate(-100px, -100px);
+	}
+	100% {
+		transform: translate(0, 0);
+	}
+}
+
+@keyframes skin {
+	0% {
+		transform: translate(100px, -100px);
+	}
+	100% {
+		transform: translate(0, 0);
+	}
+}
+
+@keyframes normal-ani {
+	0% {
+		transform: translate(-100px, 100px);
+	}
+	100% {
+		transform: translate(0, 0);
+	}
+}
+
+@keyframes about {
+	0% {
+		transform: translate(100px, 100px);
+	}
+	100% {
+		transform: translate(0, 0);
+	}
 }
 </style>
 <script>
-import store from '../../store/index.js';
 export default {
-	name: 'Menu',
-	vuex: {
-		getters: {
-			menuConfig() {
-				return store.state.menuConfig;
-			}
-		}
-	},
+	name: 'TopContextMenu',
+	props: ['show'],
 	methods: {
 		skin() {
 			console.log('skin');
 			window.open('#!/settingIndex', '美信客服平台IM');
-//			this.$route.router.go('/settingIndex');
 		}
 	}
 };

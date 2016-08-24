@@ -24,7 +24,3 @@ export const CONFIRM = (state, params) => {
 export const HIDECONFIRM = (state) => {
 	state.confirmConfig.show = false;
 };
-
-export const MENU = (state, params) => {
-	state.menuConfig.show = params.show;
-};

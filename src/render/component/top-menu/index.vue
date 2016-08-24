@@ -1,7 +1,7 @@
 <template>
 	<div class="top-menu">
 		<ul class="menu-list">
-			<li @click="menuShow()">
+			<li @click="showMenu = !showMenu">
 				<p class="hide">菜单</p><i class="iconfont icon-menu" style="font-size: 20px;"></i>
 			</li>
 			<li v-show="platform === 'win32'" @click="minimize()">
@@ -11,6 +11,7 @@
 				<p class="hide">关闭</p><i class="iconfont icon-close01"></i>
 			</li>
 		</ul>
+		<m-top-context-menu :show.sync="showMenu"></m-top-context-menu>
 	</div>
 </template>
 <style scoped>
@@ -18,7 +19,7 @@
 	position: relative;
 	height: 24px;
 	-webkit-app-region: drag;
-	background-color: rgba(255, 255, 255, 0.3);
+	background-color: rgba(255, 255, 255, 0.4);
 }
 
 .menu-list {
@@ -57,23 +58,19 @@ import {
 	remote
 } from 'electron';
 
-import store from '../../store/index.js';
-import actions from '../../store/actions/index.js';
+import TopContextMenu from './menu.vue';
 const currentWindow = remote.getCurrentWindow();
 
 export default {
 	name: 'TopMenu',
 	data() {
 		return {
-			platform: process.platform
+			platform: process.platform,
+			showMenu: false
 		};
 	},
-	vuex: {
-		getters: {
-			menuConfig() {
-				return store.state.menuConfig;
-			}
-		}
+	components: {
+		'm-top-context-menu': TopContextMenu
 	},
 	methods: {
 		minimize() {
@@ -81,12 +78,6 @@ export default {
 		},
 		hideWindow() {
 			currentWindow.hide();
-		},
-		menuShow() {
-			let show = !this.menuConfig.show;
-			actions.menu(store, {
-				show: show
-			});
 		}
 	}
 };
