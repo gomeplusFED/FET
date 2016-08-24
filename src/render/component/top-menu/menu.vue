@@ -36,7 +36,7 @@
 }
 
 .menu {
-	width: 180px;
+	width: 160px;
 	z-index: 999;
 	font-size: 0;
 }
@@ -46,8 +46,8 @@
 }
 
 .menu-item {
-	height: 80px;
-	width: 80px;
+	height: 70px;
+	width: 70px;
 	background-color: black;
 	margin: 5px;
 	color: white;
