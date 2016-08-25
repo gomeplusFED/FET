@@ -152,8 +152,6 @@ export default {
 			if (settingWin === null) {
 				let mainWinPosition = currentWindow.getPosition();
 				settingWin = new BrowserWindow({
-					x: mainWinPosition[0] - 717,
-					y: mainWinPosition[1],
 					center: true,
 					resizable: false,
 					frame: false,
