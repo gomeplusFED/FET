@@ -73,7 +73,7 @@ export const installModule = function() {
 	})
 };
 
-// 打包成按章程序
+// 打包成安装程序
 export const packageApp = function(packExec) {
 	return new Promise((resovel, reject) => {
 		exec(packExec, (code, stdout, stderr) => {
