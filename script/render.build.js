@@ -1,6 +1,7 @@
 /* eslint-disable */
 import 'shelljs/global';
 
+import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import webpack from 'webpack';
@@ -15,7 +16,6 @@ const assetsPath = path.join(baseConfig.assetsRoot, './');
 rm('-rf', assetsPath);
 
 const buildSpinner = ora(`Building staic resource for ${env}...`).start();
-const asraSpinner = ora('Building asra file ...');
 
 webpack(webpackConfig, function(err, stats) {
 	if (err) throw err;
@@ -27,5 +27,10 @@ webpack(webpackConfig, function(err, stats) {
 		chunks: false,
 		chunkModules: false
 	}) + '\n');
-	asraSpinner.start();
+	fs.readdir(path.join(__dirname, '../dist/render/static/css/'), (err, files) => {
+		let cssPath = path.join(__dirname, '../dist/render/static/css/', files[0]);
+		fs.readFile(cssPath, 'utf-8', (err, data) => {
+			fs.writeFileSync(cssPath, data.replace(/\.\/static\//ig, '../'), 'utf-8');
+		})
+	});
 });
