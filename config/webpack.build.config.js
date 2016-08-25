@@ -34,7 +34,7 @@ webpackConfig = merge(baseWebpackConfig, {
 			name: 'vendor',
 			minChunks: (module, count) => {
 				return (
-					module.resource && /\.js$/.test(module.resource) && module.resource.indexOf(path.join(__dirname, '../../node_modules')) === 0
+					module.resource && /\.js$/.test(module.resource) && module.resource.indexOf(path.join(__dirname, '../node_modules')) === 0
 				);
 			}
 		}),
