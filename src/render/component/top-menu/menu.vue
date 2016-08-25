@@ -131,6 +131,8 @@ import {
 	remote
 } from 'electron';
 
+import { createNewFramlessAndAutoSizeWindow } from 'utils/window.js';
+
 const currentWindow = remote.getCurrentWindow();
 const BrowserWindow = remote.BrowserWindow;
 
@@ -150,16 +152,7 @@ export default {
 				}
 			});
 			if (settingWin === null) {
-				let mainWinPosition = currentWindow.getPosition();
-				settingWin = new BrowserWindow({
-					center: true,
-					resizable: false,
-					frame: false,
-					width: 717,
-					height: 717,
-					fullscreen: false,
-					fullscreenable: false
-				});
+				settingWin = createNewFramlessAndAutoSizeWindow();
 				settingWin.loadURL(wholePath);
 			}
 		}
