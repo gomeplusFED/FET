@@ -12,7 +12,7 @@ Vue.use(VueElectron);
 import App from './app.vue';
 
 // shortcut module
-import './shortcut/index.js';
+// import './shortcut/index.js';
 
 import { routeConfig } from './config/route.config.js';
 const router = new Router();
