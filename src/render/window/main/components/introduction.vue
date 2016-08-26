@@ -1,6 +1,6 @@
 <template>
 	<div class="intro-con">
-		<img src="../../assets/img/icon.png">
+		<img src="../../../assets/img/icon.png">
 		<div class="intro">
 			<h2>FE-Tools</h2>
 			<p>前端工具集合</p>

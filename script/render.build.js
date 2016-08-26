@@ -27,10 +27,10 @@ webpack(webpackConfig, function(err, stats) {
 		chunks: false,
 		chunkModules: false
 	}) + '\n');
-	fs.readdir(path.join(__dirname, '../dist/render/static/css/'), (err, files) => {
-		let cssPath = path.join(__dirname, '../dist/render/static/css/', files[0]);
-		fs.readFile(cssPath, 'utf-8', (err, data) => {
-			fs.writeFileSync(cssPath, data.replace(/\.\/static\//ig, '../'), 'utf-8');
-		})
-	});
+	// fs.readdir(path.join(__dirname, '../dist/render/static/css/'), (err, files) => {
+	// 	let cssPath = path.join(__dirname, '../dist/render/static/css/', files[0]);
+	// 	fs.readFile(cssPath, 'utf-8', (err, data) => {
+	// 		fs.writeFileSync(cssPath, data.replace(/\.\/static\//ig, '../'), 'utf-8');
+	// 	})
+	// });
 });

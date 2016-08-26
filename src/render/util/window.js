@@ -4,7 +4,7 @@ const currentWindow = remote.getCurrentWindow();
 const BrowserWindow = remote.BrowserWindow;
 const app = remote.app;
 
-export const createNewFramlessAndAutoSizeWindow = () => {
+export const createNewFramlessAndAutoPositionWindow = () => {
 	let mainWinPosition = currentWindow.getPosition();
 	let screen = window.screen;
 	let middle = mainWinPosition[0] + 282 / 2 - screen.availLeft;
@@ -19,15 +19,4 @@ export const createNewFramlessAndAutoSizeWindow = () => {
 		fullscreen: false,
 		fullscreenable: false
 	});
-};
-
-export const createWindow = (params = {}) => {
-	if (params.path === '') {
-		return;
-	}
-	let wholePath = currentWindow.getURL() + params.path;
-	let win = new BrowserWindow({
-
-	});
-	win.loadURL(wholePath);
 };

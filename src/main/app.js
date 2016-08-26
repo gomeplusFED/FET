@@ -1,6 +1,7 @@
 import path from 'path';
 import { app, BrowserWindow, Tray, Menu } from 'electron';
 
+import './ipc/setting.js';
 import './plugin/download.js';
 
 import pathConfig from './config/path.config.js';

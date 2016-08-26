@@ -6,9 +6,10 @@
 		<m-bottom-menu></m-bottom-menu>
 	</div>
 </template>
-<style scoped>
+<style lang="less">
+@import '../../../assets/css/app.less';
 .main-con {
-	background-image: url('../assets/img/menu-bg.jpg');
+	background-image: url('../../../assets/img/menu-bg.jpg');
 	background-repeat: no-repeat;
 	background-size: cover;
 	height: 717px;
@@ -17,25 +18,18 @@
 }
 </style>
 <script>
-import '../window/main.js';
-
-import store from 'store';
-
-import TopMenu from './top-menu/index.vue';
-import Introduction from './introduction/index.vue';
-import Plugin from './plugins/index.vue';
-import ButtomMenu from './buttom-menu/index.vue';
-import Menu from './top-menu/menu.vue';
+import TopMenu from './top-menu.vue';
+import Introduction from './introduction.vue';
+import Plugin from './plugins.vue';
+import ButtomMenu from './buttom-menu.vue';
 
 export default {
 	name: 'Index',
-	store: store,
 	components: {
 		'm-top-menu': TopMenu,
 		'm-introduction': Introduction,
 		'm-plugin': Plugin,
-		'm-bottom-menu': ButtomMenu,
-		'm-menu': Menu
+		'm-bottom-menu': ButtomMenu
 	}
 };
 </script>

@@ -1,17 +1,21 @@
+import fs from 'fs';
 import path from 'path';
 
 import webpack from 'webpack';
 
 import baseConfig from './webpack.common.js';
-
 import env from './env.config.js';
+import { cssExtractLoaders } from '../support/common.js';
 
 const rootPath = path.join(__dirname, '../');
 
+let entrys = {};
+fs.readdirSync(path.join(rootPath, './src/render/entry')).forEach((item) => {
+	entrys[item.replace(/\.js/, '')] = path.join(rootPath, './src/render/entry', item);
+});
+
 export default {
-	entry: {
-		app: './src/render/app.js'
-	},
+	entry: entrys,
 	output: {
 		path: baseConfig.assetsRoot,
 		publicPath: baseConfig.assetsPublicPath,
@@ -21,12 +25,10 @@ export default {
 		preLoaders: [{
 			test: /\.vue$/,
 			loader: 'eslint',
-			include: rootPath,
 			exclude: path.join(rootPath, 'node_modules/')
 		}, {
 			test: /\.js$/,
 			loader: 'eslint',
-			include: rootPath,
 			exclude: path.join(rootPath, 'node_modules/')
 		}],
 		loaders: [{
@@ -35,7 +37,6 @@ export default {
 		}, {
 			test: /\.js$/,
 			loader: 'babel',
-			include: rootPath,
 			exclude: path.join(rootPath, 'node_modules/')
 		}, {
 			test: /\.json$/,
@@ -58,11 +59,7 @@ export default {
 	},
 	resolve: {
 		extensions: ['', '.js', '.vue', '.scss'],
-		alias: {
-			utils: path.join(rootPath, './src/render/util/'),
-			store: path.join(rootPath, './src/render/store/'),
-			actions: path.join(rootPath, './src/render/store/actions/')
-		}
+		alias: {}
 	},
 	eslint: {
 		formatter: require('eslint-friendly-formatter')
@@ -72,5 +69,8 @@ export default {
 		new webpack.DefinePlugin({
 			'process.env': JSON.stringify(env)
 		})
-	]
+	],
+	vue: {
+		loaders: cssExtractLoaders()
+	}
 };

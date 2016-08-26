@@ -29,7 +29,7 @@
 	position: fixed;
 	width: 100%;
 	height: 100%;
-	background-image: url('../../assets/img/menu-bg.jpg');
+	background-image: url('../../../assets/img/menu-bg.jpg');
 	background-repeat: no-repeat;
 	background-size: cover;
 	z-index: 999;
@@ -128,10 +128,11 @@
 </style>
 <script>
 import {
-	remote
+	remote,
+	ipcRenderer
 } from 'electron';
 
-import { createNewFramlessAndAutoSizeWindow } from 'utils/window.js';
+// import { createNewFramlessAndAutoSizeWindow } from 'utils/window.js';
 
 const currentWindow = remote.getCurrentWindow();
 const BrowserWindow = remote.BrowserWindow;
@@ -140,22 +141,24 @@ export default {
 	name: 'TopContextMenu',
 	props: ['show'],
 	methods: {
-		newWin(path) {
-			let wholePath = currentWindow.getURL() + path;
-			let allWindows = BrowserWindow.getAllWindows();
-			let settingWin = null;
-			allWindows.forEach((item) => {
-				if (/\/setting\//.test(item.getURL())) {
-					settingWin = item;
-					settingWin.show();
-					settingWin.focus();
-				}
-			});
-			if (settingWin === null) {
-				settingWin = createNewFramlessAndAutoSizeWindow();
-				settingWin.loadURL(wholePath);
-			}
-		}
+		// newWin(path) {
+		// 	let wholePath = currentWindow.getURL() + path;
+		// 	let allWindows = BrowserWindow.getAllWindows();
+		// 	let settingWin = null;
+		// 	allWindows.forEach((item) => {
+		// 		if (/\/setting\//.test(item.getURL())) {
+		// 			settingWin = item;
+		// 			settingWin.show();
+		// 			settingWin.focus();
+		// 		}
+		// 	});
+		// 	if (settingWin === null) {
+		// 		settingWin = createNewFramlessAndAutoSizeWindow();
+		// 		settingWin.loadURL(wholePath);
+		// 		settingWin.webContents.openDevTools();
+		// 	}
+		// 	ipcRenderer.send('setting-will-router-to', path);
+		// }
 	}
 };
 </script>

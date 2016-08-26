@@ -18,18 +18,24 @@ webpackConfig = merge(baseWebpackConfig, {
 	plugins: [
 		new webpack.optimize.OccurenceOrderPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
-		new webpack.NoErrorsPlugin(),
+		new webpack.NoErrorsPlugin()
+	]
+});
+
+Object.keys(baseWebpackConfig.entry).forEach((item) => {
+	// console.log(item);
+	webpackConfig.plugins.push(
 		new HtmlWebpackPlugin({
-			title: 'FE-Tools',
-			filename: 'index.html',
-			template: 'view/index.html',
+			filename: `${item}.html`,
+			template: `src/render/view/${item}.html`,
 			inject: true,
-			favicon: 'src/render/assets/img/icon.png'
+			chunks: [item],
+			chunksSortMode: 'dependency',
+			minify: {
+				removeComments: true
+			}
 		})
-	],
-	vue: {
-		loaders: cssExtractLoaders()
-	}
+	);
 });
 
 export default webpackConfig;

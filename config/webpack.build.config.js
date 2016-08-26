@@ -8,28 +8,22 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 import env from './env.config.js';
 import baseConfig from './webpack.common.js';
-import { cssExtractLoaders } from '../support/common.js';
 import FormatHtmlPlugin from '../support/formatHtml.js';
 import baseWebpackConfig from './webpack.base.config.js';
 
 let webpackConfig = {};
 
 webpackConfig = merge(baseWebpackConfig, {
-	vue: {
-		loaders: cssExtractLoaders({
-			extract: true
-		})
-	},
 	output: {
 		path: baseConfig.assetsRoot,
-		publicPath: './',
+		publicPath: '../',
 		filename: 'static/js/[name].[chunkhash].js',
 		chunkFilename: 'static/js/[id].[chunkhash].js'
 	},
 	plugins: [
 		new webpack.optimize.OccurenceOrderPlugin(),
 		// extract css string to file
-		new ExtractTextPlugin('static/css/[name].[contenthash].css'),
+		// new ExtractTextPlugin('static/css/[name].[contenthash].css'),
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
 			minChunks: (module, count) => {
@@ -41,33 +35,37 @@ webpackConfig = merge(baseWebpackConfig, {
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'manifest',
 			chunks: ['vendor']
-		}),
-		new HtmlWebpackPlugin({
-			title: 'FE-Tools',
-			filename: 'index.html',
-			template: 'view/index.html',
-			inject: true,
-			chunksSortMode: 'dependency',
-			minify: {
-				removeComments: true
-			},
-			favicon: 'src/render/assets/img/icon.png'
-		}),
-		new FormatHtmlPlugin()
+		})
 	]
 });
 
-if (env === 'production' || env === 'pre-production') {
-	webpackConfig.plugins.push(new webpack.DefinePlugin({
-		'process.env': {
-			NODE_ENV: '"production"'
-		}
-	}));
-	webpackConfig.plugins.push(new webpack.optimize.UglifyJsPlugin({
-		compress: {
-			warnings: false
-		}
-	}));
-}
+Object.keys(baseWebpackConfig.entry).forEach((item) => {
+	webpackConfig.plugins.push(
+		new HtmlWebpackPlugin({
+			filename: `view/${item}.html`,
+			template: `src/render/view/${item}.html`,
+			inject: true,
+			chunks: [item, 'manifest', 'vendor'],
+			chunksSortMode: 'dependency',
+			minify: {
+				removeComments: true
+			}
+		})
+	);
+});
+
+webpackConfig.plugins.push(new FormatHtmlPlugin());
+
+// for close vue dev tools
+webpackConfig.plugins.push(new webpack.DefinePlugin({
+	'process.env': {
+		NODE_ENV: '"production"'
+	}
+}));
+webpackConfig.plugins.push(new webpack.optimize.UglifyJsPlugin({
+	compress: {
+		warnings: false
+	}
+}));
 
 export default webpackConfig;
