@@ -1,22 +1,22 @@
 <template>
 	<div class="menu-con" v-show="show" transition="fade">
 		<div class="menu absolute-center">
-			<div class="menu-item plugin" @click="newWin('setting/plugin')">
+			<div class="menu-item plugin" @click="newWin('setting.html')">
 				<div class="absolute-center">
 					<i class="iconfont icon-chatouplug"></i><span>插件</span>
 				</div>
 			</div>
-			<div class="menu-item skin" @click="newWin('setting/skin')">
+			<div class="menu-item skin" @click="newWin('setting.html')">
 				<div class="absolute-center">
 					<i class="iconfont icon-skin"></i><span>换肤</span>
 				</div>
 			</div>
-			<div class="menu-item normal" @click="newWin('setting/normal')">
+			<div class="menu-item normal" @click="newWin('setting.html')">
 				<div class="absolute-center">
 					<i class="iconfont icon-set"></i><span>设置</span>
 				</div>
 			</div>
-			<div class="menu-item about" @click="newWin('setting/about')">
+			<div class="menu-item about" @click="newWin('setting.html')">
 				<div class="absolute-center">
 					<i class="iconfont icon-caidan"></i><span>关于</span>
 				</div>
@@ -132,7 +132,7 @@ import {
 	ipcRenderer
 } from 'electron';
 
-// import { createNewFramlessAndAutoSizeWindow } from 'utils/window.js';
+import { createNewFramlessAndAutoSizeWindow } from 'utils/window.js';
 
 const currentWindow = remote.getCurrentWindow();
 const BrowserWindow = remote.BrowserWindow;
@@ -141,24 +141,24 @@ export default {
 	name: 'TopContextMenu',
 	props: ['show'],
 	methods: {
-		// newWin(path) {
-		// 	let wholePath = currentWindow.getURL() + path;
-		// 	let allWindows = BrowserWindow.getAllWindows();
-		// 	let settingWin = null;
-		// 	allWindows.forEach((item) => {
-		// 		if (/\/setting\//.test(item.getURL())) {
-		// 			settingWin = item;
-		// 			settingWin.show();
-		// 			settingWin.focus();
-		// 		}
-		// 	});
-		// 	if (settingWin === null) {
-		// 		settingWin = createNewFramlessAndAutoSizeWindow();
-		// 		settingWin.loadURL(wholePath);
-		// 		settingWin.webContents.openDevTools();
-		// 	}
-		// 	ipcRenderer.send('setting-will-router-to', path);
-		// }
+		newWin(path) {
+			let wholePath = currentWindow.getURL() + path;
+			let allWindows = BrowserWindow.getAllWindows();
+			let settingWin = null;
+			// allWindows.forEach((item) => {
+			// 	if (/\/setting\//.test(item.getURL())) {
+			// 		settingWin = item;
+			// 		settingWin.show();
+			// 		settingWin.focus();
+			// 	}
+			// });
+			// if (settingWin === null) {
+			// 	settingWin = createNewFramlessAndAutoSizeWindow();
+			// 	settingWin.loadURL(wholePath);
+			// 	settingWin.webContents.openDevTools();
+			// }
+			// ipcRenderer.send('setting-will-router-to', path);
+		}
 	}
 };
 </script>

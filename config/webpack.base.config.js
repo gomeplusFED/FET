@@ -59,7 +59,9 @@ export default {
 	},
 	resolve: {
 		extensions: ['', '.js', '.vue', '.scss'],
-		alias: {}
+		alias: {
+			utils: path.join(rootPath, './src/render/util')
+		}
 	},
 	eslint: {
 		formatter: require('eslint-friendly-formatter')
