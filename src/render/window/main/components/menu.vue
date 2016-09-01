@@ -155,8 +155,7 @@ export default {
 	props: ['show'],
 	methods: {
 		newWin(view, tab) {
-			let urlObj = url.parse(currentWindow.getURL());
-			let root = urlObj.protocol + urlObj.host + '/';
+			let root = currentWindow.getURL().replace(/main\.html/, '');
 			let wholePath = root + view;
 			let screen = {};
 			for (let i in window.screen) {

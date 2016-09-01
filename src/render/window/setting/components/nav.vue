@@ -24,26 +24,38 @@
 .nav {
 	height: 100%;
 	width: 120px;
-	color: rgba(255,255,255,0.7);
-	border-right: 1px solid #181a1f;
+	color: rgba(255, 255, 255, 0.7);
+	border-right: 2px solid #181a1f;
 }
+
 .nav ul li {
 	cursor: pointer;
 	line-height: 38px;
 	box-sizing: border-box;
 	padding-left: 18px;
-	transition: all ease 0.2s;
 }
-.nav ul li.active,.nav ul li.active:hover {
+
+.nav ul li.active,
+.nav ul li.active:hover {
 	background-color: #3a3f4b;
 }
+.nav ul li.active span, .nav ul li.active:hover span{
+	color: #fff;
+}
+
 .nav ul li i {
 	margin-right: 5px;
 	font-size: 14px;
+	display: inline-block;
+	vertical-align: middle;
 }
+
 .nav ul li span {
 	font-size: 12px;
+	display: inline-block;
+	vertical-align: middle;
 }
+
 .nav ul li:hover {
 	background-color: #31363f;
 }

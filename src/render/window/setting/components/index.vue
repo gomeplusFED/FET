@@ -32,6 +32,11 @@
 	display: flex;
 	background-color: rgba(40,44,52,1);
 }
+.con .main .detail {
+	flex: 1;
+	height: 100%;
+	overflow: auto;
+}
 </style>
 <script>
 import {
@@ -49,7 +54,7 @@ export default {
 	name: 'Index',
 	data() {
 		return {
-			tab: ''
+			tab: 'plugin'
 		};
 	},
 	ready() {

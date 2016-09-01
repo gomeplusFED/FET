@@ -1,0 +1,44 @@
+.setting-detail-ul {
+    box-sizing: border-box;
+    padding: 15px 20px;
+    li {
+        margin-bottom: 10px;
+        .head {
+            color: #fff;
+            line-height: 38px;
+            font-size: 0;
+            position: relative;
+            cursor: pointer;
+            i {
+                font-size: 16px;
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 5px;
+                color: rgba(255, 255, 255, 0.7);
+            }
+            span {
+                font-weight: normal;
+                font-size: 18px;
+                display: inline-block;
+                vertical-align: middle;
+            }
+            .shouqi {
+                position: absolute;
+                right: 0;
+                font-size: 16px;
+                top: 50%;
+                margin-top: -19px;
+                transition: all ease 0.2s;
+            }
+            .shouqi:hover {
+            	color: #fff;
+            }
+            .shouqi.open {
+				transform: rotate(90deg);
+            }
+            .shouqi.close {
+            	transform: rotate(0deg);
+            }
+        }
+    }
+}
