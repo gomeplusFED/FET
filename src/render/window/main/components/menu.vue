@@ -12,7 +12,7 @@
 					<i class="iconfont icon-skin"></i><span>换肤</span>
 				</div>
 			</div>
-			<div class="menu-item normal" @click="newWin('setting.html', 'normal')">
+			<div class="menu-item setting" @click="newWin('setting.html', 'setting')">
 				<div class="absolute-center">
 					<i class="iconfont icon-set"></i><span>设置</span>
 				</div>
@@ -81,9 +81,9 @@
 	animation: skin ease 0.3s;
 }
 
-.normal {
+.setting {
 	background-color: #e5e5cb;
-	animation: normal-ani ease 0.3s;
+	animation: setting-ani ease 0.3s;
 }
 
 .about {
@@ -109,7 +109,7 @@
 	}
 }
 
-@keyframes normal-ani {
+@keyframes setting-ani {
 	0% {
 		transform: translate(-100px, 100px);
 	}
