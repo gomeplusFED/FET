@@ -1,5 +1,5 @@
 <template>
-	<h1>test</h1>
+	<h1>{{tab}}</h1>
 </template>
 <style lang="less">
 @import '../../../assets/css/app.less';

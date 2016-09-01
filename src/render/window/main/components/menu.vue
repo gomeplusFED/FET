@@ -1,5 +1,6 @@
 <template>
 	<div class="menu-con" v-show="show" transition="fade">
+		<div class="close" @click="show = !show"><i class="iconfont icon-close01"></i></div>
 		<div class="menu absolute-center">
 			<div class="menu-item plugin" @click="newWin('setting.html', 'plugin')">
 				<div class="absolute-center">
@@ -124,6 +125,19 @@
 	100% {
 		transform: translate(0, 0);
 	}
+}
+.close {
+	position: absolute;right: 8px;
+	top: 3px;
+}
+.close i {
+	font-size: 24px;
+	color: rgba(255,255,255, 0.7);
+	cursor: pointer;
+	transition: all ease 0.2s;
+}
+.close i:hover{
+	color: #fff;
 }
 </style>
 <script>
