@@ -53,7 +53,6 @@ export default {
 	props: ['tab'],
 	methods: {
 		changeTab(tab) {
-			console.log(tab);
 			this.tab = tab;
 		}
 	}

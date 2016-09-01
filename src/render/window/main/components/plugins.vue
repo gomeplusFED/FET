@@ -70,7 +70,6 @@
 .content {
 	flex: 1;
 	width: 100%;
-	/*background-color: white;*/
 	position: relative;
 	height: 100%;
 	overflow: hidden;
@@ -97,7 +96,7 @@
 	line-height: 12px;
 	display: block;
 	padding: 0 5px;
-	margin: 0 20px;
+	margin: 0 10px;
 	width: 100px;
 	border-left: 2px solid white;
 }
