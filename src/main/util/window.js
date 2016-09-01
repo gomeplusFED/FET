@@ -1,12 +1,14 @@
-import { remote, screen } from 'electron';
+import { BrowserWindow } from 'electron';
 
-const currentWindow = remote.getCurrentWindow();
-const BrowserWindow = remote.BrowserWindow;
-const app = remote.app;
-
-export const createNewFramlessAndAutoPositionWindow = () => {
-	let mainWinPosition = currentWindow.getPosition();
-	let screen = window.screen;
+export const createNewFramlessAndAutoSizeWindow = (screen) => {
+	let allWindows = BrowserWindow.getAllWindows();
+	let mainWin = null;
+	allWindows.forEach((item) => {
+		if (/\/main\.html/.test(item.getURL())) {
+			mainWin = item;
+		}
+	});
+	let mainWinPosition = mainWin.getPosition();
 	let middle = mainWinPosition[0] + 282 / 2 - screen.availLeft;
 	return new BrowserWindow({
 		x: middle >= screen.availWidth / 2 ? screen.availLeft + mainWinPosition[0] - screen.availLeft - 717 : screen.availLeft + mainWinPosition[0] - screen.availLeft + 282,
