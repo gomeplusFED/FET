@@ -100,12 +100,12 @@ export const injectAppInfo = function() {
 		let requiredFied = ['name', 'version', 'description', 'author', 'homepage', 'license'];
 		requiredFied.forEach((item) => {
 			result[item] = pkgInfo[item];
-			fs.writeFile(path.join(srcMainPath, './config/info.config.js'), jsbeautify(`export default ${JSON.stringify(result)};`, {
-				'indent_with_tabs': true,
-				'indent_size': 4,
-			}).replace(/\"/g, `'`) + '\n', (err) => {
-				resolve();
-			});
 		})
+		fs.writeFile(path.join(srcMainPath, './config/info.config.js'), jsbeautify(`export default ${JSON.stringify(result)};`, {
+			'indent_with_tabs': true,
+			'indent_size': 4,
+		}).replace(/\"/g, `'`) + '\n', (err) => {
+			resolve();
+		});
 	})
 };
