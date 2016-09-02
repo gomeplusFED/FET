@@ -2,6 +2,7 @@
 import 'shelljs/global';
 
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 
 import minimist from 'minimist';
@@ -55,6 +56,6 @@ inquirer.prompt([{
 	message: 'which arch?',
 	choices: ['ia32', 'x64', 'all']
 }]).then((answers) => {
-	packExec = answers.platform === 'win' ? `.\\node_modules\\.bin\\build --platform=${answers.platform} --arch=${answers.arch}` : `./node_modules/.bin/build --platform=${answers.platform} --arch=${answers.arch}`;
+	packExec = os.platform() === 'win32' ? `.\\node_modules\\.bin\\build --platform=${answers.platform} --arch=${answers.arch}` : `./node_modules/.bin/build --platform=${answers.platform} --arch=${answers.arch}`;
 	run();
 });
