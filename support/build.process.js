@@ -10,8 +10,6 @@ import ora from 'ora';
 import chalk from 'chalk';
 import { js as jsbeautify } from 'js-beautify';
 
-import pkgInfo from '../package.json';
-
 let srcMainPath = path.join(__dirname, '../src/main');
 let distPath = path.join(__dirname, '../dist');
 
@@ -40,10 +38,11 @@ export const generatePorductionPackageJson = function() {
 	return new Promise((resolve, reject) => {
 		let excludeField = ['scripts', 'devDependencies', 'build', 'directories'];
 		let proPackageJson = {};
+		let currentPkgInfo = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
 
-		Object.keys(pkgInfo).forEach((item) => {
+		Object.keys(currentPkgInfo).forEach((item) => {
 			if (excludeField.indexOf(item) === -1) {
-				proPackageJson[item] = pkgInfo[item];
+				proPackageJson[item] = currentPkgInfo[item];
 			}
 		});
 
@@ -55,8 +54,10 @@ export const generatePorductionPackageJson = function() {
 				delete proPackageJson.dependencies[item];
 			}
 		});
-
-		fs.writeFile(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson)), 'utf-8', function() {
+		fs.writeFile(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson), {
+			'indent_with_tabs': true,
+			'indent_size': 4,
+		}), 'utf-8', function() {
 			resolve();
 		});
 	})
@@ -86,7 +87,8 @@ export const packageApp = function(packExec) {
 // 打包 asar 文件，可供更新
 export const buildAsar = function() {
 	return new Promise((resolve, reject) => {
-		asar.createPackage(distPath, path.join(__dirname, '../asar/app.asar'), function() {
+		let currentPkgInfo = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
+		asar.createPackage(distPath, path.join(__dirname, `../asar/app-${currentPkgInfo.version}.asar`), function() {
 			console.log(chalk.green.bold('\ncreate asar success'));
 			resolve();
 		})
@@ -98,8 +100,9 @@ export const injectAppInfo = function() {
 	return new Promise((resolve, reject) => {
 		let result = {};
 		let requiredFied = ['name', 'version', 'description', 'author', 'homepage', 'license'];
+		let currentPkgInfo = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
 		requiredFied.forEach((item) => {
-			result[item] = pkgInfo[item];
+			result[item] = currentPkgInfo[item];
 		})
 		fs.writeFile(path.join(srcMainPath, './config/info.config.js'), jsbeautify(`export default ${JSON.stringify(result)};`, {
 			'indent_with_tabs': true,
