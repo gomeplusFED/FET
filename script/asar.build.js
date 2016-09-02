@@ -14,5 +14,5 @@ buildStatic()
 	}).then(() => {
 		return buildAsar();
 	}).catch((e) => {
-		console.log(e);
+		throw e;
 	});

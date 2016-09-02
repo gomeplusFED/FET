@@ -17,7 +17,7 @@ let appPath = path.join(__dirname, '../app');
 let distPath = path.join(__dirname, '../dist');
 
 // 移除 app 产出目录
-rm('-rf', appPath);
+// rm('-rf', appPath);
 
 if (!test('-e', distPath)) {
 	mkdir(distPath);
@@ -41,7 +41,7 @@ const run = function() {
 		}).then(() => {
 			return packageApp(packExec);
 		}).catch((e) => {
-			console.log(e);
+			throw e;
 		})
 };
 
