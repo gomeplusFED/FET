@@ -49,11 +49,11 @@ export const generatePorductionPackageJson = function() {
 		proPackageJson.main = './main/app.babel.js';
 
 		// delete vue production dependencies
-		Object.keys(proPackageJson.dependencies).forEach((item) => {
-			if (/vue/.test(item)) {
-				delete proPackageJson.dependencies[item];
-			}
-		});
+		// Object.keys(proPackageJson.dependencies).forEach((item) => {
+			// if (/vue/.test(item)) {
+				// delete proPackageJson.dependencies[item];
+			// }
+		// });
 		fs.writeFile(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson), {
 			'indent_with_tabs': true,
 			'indent_size': 4,
