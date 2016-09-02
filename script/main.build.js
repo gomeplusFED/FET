@@ -66,7 +66,7 @@ inquirer.prompt([{
 	let arch = '--x64=true';
 	let fixedPath = os.platform() === 'win32' ? '.\\node_modules\\.bin\\build' : './node_modules/.bin/build';
 	let release = answers.release ? '--publish=onTag' : '';
-	packExec = `${fixedPath} ${platform} ${arch} ${release}`;
+	packExec = `${fixedPath} ${platform} ${arch}`;
 	let newPkgInfo = Object.assign({}, pkinfo);
 	newPkgInfo.version = answers.version;
 	rm('-rf', path.join(appPath, answers.platform === 'all' ? '/' : answers.platform));
