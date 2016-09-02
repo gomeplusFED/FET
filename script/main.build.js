@@ -64,7 +64,9 @@ inquirer.prompt([{
 }]).then((answers) => {
 	let platform = answers.platform === 'all' ? '--mac --win' : `--${answers.platform}`;
 	let arch = '--x64=true';
-	packExec = os.platform() === 'win32' ? `.\\node_modules\\.bin\\build ${platform} ${arch}` : `./node_modules/.bin/build ${platform} ${arch}`;
+	let fixedPath = os.platform() === 'win32' ? '.\\node_modules\\.bin\\build' : './node_modules/.bin/build';
+	let release = answers.release ? '--publish=onTag' : '';
+	packExec = `${fixedPath} ${platform} ${arch} ${release}`;
 	let newPkgInfo = Object.assign({}, pkinfo);
 	newPkgInfo.version = answers.version;
 	rm('-rf', path.join(appPath, answers.platform === 'all' ? '/' : answers.platform));
