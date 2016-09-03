@@ -5,11 +5,12 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
+import chalk from 'chalk';
 import minimist from 'minimist';
 import inquirer from 'inquirer';
 import { js as jsbeautify } from 'js-beautify';
 
-import { generatePorductionPackageJson, buildStatic, copyMainFile, installModule, packageApp, injectAppInfo, buildAsar } from '../support/build.process.js';
+import { generatePorductionPackageJson, buildStatic, copyMainFile, installModule, packageApp, injectAppInfo, buildAsar, pushNewTagAndUploadQiniu } from '../support/build.process.js';
 
 import pkinfo from '../package.json';
 
@@ -25,7 +26,7 @@ if (!test('-e', distPath)) {
 
 let packExec = '';
 
-const run = function() {
+const run = function(answers) {
 	buildStatic()
 		.then(() => {
 			return generatePorductionPackageJson();
@@ -41,10 +42,16 @@ const run = function() {
 			return buildAsar();
 		}).then(() => {
 			return packageApp(packExec);
+		}).then(() => {
+			if (answers.release) {
+				return pushNewTagAndUploadQiniu(answers.version);
+			}
 		}).catch((e) => {
 			throw e;
 		})
 };
+
+function BreakSignal() { }
 
 inquirer.prompt([{
 	type: 'list',
@@ -65,15 +72,23 @@ inquirer.prompt([{
 	let platform = answers.platform === 'all' ? '--mac --win' : `--${answers.platform}`;
 	let arch = '--x64=true';
 	let fixedPath = os.platform() === 'win32' ? '.\\node_modules\\.bin\\build' : './node_modules/.bin/build';
-	let release = answers.release ? '--publish=onTag' : '';
 	packExec = `${fixedPath} ${platform} ${arch}`;
 	let newPkgInfo = Object.assign({}, pkinfo);
+	if (answers.release) {
+		let tags = exec('git tag', {silent:true}).stdout;
+		tags.split('\n').forEach((item) => {
+			if (item === `v${answers.version}`) {
+				console.log(chalk.red.bold(`\nVersion ${answers.version} has published!\n`));
+				throw new BreakSignal();
+			}
+		})
+	}
 	newPkgInfo.version = answers.version;
 	rm('-rf', path.join(appPath, answers.platform === 'all' ? '/' : answers.platform));
 	fs.writeFile(path.join(__dirname, '../package.json'), jsbeautify(`${JSON.stringify(newPkgInfo)}`, {
 		'indent_with_tabs': true,
 		'indent_size': 4,
 	}), () => {
-		run();
+		run(answers);
 	})
 });

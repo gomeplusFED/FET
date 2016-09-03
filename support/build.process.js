@@ -8,6 +8,7 @@ import asar from 'asar';
 
 import ora from 'ora';
 import chalk from 'chalk';
+import qiniu from 'qiniu';
 import { js as jsbeautify } from 'js-beautify';
 
 let srcMainPath = path.join(__dirname, '../src/main');
@@ -79,7 +80,7 @@ export const installModule = function() {
 export const packageApp = function(packExec) {
 	return new Promise((resovel, reject) => {
 		exec(packExec, (code, stdout, stderr) => {
-			console.log(chalk.green.bold('\nbuild success'));
+			console.log(chalk.green.bold('\nBuild success'));
 			resovel();
 		})
 	})
@@ -90,7 +91,7 @@ export const buildAsar = function() {
 	return new Promise((resolve, reject) => {
 		let currentPkgInfo = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
 		asar.createPackage(distPath, path.join(__dirname, `../asar/app-${currentPkgInfo.version}.asar`), function() {
-			console.log(chalk.green.bold('\ncreate asar success'));
+			console.log(chalk.green.bold('\nCreate asar success'));
 			resolve();
 		})
 	})
@@ -114,5 +115,47 @@ export const injectAppInfo = function() {
 				resolve();
 			});
 		});
+	})
+};
+
+export const pushNewTagAndUploadQiniu = function(version) {
+	return new Promise((resolve, reject) => {
+		exec(`git tag v${version}`);
+		let pushSpinner = ora('Pushing tag to github ...').start();
+		exec(`git push --tags`, {silent:true}, (e, stout) => {
+			if (e) {
+				reject(e);
+			}
+			pushSpinner.stop();
+			console.log(chalk.green.bold('Push success.'));
+			qiniu.conf.ACCESS_KEY = 'ph_x5iVvarUseCKLNyojsXy_g-0Exot_JJO1Shuu';
+			qiniu.conf.SECRET_KEY = 'NmKd311874wMvQnKPEfJyRel6uqcCnfnx4IFPHir';
+			let bucket = 'luoye';
+			let key = `app-${version}.asar`;
+
+			function uptoken(bucket, key) {
+				let putPolicy = new qiniu.rs.PutPolicy(bucket + ":" + key);
+				return putPolicy.token();
+			}
+			let token = uptoken(bucket, key);
+			let filePath = path.join(__dirname, `../asar/app-${version}.asar`);
+
+			function uploadFile(uptoken, key, localFile) {
+				let spinner = ora('Uploading asar to qiniu ...').start();
+				var extra = new qiniu.io.PutExtra();
+				qiniu.io.putFile(uptoken, key, localFile, extra, function(err, ret) {
+					if (!err) {
+						// 上传成功， 处理返回值
+						spinner.stop();
+						console.log(chalk.green.bold('Upload success.'));
+						resolve();
+					} else {
+						// 上传失败， 处理返回代码
+						reject(err);
+					}
+				});
+			}
+			uploadFile(token, key, filePath);
+		})
 	})
 };
