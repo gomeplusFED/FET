@@ -18,7 +18,9 @@ ipcMain.on('app-init', (ev) => {
 	fetch('http://7xqahl.com1.z0.glb.clouddn.com/info.json', {
 		method: 'GET',
 		headers: {
-			'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
+			'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36',
+			'pragma': 'no-cache',
+			'cache-control': 'no-cache'
 		},
 		timeout: 3000
 	}).then((res) => {

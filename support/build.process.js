@@ -162,6 +162,9 @@ export const pushNewTagAndUploadQiniu = function(version) {
 					} else {
 						spinner.stop();
 						console.log(chalk.green.bold('Upload success.'));
+						if (!test('-e', path.join(__dirname, '../temp'))) {
+							mkdir( path.join(__dirname, '../temp'));
+						}
 						fs.writeFile(path.join(__dirname, '../temp/info.json'), `{"version": "v${version}"}`, (err) => {
 							uploadFile(uptoken(bucket, 'info.json'), 'info.json', path.join(__dirname, '../temp/info.json'), () => {
 								resolve();
