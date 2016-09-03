@@ -18,7 +18,7 @@ ipcMain.on('app-init', (ev) => {
 	fetch('https://api.github.com/repos/gomeplusFED/FET/releases', {
 		method: 'GET',
 		headers: {
-			'Authorization': `Basic ${new Buffer('luoye-fe:b8fe8ebd49c3a21c8deb7ce538dcf240fa27e9b7').toString('base64')}`,
+			'Authorization': `Basic ${new Buffer('luoye-fe:aae6fbcc760f98fba79442620f26bf4127281c75').toString('base64')}`,
 			'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
 		},
 		timeout: 3000
