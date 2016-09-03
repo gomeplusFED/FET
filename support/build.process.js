@@ -11,6 +11,7 @@ import chalk from 'chalk';
 import { js as jsbeautify } from 'js-beautify';
 
 let srcMainPath = path.join(__dirname, '../src/main');
+let srcRenderPath = path.join(__dirname, '../src/render');
 let distPath = path.join(__dirname, '../dist');
 
 // 打包 render 资源
@@ -104,11 +105,14 @@ export const injectAppInfo = function() {
 		requiredFied.forEach((item) => {
 			result[item] = currentPkgInfo[item];
 		})
-		fs.writeFile(path.join(srcMainPath, './config/info.config.js'), jsbeautify(`export default ${JSON.stringify(result)};`, {
+		let info = jsbeautify(`export default ${JSON.stringify(result)};`, {
 			'indent_with_tabs': true,
 			'indent_size': 4,
-		}).replace(/\"/g, `'`) + '\n', (err) => {
-			resolve();
+		}).replace(/\"/g, `'`) + '\n';
+		fs.writeFile(path.join(srcMainPath, './config/info.config.js'), info, (err) => {
+			fs.writeFile(path.join(srcRenderPath, './config/info.config.js'), info, (err) => {
+				resolve();
+			});
 		});
 	})
 };

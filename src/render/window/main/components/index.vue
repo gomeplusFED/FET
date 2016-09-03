@@ -1,6 +1,5 @@
 <template>
 	<div class="main-con">
-		<m-init></m-init>
 		<m-top-menu></m-top-menu>
 		<m-introduction></m-introduction>
 		<m-plugin></m-plugin>
@@ -19,16 +18,14 @@
 }
 </style>
 <script>
-import Init from './init';
 import TopMenu from './top-menu.vue';
 import Introduction from './introduction.vue';
 import Plugin from './plugins.vue';
-import ButtomMenu from './buttom-menu.vue';
+import ButtomMenu from './bottom-menu.vue';
 
 export default {
 	name: 'Index',
 	components: {
-		'm-init': Init,
 		'm-top-menu': TopMenu,
 		'm-introduction': Introduction,
 		'm-plugin': Plugin,

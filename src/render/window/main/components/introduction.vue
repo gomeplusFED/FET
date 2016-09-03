@@ -10,11 +10,10 @@
 <style scoped>
 .intro-con {
 	width: 100%;
-	overflow: hidden;
 	font-size: 0;
 	padding: 10px 15px;
 	box-sizing: border-box;
-	background-color: rgba(255,255,255,0.3);
+	background-color: rgba(255, 255, 255, 0.3);
 }
 
 img {
@@ -22,13 +21,20 @@ img {
 	display: inline-block;
 	vertical-align: middle;
 }
+
 .intro {
-	display: inline-block;vertical-align: middle;color: #fff;
-	padding-left: 20px;box-sizing: border-box;
+	display: inline-block;
+	vertical-align: middle;
+	color: #fff;
+	padding-left: 20px;
+	box-sizing: border-box;
 }
+
 .intro h2 {
-	font-size: 16px;font-weight: normal;
+	font-size: 16px;
+	font-weight: normal;
 }
+
 .intro p {
 	font-size: 14px;
 }

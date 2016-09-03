@@ -1,110 +1,100 @@
 <template>
-	<div class="tools">
-		<h2>插件列表</h2>
-	</div>
-	<div class="content">
-		<div class="plugin">
-			<p>456</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123123</p>
-			<p>123</p>
-			<!-- <div class="service" v-for="item in model.data" :model="model" data-url={{item.url}} @click="openUrl($event)">{{item.title}}</div> -->
+	<div class="plugins">
+		<div class="tools">
+			<h2>插件列表</h2>
+		</div>
+		<div class="content">
+			<div class="plugin">
+				<p>456</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123123</p>
+				<p>123</p>
+				<!-- <div class="service" v-for="item in model.data" :model="model" data-url={{item.url}} @click="openUrl($event)">{{item.title}}</div> -->
+			</div>
 		</div>
 	</div>
 </template>
 <style scoped>
-.content {
+.plugins {
 	flex: 1;
-	width: 100%;
-	position: relative;
-	height: 100%;
 	overflow: hidden;
+	position: relative;
 	display: flex;
 	flex-direction: column;
-	margin-top: 30px;
+	padding-bottom: 30px;
 }
-
-.tools {
+.plugins .tools {
 	position: absolute;
-	top: 94px;
-	left: 0;
+	top: 0;
 	width: 100%;
-	height: 21px;
-	background-color: rgba(0,0,0,0.3);
-	padding-top: 9px;
-	z-index: 100;
+	background: rgba(0,0,0,0.2);
 }
-
-.tools h2 {
-	color: white;
-	height: 12px;
+.plugins .tools h2 {
+	color: #fff;
 	font-size: 12px;
-	line-height: 12px;
-	display: block;
-	padding: 0 5px;
-	margin: 0 10px;
-	width: 100px;
-	border-left: 2px solid white;
+	padding: 5px;
+	line-height: 22px;
+	box-sizing: border-box;
 }
-.plugin {
-	background-color: white;
-	padding-top: 10px;
-	overflow: auto;
+.plugins .content {
+	margin-top: 32px;
+	background-color: #fff;
 	flex: 1;
+	overflow: auto;
 }
 
 </style>
