@@ -1,7 +1,8 @@
 <template>
 	<div class="bottom">
 		<div class="status">
-			<i class="iconfont icon-gouhao" v-show="!loading"></i>
+			<i class="tip-icon iconfont icon-gouhao" v-show="!loading && !net"></i>
+			<i class="tip-icon iconfont icon-close01" v-show="!net"></i>
 			<div class="sk-circle" v-show="loading">
 				<div class="sk-circle1 sk-child"></div>
 				<div class="sk-circle2 sk-child"></div>
@@ -26,7 +27,7 @@
 	</div>
 </template>
 <style scoped>
-.icon-gouhao {
+.tip-icon {
 	font-size: 16px;
 	color: #fff;
 	display: inline-block;
@@ -41,6 +42,7 @@
 	position: fixed;
 	bottom: 0;
 	left: 0;
+	width: 100%;
 }
 
 .bottom .status {
@@ -263,15 +265,28 @@
 }
 </style>
 <script>
+import {
+	ipcRenderer
+} from 'electron';
+
 import appInfo from '../../../config/info.config.js';
 export default {
 	name: 'Bottom-Menu',
 	data() {
 		return {
 			currentVersion: appInfo.version,
-			statusStr: '正在检查更新',
-			loading: true
+			statusStr: '',
+			loading: true,
+			net: true
 		};
+	},
+	ready() {
+		ipcRenderer.send('app-init');
+		ipcRenderer.on('app-initing', (ev, args) => {
+			console.log(args);
+			this.statusStr = args.msg;
+			this.loading = args.loading;
+		});
 	}
 };
 </script>
