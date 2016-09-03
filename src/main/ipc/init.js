@@ -1,5 +1,5 @@
 import { ipcMain, BrowserWindow } from 'electron';
-// import request from 'request';
+import fetch from 'node-fetch';
 
 import env from '../config/env.config.js';
 
