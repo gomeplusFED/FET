@@ -15,6 +15,25 @@ let srcMainPath = path.join(__dirname, '../src/main');
 let srcRenderPath = path.join(__dirname, '../src/render');
 let distPath = path.join(__dirname, '../dist');
 
+qiniu.conf.ACCESS_KEY = 'ph_x5iVvarUseCKLNyojsXy_g-0Exot_JJO1Shuu';
+qiniu.conf.SECRET_KEY = 'NmKd311874wMvQnKPEfJyRel6uqcCnfnx4IFPHir';
+
+function uptoken(bucket, key) {
+	let putPolicy = new qiniu.rs.PutPolicy(bucket + ':' + key);
+	return putPolicy.token();
+}
+
+function uploadFile(uptoken, key, localFile, cb) {
+	var extra = new qiniu.io.PutExtra();
+	qiniu.io.putFile(uptoken, key, localFile, extra, function(err, ret) {
+		if (!err) {
+			cb();
+		} else {
+			cb(err);
+		}
+	});
+}
+
 // 打包 render 资源
 export const buildStatic = function() {
 	return new Promise((resolve, reject) => {
@@ -118,45 +137,38 @@ export const injectAppInfo = function() {
 	})
 };
 
+// 创建新 tag 并且推送相关文件到 七牛
 export const pushNewTagAndUploadQiniu = function(version) {
 	return new Promise((resolve, reject) => {
 		exec(`git tag v${version}`);
 		let pushSpinner = ora('Pushing tag to github ...').start();
-		exec('git commit -am "Releas new version." && git push origin master', {silent:true}, (e, stout) => {
-			exec(`git push --tags`, {silent:true}, (e, stout) => {
+		exec('git commit -am "Releas new version." && git push origin master', { silent: true }, (e, stout) => {
+			exec(`git push --tags`, { silent: true }, (e, stout) => {
 				if (e) {
 					reject(e);
 				}
 				pushSpinner.stop();
 				console.log(chalk.green.bold('Push success.'));
-				qiniu.conf.ACCESS_KEY = 'ph_x5iVvarUseCKLNyojsXy_g-0Exot_JJO1Shuu';
-				qiniu.conf.SECRET_KEY = 'NmKd311874wMvQnKPEfJyRel6uqcCnfnx4IFPHir';
+
 				let bucket = 'luoye';
 				let key = `app-${version}.asar`;
 
-				function uptoken(bucket, key) {
-					let putPolicy = new qiniu.rs.PutPolicy(bucket + ":" + key);
-					return putPolicy.token();
-				}
 				let token = uptoken(bucket, key);
 				let filePath = path.join(__dirname, `../asar/app-${version}.asar`);
-
-				function uploadFile(uptoken, key, localFile) {
-					let spinner = ora('Uploading asar to qiniu ...').start();
-					var extra = new qiniu.io.PutExtra();
-					qiniu.io.putFile(uptoken, key, localFile, extra, function(err, ret) {
-						if (!err) {
-							// 上传成功， 处理返回值
-							spinner.stop();
-							console.log(chalk.green.bold('Upload success.'));
-							resolve();
-						} else {
-							// 上传失败， 处理返回代码
-							reject(err);
-						}
-					});
-				}
-				uploadFile(token, key, filePath);
+				let spinner = ora('Uploading asar to qiniu ...').start();
+				uploadFile(token, key, filePath, (err) => {
+					if (err) {
+						reject(err);
+					} else {
+						spinner.stop();
+						console.log(chalk.green.bold('Upload success.'));
+						fs.writeFile(path.join(__dirname, '../temp/info.json'), `{"version": "v${version}"}`, (err) => {
+							uploadFile(uptoken(bucket, 'info.json'), 'info.json', path.join(__dirname, '../temp/info.json'), () => {
+								resolve();
+							});
+						});
+					}
+				});
 			})
 		})
 	})
