@@ -1,7 +1,7 @@
 <template>
 	<div class="bottom">
 		<div class="status">
-			<i class="tip-icon iconfont icon-gouhao" v-show="!loading && !net"></i>
+			<i class="tip-icon iconfont icon-gouhao" v-show="!loading && net"></i>
 			<i class="tip-icon iconfont icon-close01" v-show="!net"></i>
 			<div class="sk-circle" v-show="loading">
 				<div class="sk-circle1 sk-child"></div>
@@ -18,12 +18,12 @@
 				<div class="sk-circle12 sk-child"></div>
 			</div>
 			<span>{{statusStr}}</span>
-			<div class="restart" v-show="!loading">
+			<div class="restart" v-show="shouldUpdate">
 				<i class="iconfont icon-restart"></i>
 				<em>重启</em>
 			</div>
 		</div>
-		<div class="current-version">当前版本：{{currentVersion}}</div>
+		<div class="current-version">V {{currentVersion}}</div>
 	</div>
 </template>
 <style scoped>
@@ -277,15 +277,25 @@ export default {
 			currentVersion: appInfo.version,
 			statusStr: '',
 			loading: true,
-			net: true
+			net: true,
+			shouldUpdate: false
 		};
 	},
 	ready() {
+		// 是否有网络连接
+		if (!navigator.onLine) {
+			this.loading = false;
+			this.net = false;
+			this.statusStr = '无网络';
+			return;
+		};
 		ipcRenderer.send('app-init');
 		ipcRenderer.on('app-initing', (ev, args) => {
 			console.log(args);
 			this.statusStr = args.msg;
 			this.loading = args.loading;
+			this.shouldUpdate = args.shouldUpdate || false;
+			this.net = args.net || true;
 		});
 	}
 };
