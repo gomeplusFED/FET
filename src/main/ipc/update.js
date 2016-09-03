@@ -15,7 +15,7 @@ ipcMain.on('app-init', (ev) => {
 		msg: '正在检查更新',
 		loading: true
 	});
-	fetch('http://7xqahl.com1.z0.glb.clouddn.com/info.json', {
+	fetch('http://7xqahl.com1.z0.glb.clouddn.com/info.json?v=' + Date.now(), {
 		method: 'GET',
 		headers: {
 			'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36',
