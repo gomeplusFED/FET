@@ -7,7 +7,9 @@
 			</div>
 			<input class="input" type="text" v-model="pluginAdress" placeholder="请输入插件地址（github项目地址），回车安装" @keypress.enter="installPlugin()">
 			<div class="check-plugin" v-show="showCheck">
-				<i class="iconfont icon-loading"></i>
+				<i class="tip-icon iconfont icon-gouhao" v-show="showGouhao"></i>
+				<i class="tip-icon iconfont icon-close01" v-show="showClose"></i>
+				<i class="iconfont icon-loading" v-show="showLoading"></i>
 				<span>{{checkInfo}}</span>
 			</div>
 		</li>
@@ -69,15 +71,33 @@ export default {
 			showRecommendPlugin: true,
 			showInstalledPlugin: true,
 			showCheck: false,
+			showGouhao: false,
+			showClose: false,
+			showLoading: false,
 			checkInfo: '正在检查插件',
 			pluginAdress: ''
 		};
 	},
 	methods: {
 		installPlugin() {
+			if (!/http:/.test(this.pluginAdress)) {
+				this.checkInfo = '地址不合法';
+				this.showCheck = true;
+				this.showClose = true;
+				return;
+			}
 			ipcRenderer.send('plugin-install', {
 				path: this.pluginAdress
 			});
+		}
+	},
+	watch: {
+		pluginAdress: {
+			handler() {
+				if (this.pluginAdress === '') {
+					this.showCheck = false;
+				}
+			}
 		}
 	}
 };
