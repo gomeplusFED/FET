@@ -34,7 +34,7 @@ const currentWindow = remote.getCurrentWindow();
 export default {
 	methods: {
 		close() {
-			currentWindow.destroy();
+			currentWindow.hide();
 		}
 	}
 };
