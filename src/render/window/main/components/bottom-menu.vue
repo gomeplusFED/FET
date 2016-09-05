@@ -291,7 +291,6 @@ export default {
 		};
 		ipcRenderer.send('app-init');
 		ipcRenderer.on('app-initing', (ev, args) => {
-			console.log(args);
 			this.statusStr = args.msg;
 			this.loading = args.loading;
 			this.shouldUpdate = args.shouldUpdate || false;

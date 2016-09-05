@@ -80,7 +80,7 @@ export default {
 	},
 	methods: {
 		installPlugin() {
-			if (!/http:/.test(this.pluginAdress)) {
+			if (!/^https:\/\/github.com\//.test(this.pluginAdress)) {
 				this.checkInfo = '地址不合法';
 				this.showCheck = true;
 				this.showClose = true;
@@ -88,6 +88,13 @@ export default {
 			}
 			ipcRenderer.send('plugin-install', {
 				path: this.pluginAdress
+			});
+			ipcRenderer.on('pligin-installing', (ev, args) => {
+				this.showCheck = args.showCheck || false;
+				this.showGouhao = args.showGouhao || false;
+				this.showClose = args.showClose || false;
+				this.showLoading = args.showLoading || false;
+				this.checkInfo = args.msg || '';
 			});
 		}
 	},
