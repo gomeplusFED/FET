@@ -32,32 +32,56 @@
 		</li>
 	</ul>
 </template>
-
 <style scoped>
 .input {
-	display: block;padding: 0;
-	margin: 0;width: 100%;border: 1px solid #1c1e24;border-radius: 5px;height: 38px;line-height: 25px;background: #1e2228;
+	display: block;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	border: 1px solid #1c1e24;
+	border-radius: 5px;
+	height: 38px;
+	line-height: 25px;
+	background: #1e2228;
 	color: #fff;
 	box-sizing: border-box;
 	padding: 0 10px;
 	font-size: 14px;
 	margin-top: 10px;
 }
+
 .check-plugin {
-	color: rgba(255,255,255,0.7);
+	color: rgba(255, 255, 255, 0.7);
 	line-height: 28px;
 	font-size: 0;
 }
+
 .check-plugin i {
 	font-size: 12px;
 	line-height: 28px;
-	display: inline-block;vertical-align: middle;
+	display: inline-block;
+	vertical-align: middle;
 	margin-right: 4px;
 }
+
 .check-plugin span {
 	font-size: 12px;
 	line-height: 28px;
-	display: inline-block;vertical-align: middle;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.icon-loading {
+	animation: loading linear 1s infinite;
+}
+
+@keyframes loading {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
 </style>
 <script>

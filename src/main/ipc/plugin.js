@@ -3,20 +3,36 @@ import path from 'path';
 
 import { app, ipcMain, BrowserWindow } from 'electron';
 import fetch from 'node-fetch';
-// import unzip from 'unzip';
+import unzip from 'unzip';
+import rmdir from 'rmdir';
 
 import { formatFileSize } from '../util/common.js';
 import env from '../config/env.config.js';
 
-function BreakSignal() { }
+function BreakSignal() {}
 
 let tempWin = null;
 
 ipcMain.on('plugin-install', (ev, obj) => {
 	let pluginPath = obj.path;
-	// https://github.com/luoye-fe/amp-fet/archive/fet.zip
-	let pluginAuthor = pluginPath.match(/https:\/\/github.com\/(.*)\/(.*)/)[1];
-	let pluginName = pluginPath.match(/https:\/\/github.com\/(.*)\/(.*)/)[2];
+	let pluginAuthor;
+	let pluginName;
+	try {
+		pluginAuthor = pluginPath.match(/https:\/\/github.com\/(.*)\/(.*)/)[1];
+		pluginName = pluginPath.match(/https:\/\/github.com\/(.*)\/(.*)/)[2];
+	} catch (e) {
+		ev.sender.send('pligin-installing', {
+			showCheck: true,
+			showClose: true,
+			msg: '地址不合法'
+		});
+	}
+
+	ev.sender.send('pligin-installing', {
+		showCheck: true,
+		showLoading: true,
+		msg: '正在安装插件'
+	});
 	fetch(`${pluginPath}/archive/fet.zip`)
 		.then((res) => {
 			if (res.status === 404) {
@@ -34,11 +50,17 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				height: 0
 			});
 			tempWin.webContents.session.on('will-download', (event, item, webContents) => {
-				let pluginDownloadPath = path.join(app.getPath('userData'), 'Plugins', pluginName + '.zip');
-				if (!fs.existsSync(path.join(app.getPath('userData'), 'Plugins'))) {
-					fs.mkdirSync(path.join(app.getPath('userData'), 'Plugins'));
+				let userDataPath = app.getPath('userData');
+				let pluginContentPath = path.join(userDataPath, 'Plugins');
+				let pluginDownloadFileName = path.join(userDataPath, 'Plugins', pluginName + '.zip');
+				let pluginDownloadPath = path.join(userDataPath, 'Plugins', pluginName);
+				if (!fs.existsSync(pluginContentPath)) {
+					fs.mkdirSync(pluginContentPath);
 				}
-				item.setSavePath(pluginDownloadPath);
+				if (fs.existsSync(pluginDownloadPath)) {
+					rmdir(pluginDownloadPath);
+				}
+				item.setSavePath(pluginDownloadFileName);
 				item.on('updated', (event, state) => {
 					if (state === 'progressing') {
 						ev.sender.send('pligin-installing', {
@@ -55,14 +77,16 @@ ipcMain.on('plugin-install', (ev, obj) => {
 							showLoading: true,
 							msg: '下载完成，正在解压'
 						});
-						fs.createReadStream(pluginDownloadPath)
-							.pipe(unzip.Extract({ path: path.join(app.getPath('userData'), 'Plugins', pluginName) }))
-							.on('end', () => {
+						fs.createReadStream(pluginDownloadFileName)
+							.pipe(unzip.Extract({ path: pluginContentPath }))
+							.on('close', () => {
 								ev.sender.send('pligin-installing', {
 									showCheck: true,
 									showGouhao: true,
 									msg: '安装成功'
 								});
+								fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
+								fs.unlinkSync(pluginDownloadFileName);
 							});
 					}
 				});

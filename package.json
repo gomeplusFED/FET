@@ -33,6 +33,7 @@
 		"babel-preset-es2015": "^6.13.2",
 		"minimist": "^1.2.0",
 		"node-fetch": "^1.6.0",
+		"rmdir": "^1.2.0",
 		"unzip": "^0.1.11",
 		"vue": "^1.0.26",
 		"vue-electron": "^1.0.4",
