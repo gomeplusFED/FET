@@ -11,12 +11,14 @@ import chalk from 'chalk';
 import qiniu from 'qiniu';
 import { js as jsbeautify } from 'js-beautify';
 
+import customConfig from '../config/custom.config.js';
+
 let srcMainPath = path.join(__dirname, '../src/main');
 let srcRenderPath = path.join(__dirname, '../src/render');
 let distPath = path.join(__dirname, '../dist');
 
-qiniu.conf.ACCESS_KEY = 'ph_x5iVvarUseCKLNyojsXy_g-0Exot_JJO1Shuu';
-qiniu.conf.SECRET_KEY = 'NmKd311874wMvQnKPEfJyRel6uqcCnfnx4IFPHir';
+qiniu.conf.ACCESS_KEY = customConfig.qiniu.ACCESS_KEY;
+qiniu.conf.SECRET_KEY = customConfig.qiniu.SECRET_KEY;
 
 function uptoken(bucket, key) {
 	let putPolicy = new qiniu.rs.PutPolicy(bucket + ':' + key);
