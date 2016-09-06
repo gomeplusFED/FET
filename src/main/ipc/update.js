@@ -22,7 +22,7 @@ ipcMain.on('app-init', (ev) => {
 			'pragma': 'no-cache',
 			'cache-control': 'no-cache'
 		},
-		timeout: 3000
+		timeout: 10000
 	}).then((res) => {
 		return res.json();
 	}).then((res) => {
@@ -60,9 +60,7 @@ ipcMain.on('app-init', (ev) => {
 		}
 	}).catch((e) => {
 		ev.sender.send('app-initing', {
-			msg: '下载出错，本次更新取消',
-			loading: false,
-			net: false
+			erro: e
 		});
 	});
 });

@@ -43,6 +43,8 @@
 	bottom: 0;
 	left: 0;
 	width: 100%;
+	border-top: 1px solid #9da6b4;
+	background-color: rgba(0, 0, 0, 0.2);
 }
 
 .bottom .status {
@@ -291,6 +293,16 @@ export default {
 		};
 		ipcRenderer.send('app-init');
 		ipcRenderer.on('app-initing', (ev, args) => {
+			if (args.erro) {
+				switch (args.erro.type) {
+				case 'request-timeout':
+					this.statusStr = '下载超时';
+					this.loading = false;
+					this.net = false;
+					break;
+				}
+				return;
+			}
 			this.statusStr = args.msg;
 			this.loading = args.loading;
 			this.shouldUpdate = args.shouldUpdate || false;
