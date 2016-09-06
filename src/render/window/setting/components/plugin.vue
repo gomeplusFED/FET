@@ -102,6 +102,20 @@ export default {
 			pluginAdress: ''
 		};
 	},
+	ready() {
+		ipcRenderer.on('plugin-installing', (ev, args) => {
+			this.showCheck = args.showCheck || false;
+			this.showGouhao = args.showGouhao || false;
+			this.showClose = args.showClose || false;
+			this.showLoading = args.showLoading || false;
+			this.checkInfo = args.msg || '';
+		});
+		ipcRenderer.on('plugin-installed', (ev, args) => {
+			// this.checkInfo = '';
+			// 插件安装完成，触发插件系统更新操作
+			console.log(args);
+		});
+	},
 	methods: {
 		installPlugin() {
 			if (!/^https:\/\/github.com\//.test(this.pluginAdress)) {
@@ -112,13 +126,6 @@ export default {
 			}
 			ipcRenderer.send('plugin-install', {
 				path: this.pluginAdress
-			});
-			ipcRenderer.on('pligin-installing', (ev, args) => {
-				this.showCheck = args.showCheck || false;
-				this.showGouhao = args.showGouhao || false;
-				this.showClose = args.showClose || false;
-				this.showLoading = args.showLoading || false;
-				this.checkInfo = args.msg || '';
 			});
 		}
 	},

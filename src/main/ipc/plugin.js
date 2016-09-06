@@ -21,7 +21,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 		pluginAuthor = pluginPath.match(/https:\/\/github.com\/(.*)\/(.*)/)[1];
 		pluginName = pluginPath.match(/https:\/\/github.com\/(.*)\/(.*)/)[2];
 	} catch (e) {
-		ev.sender.send('pligin-installing', {
+		ev.sender.send('plugin-installing', {
 			showCheck: true,
 			showClose: true,
 			msg: '地址不合法'
@@ -30,7 +30,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 	}
 
 	let pluginWholeName = pluginAuthor + '~' + pluginName;
-	ev.sender.send('pligin-installing', {
+	ev.sender.send('plugin-installing', {
 		showCheck: true,
 		showLoading: true,
 		msg: '正在安装插件'
@@ -38,7 +38,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 	fetch(`${pluginPath}/archive/fet.zip`)
 		.then((res) => {
 			if (res.status === 404) {
-				ev.sender.send('pligin-installing', {
+				ev.sender.send('plugin-installing', {
 					showCheck: true,
 					showClose: true,
 					msg: '插件不存在，请检查插件地址'
@@ -51,7 +51,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				width: 0,
 				height: 0
 			});
-			tempWin.webContents.session.on('will-download', (event, item, webContents) => {
+			tempWin.webContents.session.once('will-download', (event, item, webContents) => {
 				let userDataPath = app.getPath('userData');
 				let pluginContentPath = path.join(userDataPath, 'Plugins');
 				let pluginDownloadFileName = path.join(userDataPath, 'Plugins', pluginWholeName + '.zip');
@@ -67,7 +67,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				item.setSavePath(pluginDownloadFileName);
 				item.on('updated', (event, state) => {
 					if (state === 'progressing') {
-						ev.sender.send('pligin-installing', {
+						ev.sender.send('plugin-installing', {
 							showCheck: true,
 							showLoading: true,
 							msg: `正在下载 ${formatFileSize(item.getReceivedBytes())}/${formatFileSize(item.getTotalBytes())}`
@@ -76,7 +76,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				});
 				item.once('done', (event, state) => {
 					if (state === 'completed') {
-						ev.sender.send('pligin-installing', {
+						ev.sender.send('plugin-installing', {
 							showCheck: true,
 							showLoading: true,
 							msg: '下载完成，正在解压'
@@ -84,14 +84,12 @@ ipcMain.on('plugin-install', (ev, obj) => {
 						fs.createReadStream(pluginDownloadFileName)
 							.pipe(unzip.Extract({ path: pluginContentPath }))
 							.on('close', () => {
-								ev.sender.send('pligin-installing', {
+								ev.sender.send('plugin-installing', {
 									showCheck: true,
 									showGouhao: true,
 									msg: '安装成功'
 								});
-								ev.sender.send('plugin-installed', {
-
-								});
+								ev.sender.send('plugin-installed', pluginDownloadPath);
 								fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
 								fs.unlinkSync(pluginDownloadFileName);
 							});
@@ -99,5 +97,8 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				});
 			});
 			tempWin.webContents.downloadURL(`${pluginPath}/archive/fet.zip`);
+			tempWin.on('closed', function() {
+				tempWin = null;
+			});
 		});
 });
