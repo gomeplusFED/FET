@@ -29,8 +29,40 @@
 				<span>已安装插件</span>
 				<i class="shouqi iconfont icon-caidanshouqi" :class="{'open': showInstalledPlugin}"></i>
 			</div>
-			<ul style="color: #fff;">
-				<li v-for="item in installedPluginList">{{item | json}}</li>
+			<ul class="installed-list">
+				<li v-for="(index, item) in installedPluginList">
+					<div class="top item">
+						<div class="left">
+							<a @click="openUrl('https://github.com/'+ index.split('~')[0] + '/' + item.repoName)">{{item.name}}</a>
+						</div>
+						<div class="right">
+							<i class="iconfont icon-version"></i>
+							<span>{{item.version}}</span>
+						</div>
+					</div>
+					<div class="middle item">
+						<p>{{item.desc}}</p>
+					</div>
+					<div class="bottom item">
+						<div class="left">
+							Author: <a @click="openUrl('https://github.com/' + index.split('~')[0])">{{index.split('~')[0]}}</a>
+						</div>
+						<div class="right">
+							<a href="javascript:void(0)">
+								<i class="iconfont icon-delete"></i>
+								<span>删除</span>
+							</a>
+							<a href="javascript:void(0)">
+								<i class="iconfont icon-restart"></i>
+								<span>更新</span>
+							</a>
+							<a href="javascript:void(0)">
+								<i class="iconfont icon-disable"></i>
+								<span>禁用</span>
+							</a>
+						</div>
+					</div>
+				</li>
 			</ul>
 		</li>
 	</ul>
@@ -46,7 +78,7 @@
 	height: 38px;
 	line-height: 25px;
 	background: #1e2228;
-	color: #fff;
+	color: #d7dae0;
 	box-sizing: border-box;
 	padding: 0 10px;
 	font-size: 14px;
@@ -86,6 +118,137 @@
 		transform: rotate(360deg);
 	}
 }
+
+.installed-list {}
+
+.installed-list li {
+	margin-top: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 15px 20px;
+	background-color: #333842;
+	border: 1px solid #181a1f;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.installed-list li:hover {
+	background-color: #373d48;
+}
+
+.installed-list li .item {
+	display: flex;
+}
+
+.installed-list li .item .left {
+	flex: 1;
+}
+
+.installed-list li .top {}
+
+.installed-list li .top a {
+	color: #d7dae0;
+	font-style: normal;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 26px;
+	text-decoration: none;
+}
+
+.installed-list li .top a:hover {
+	text-decoration: underline;
+}
+
+.installed-list li .top .right {
+	font-size: 0;
+}
+
+.installed-list li .top .right span {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 14px;
+	color: #9da5b4;
+}
+
+.installed-list li .top .right i {
+	display: inline-block;
+	vertical-align: middle;
+	color: #727986;
+	font-size: 12px;
+	margin-right: 3px;
+	margin-top: 3px;
+}
+
+.installed-list li .middle p {
+	font-size: 12px;
+	color: #9da5b4;
+	line-height: 26px;
+}
+
+.installed-list li .bottom .left {
+	font-size: 12px;
+	color: #727a87;
+}
+
+.installed-list li .bottom .left a {
+	font-size: 12px;
+	color: #727a87;
+	text-decoration: none;
+}
+
+.installed-list li .bottom .left a:hover {
+	text-decoration: underline;
+}
+
+.installed-list li .bottom .right {
+	font-size: 0;
+}
+
+.installed-list li .bottom .right a {
+	display: inline-block;
+	vertical-align: middle;
+	text-decoration: none;
+	font-size: 0;
+	padding: 3px 8px;
+	background: #383d49;
+	border: 1px solid #181a1f;
+	margin-left: -1px;
+	cursor: pointer;
+}
+
+.installed-list li .bottom .right a:first-child {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+.installed-list li .bottom .right a:last-child {
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+.installed-list li .bottom .right a:hover span {
+	color: #d7dae0;
+}
+
+.installed-list li .bottom .right a i {
+	margin-right: 3px;
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 12px;
+	color: #747b88;
+	line-height: 12px;
+}
+
+.installed-list li .bottom .right a:nth-child(2) i {
+	margin-top: 2px;
+}
+
+.installed-list li .bottom .right a span {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 12px;
+	color: #9da5b4;
+}
 </style>
 <script>
 import fs from 'fs';
@@ -97,8 +260,10 @@ import {
 } from 'electron';
 
 import storage from 'utils/storage.js';
+import { openUrl } from 'utils/common.js';
 
 export default {
+	name: 'Setting-Plugin',
 	data() {
 		return {
 			showRecommendPlugin: true,
@@ -159,6 +324,9 @@ export default {
 			ipcRenderer.send('plugin-install', {
 				path: this.pluginAdress
 			});
+		},
+		openUrl(path) {
+			openUrl(path);
 		}
 	},
 	watch: {
