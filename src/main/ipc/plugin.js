@@ -26,8 +26,10 @@ ipcMain.on('plugin-install', (ev, obj) => {
 			showClose: true,
 			msg: '地址不合法'
 		});
+		return;
 	}
 
+	let pluginWholeName = pluginAuthor + '~' + pluginName;
 	ev.sender.send('pligin-installing', {
 		showCheck: true,
 		showLoading: true,
@@ -52,14 +54,16 @@ ipcMain.on('plugin-install', (ev, obj) => {
 			tempWin.webContents.session.on('will-download', (event, item, webContents) => {
 				let userDataPath = app.getPath('userData');
 				let pluginContentPath = path.join(userDataPath, 'Plugins');
-				let pluginDownloadFileName = path.join(userDataPath, 'Plugins', pluginName + '.zip');
-				let pluginDownloadPath = path.join(userDataPath, 'Plugins', pluginName);
+				let pluginDownloadFileName = path.join(userDataPath, 'Plugins', pluginWholeName + '.zip');
+				let pluginDownloadPath = path.join(userDataPath, 'Plugins', pluginWholeName);
+
 				if (!fs.existsSync(pluginContentPath)) {
 					fs.mkdirSync(pluginContentPath);
 				}
 				if (fs.existsSync(pluginDownloadPath)) {
 					rmdir(pluginDownloadPath);
 				}
+
 				item.setSavePath(pluginDownloadFileName);
 				item.on('updated', (event, state) => {
 					if (state === 'progressing') {
@@ -84,6 +88,9 @@ ipcMain.on('plugin-install', (ev, obj) => {
 									showCheck: true,
 									showGouhao: true,
 									msg: '安装成功'
+								});
+								ev.sender.send('plugin-installed', {
+
 								});
 								fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
 								fs.unlinkSync(pluginDownloadFileName);
