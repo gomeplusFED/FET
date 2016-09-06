@@ -4,67 +4,9 @@
 			<h2>插件列表</h2>
 		</div>
 		<div class="content">
-			<div class="plugin">
-				<p>456</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123123</p>
-				<p>123</p>
-				<!-- <div class="service" v-for="item in model.data" :model="model" data-url={{item.url}} @click="openUrl($event)">{{item.title}}</div> -->
-			</div>
+			<ul class="plugin">
+				<li v-for="item in installedPluginList">{{item|json}}</li>
+			</ul>
 		</div>
 	</div>
 </template>
@@ -98,8 +40,24 @@
 }
 
 </style>
-<script type="text/ecmascript-6">
+<script>
+import {
+	ipcRenderer
+} from 'electron';
+
+import storage from 'utils/storage.js';
+
 export default {
-	name: 'Plugins'
+	name: 'Plugins',
+	data() {
+		return {
+			installedPluginList: storage.get('installedPlugin') || {}
+		};
+	},
+	ready() {
+		ipcRenderer.on('plugin-list-should-update', () => {
+			this.installedPluginList = storage.get('installedPlugin');
+		});
+	}
 };
 </script>

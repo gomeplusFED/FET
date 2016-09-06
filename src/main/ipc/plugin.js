@@ -89,7 +89,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 									showGouhao: true,
 									msg: '安装成功'
 								});
-								ev.sender.send('plugin-installed', pluginDownloadPath);
+								ev.sender.send('plugin-installed', pluginWholeName);
 								fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
 								fs.unlinkSync(pluginDownloadFileName);
 							});
@@ -101,4 +101,8 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				tempWin = null;
 			});
 		});
+});
+
+ipcMain.on('plugin-list-should-update', (ev) => {
+	ev.sender.send('plugin-list-should-update');
 });
