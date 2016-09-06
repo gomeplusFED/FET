@@ -33,7 +33,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 	ev.sender.send('plugin-installing', {
 		showCheck: true,
 		showLoading: true,
-		msg: '正在安装插件'
+		msg: `正在${obj.action || '安装'}插件`
 	});
 	fetch(`${pluginPath}/archive/fet.zip`)
 		.then((res) => {
@@ -87,7 +87,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 								ev.sender.send('plugin-installing', {
 									showCheck: true,
 									showGouhao: true,
-									msg: '安装成功'
+									msg: `${obj.action || '安装'}成功`
 								});
 								ev.sender.send('plugin-installed', pluginWholeName);
 								fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);

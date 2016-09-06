@@ -14,7 +14,7 @@
 				<span>设置</span>
 			</li>
 			<li :class="{active: tab === 'about'}" @click.stop="changeTab('about')">
-				<i class="iconfont icon-caidan"></i>
+				<i class="iconfont icon-about"></i>
 				<span>关于</span>
 			</li>
 		</ul>

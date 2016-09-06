@@ -5,7 +5,7 @@
 		</div>
 		<div class="content">
 			<ul class="plugin">
-				<li v-for="item in installedPluginList">{{item|json}}</li>
+				<li v-for="item in installedPluginList" v-show="item.status">{{item|json}}</li>
 			</ul>
 		</div>
 	</div>

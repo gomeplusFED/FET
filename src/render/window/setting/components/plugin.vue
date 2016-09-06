@@ -29,11 +29,11 @@
 				<span>已安装插件</span>
 				<i class="shouqi iconfont icon-caidanshouqi" :class="{'open': showInstalledPlugin}"></i>
 			</div>
-			<ul class="installed-list">
-				<li v-for="(index, item) in installedPluginList">
+			<ul class="installed-list" v-show="showInstalledPlugin" transition="fade">
+				<li v-for="(key, item) in installedPluginList">
 					<div class="top item">
 						<div class="left">
-							<a @click="openUrl('https://github.com/'+ index.split('~')[0] + '/' + item.repoName)">{{item.name}}</a>
+							<a @click="openUrl('https://github.com/'+ key.split('~')[0] + '/' + item.repoName)">{{item.name}}</a>
 						</div>
 						<div class="right">
 							<i class="iconfont icon-version"></i>
@@ -45,20 +45,20 @@
 					</div>
 					<div class="bottom item">
 						<div class="left">
-							Author: <a @click="openUrl('https://github.com/' + index.split('~')[0])">{{index.split('~')[0]}}</a>
+							Author: <a @click="openUrl('https://github.com/' + key.split('~')[0])">{{key.split('~')[0]}}</a>
 						</div>
 						<div class="right">
-							<a href="javascript:void(0)">
+							<a href="javascript:void(0)" @click="delPlugin(key)">
 								<i class="iconfont icon-delete"></i>
 								<span>删除</span>
 							</a>
-							<a href="javascript:void(0)">
+							<a href="javascript:void(0)" @click="updatePlugin(key)">
 								<i class="iconfont icon-restart"></i>
 								<span>更新</span>
 							</a>
-							<a href="javascript:void(0)">
+							<a href="javascript:void(0)" @click="togglePlugin(key)">
 								<i class="iconfont icon-disable"></i>
-								<span>禁用</span>
+								<span>{{item.status ? '禁用' : '启用'}}</span>
 							</a>
 						</div>
 					</div>
@@ -83,12 +83,15 @@
 	padding: 0 10px;
 	font-size: 14px;
 	margin-top: 10px;
+	margin-bottom: 20px;
 }
 
 .check-plugin {
 	color: rgba(255, 255, 255, 0.7);
 	line-height: 28px;
 	font-size: 0;
+	position: absolute;
+	bottom: -28px;
 }
 
 .check-plugin i {
@@ -166,7 +169,7 @@
 .installed-list li .top .right span {
 	display: inline-block;
 	vertical-align: middle;
-	font-size: 14px;
+	font-size: 12px;
 	color: #9da5b4;
 }
 
@@ -176,7 +179,7 @@
 	color: #727986;
 	font-size: 12px;
 	margin-right: 3px;
-	margin-top: 3px;
+	margin-top: 2px;
 }
 
 .installed-list li .middle p {
@@ -242,6 +245,9 @@
 .installed-list li .bottom .right a:nth-child(2) i {
 	margin-top: 2px;
 }
+.installed-list li .bottom .right a:nth-child(3) i {
+	margin-top: 2px;
+}
 
 .installed-list li .bottom .right a span {
 	display: inline-block;
@@ -295,8 +301,12 @@ export default {
 				name: pluginPkgInfo.fet.name || pluginPkgInfo.name,
 				desc: pluginPkgInfo.fet.desc || pluginPkgInfo.description,
 				entry: pluginPkgInfo.fet.entry,
-				version: pluginPkgInfo.version
+				version: pluginPkgInfo.version,
+				status: 1
 			};
+			setTimeout(() => {
+				this.showCheck = false;
+			}, 1000);
 			storage.set('installedPlugin', installedPlugin);
 			ipcRenderer.send('plugin-list-should-update');
 		});
@@ -322,11 +332,30 @@ export default {
 				return;
 			}
 			ipcRenderer.send('plugin-install', {
-				path: this.pluginAdress
+				path: this.pluginAdress,
+				action: '安装'
 			});
 		},
 		openUrl(path) {
 			openUrl(path);
+		},
+		delPlugin(key) {
+			let installedPlugin = storage.get('installedPlugin') || {};
+			delete installedPlugin[key];
+			storage.set('installedPlugin', installedPlugin);
+			ipcRenderer.send('plugin-list-should-update');
+		},
+		updatePlugin(key) {
+			ipcRenderer.send('plugin-install', {
+				path: `https://github.com/${key.split('~')[0]}/${key.split('~')[1]}`,
+				action: '更新'
+			});
+		},
+		togglePlugin(key) {
+			let installedPlugin = storage.get('installedPlugin') || {};
+			installedPlugin[key].status = installedPlugin[key].status ? 0 : 1;
+			storage.set('installedPlugin', installedPlugin);
+			ipcRenderer.send('plugin-list-should-update');
 		}
 	},
 	watch: {
