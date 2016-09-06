@@ -302,7 +302,9 @@ export default {
 				desc: pluginPkgInfo.fet.desc || pluginPkgInfo.description,
 				entry: pluginPkgInfo.fet.entry,
 				version: pluginPkgInfo.version,
-				status: 1
+				status: 1,
+				icon: pluginPkgInfo.fet.icon || '',
+				bg: pluginPkgInfo.fet.bg || ''
 			};
 			setTimeout(() => {
 				this.showCheck = false;
@@ -356,15 +358,6 @@ export default {
 			installedPlugin[key].status = installedPlugin[key].status ? 0 : 1;
 			storage.set('installedPlugin', installedPlugin);
 			ipcRenderer.send('plugin-list-should-update');
-		}
-	},
-	watch: {
-		pluginAdress: {
-			handler() {
-				if (this.pluginAdress === '') {
-					this.showCheck = false;
-				}
-			}
 		}
 	}
 };
