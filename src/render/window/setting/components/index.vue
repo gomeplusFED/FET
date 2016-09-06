@@ -27,11 +27,13 @@
 	height: 100%;
 	position: absolute;
 }
+
 .con .main {
 	flex: 1;
 	display: flex;
-	background-color: rgba(40,44,52,1);
+	background-color: rgba(40, 44, 52, 1);
 }
+
 .con .main .detail {
 	flex: 1;
 	height: 100%;
@@ -40,6 +42,7 @@
 </style>
 <script>
 import {
+	remote,
 	ipcRenderer
 } from 'electron';
 
@@ -58,6 +61,8 @@ export default {
 		};
 	},
 	ready() {
+		const currentWindow = remote.getCurrentWindow();
+		currentWindow.removeAllListeners();
 		ipcRenderer.on('setting-opened-tab', (ev, argvs) => {
 			this.tab = argvs;
 		});

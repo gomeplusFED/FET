@@ -55,7 +55,7 @@ export default {
 		};
 	},
 	ready() {
-		ipcRenderer.on('plugin-list-should-update', () => {
+		ipcRenderer.on('plugin-list-should-update', (ev) => {
 			this.installedPluginList = storage.get('installedPlugin');
 		});
 	}

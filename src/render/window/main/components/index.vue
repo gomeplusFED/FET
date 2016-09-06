@@ -18,6 +18,10 @@
 }
 </style>
 <script>
+import {
+	remote
+} from 'electron';
+
 import TopMenu from './top-menu.vue';
 import Introduction from './introduction.vue';
 import Plugin from './plugins.vue';
@@ -30,6 +34,10 @@ export default {
 		'm-introduction': Introduction,
 		'm-plugin': Plugin,
 		'm-bottom-menu': ButtomMenu
+	},
+	ready() {
+		const currentWindow = remote.getCurrentWindow();
+		currentWindow.removeAllListeners();
 	}
 };
 </script>

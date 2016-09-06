@@ -104,5 +104,8 @@ ipcMain.on('plugin-install', (ev, obj) => {
 });
 
 ipcMain.on('plugin-list-should-update', (ev) => {
-	ev.sender.send('plugin-list-should-update');
+	let allWindows = BrowserWindow.getAllWindows();
+	allWindows.forEach((item) => {
+		item.webContents.send('plugin-list-should-update');
+	});
 });
