@@ -1,6 +1,6 @@
 export default {
 	'name': 'fet-tools',
-	'version': '0.0.5',
+	'version': '0.0.6',
 	'description': '前端工具集',
 	'author': [{
 		'name': 'luoye',
