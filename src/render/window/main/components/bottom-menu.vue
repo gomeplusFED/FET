@@ -18,7 +18,7 @@
 				<div class="sk-circle12 sk-child"></div>
 			</div>
 			<span>{{statusStr}}</span>
-			<div class="restart" v-show="shouldUpdate">
+			<div class="restart" v-show="shouldUpdate" @click="restartApp()">
 				<i class="iconfont icon-restart"></i>
 				<em>重启</em>
 			</div>
@@ -268,7 +268,8 @@
 </style>
 <script>
 import {
-	ipcRenderer
+	ipcRenderer,
+	remote
 } from 'electron';
 
 import appInfo from '../../../config/info.config.js';
@@ -308,6 +309,11 @@ export default {
 			this.shouldUpdate = args.shouldUpdate || false;
 			this.net = args.net || true;
 		});
+	},
+	methods: {
+		restartApp() {
+			ipcRenderer.send('app-restart');
+		}
 	}
 };
 </script>
