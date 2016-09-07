@@ -27,7 +27,7 @@ export const createWindowForPlugin = (params) => {
 	let resultParams = {};
 	if (params.size === 'full') {
 		resultParams.width = params.screen.availWidth;
-		resultParams.height = params.screen.availWidth;
+		resultParams.height = params.screen.availHeight;
 	} else if (params.size === 'custom') {
 		resultParams.width = params.width;
 		resultParams.height = params.height;
