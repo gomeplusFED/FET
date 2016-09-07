@@ -7,12 +7,14 @@ import unzip from 'unzip';
 import rmdir from 'rmdir';
 
 import { formatFileSize } from '../util/common.js';
+import { createWindowForPlugin } from '../util/window.js';
 import env from '../config/env.config.js';
 
 function BreakSignal() {}
 
 let tempWin = null;
 
+// 安装插件
 ipcMain.on('plugin-install', (ev, obj) => {
 	let pluginPath = obj.path;
 	let pluginAuthor;
@@ -103,9 +105,37 @@ ipcMain.on('plugin-install', (ev, obj) => {
 		});
 });
 
+// 插件安装或更新后通知所有页面
 ipcMain.on('plugin-list-should-update', (ev) => {
 	let allWindows = BrowserWindow.getAllWindows();
 	allWindows.forEach((item) => {
 		item.webContents.send('plugin-list-should-update');
+	});
+});
+
+// 打开插件
+ipcMain.on('plugin-start', (ev, args) => {
+	let currentWin = null;
+	let entry = null;
+	if (/^http/.test(args.entry)) {
+		entry = args.entry;
+	} else {
+		entry = `file://${path.join(app.getPath('userData'), 'Plugins', args.key, args.entry)}`;
+	}
+	let allWindows = BrowserWindow.getAllWindows();
+	allWindows.forEach((item) => {
+		let entryRegex = new RegExp(item.getURL());
+		if (entryRegex.test(entry)) {
+			currentWin = item;
+			currentWin.show();
+			currentWin.focus();
+		}
+	});
+	if (currentWin === null) {
+		currentWin = createWindowForPlugin(args);
+		currentWin.loadURL(entry);
+	}
+	currentWin.on('close', () => {
+		currentWin = null;
 	});
 });

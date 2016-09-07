@@ -5,13 +5,15 @@
 		</div>
 		<div class="content">
 			<ul class="plugin">
-				<li v-for="(index, item) in installedPluginList" v-show="item.status">
-					<div class="lump" :style="{'backgroundColor': colorList[index]}"></div>
-					<div class="menu"></div>
-					<div class="top item">
+				<li v-for="(key, item) in installedPluginList" v-show="item.status" @click.stop="startPlugin(key, item)">
+					<div class="lump" :style="{'backgroundColor': colorList[key]}"></div>
+					<!-- <div class="menu-icon">
+						<i class="iconfont icon-arrowdown"></i>
+					</div> -->
+					<div class="item">
 						<div class="avatar left">
-							<p v-show="!item.icon" :style="{'backgroundColor': colorList[index]}">{{item.name[0].toUpperCase()}}</p>
-							<img :src="avatar[index]" v-show="item.icon">
+							<p v-show="!item.icon" :style="{'backgroundColor': colorList[key]}">{{item.name[0].toUpperCase()}}</p>
+							<img :src="avatar[key]" v-show="item.icon">
 						</div>
 						<div class="detail right">
 							<h2>{{item.name}}</h2>
@@ -64,10 +66,6 @@
 	cursor: pointer;
 }
 
-.plugins .content .plugin li:last-child {
-	border-bottom: none;
-}
-
 .plugins .content .plugin li:hover .lump {
 	opacity: 1;
 }
@@ -102,6 +100,9 @@
 	color: #fff;
 	text-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
 }
+.plugins .content .plugin li .item .left img{
+	display: block;width: 45px;height: 45px;border-radius: 50%;
+}
 
 .plugins .content .plugin li .item .right {
 	flex: 1;
@@ -116,6 +117,16 @@
 .plugins .content .plugin li .item .right p {
 	font-size: 12px;
 	color: #d7dae0;
+}
+.menu-icon {
+	position: absolute;color: #fff;
+	right: 20px;
+	top: 15px;font-size: 12px;
+	opacity: 0;
+	transition: all ease 0.2s;
+}
+.plugins .content .plugin li:hover .menu-icon {
+	opacity: 1;
 }
 </style>
 <script>
@@ -171,6 +182,17 @@ export default {
 					Vue.set(this.avatar, item, image.toDataURL());
 				}
 			});
+		},
+		startPlugin(key, plugin) {
+			let screen = {};
+			for (let i in window.screen) {
+				screen[i] = window.screen[i];
+			}
+			let pluginDetail = Object.assign({
+				key: key,
+				screen: screen
+			}, plugin);
+			ipcRenderer.send('plugin-start', pluginDetail);
 		}
 	},
 	wathc: {
