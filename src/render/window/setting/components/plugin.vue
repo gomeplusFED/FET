@@ -306,16 +306,12 @@ export default {
 			// 插件安装完成，触发插件系统更新操作
 			let installedPlugin = storage.get('installedPlugin') || {};
 			let pluginPkgInfo = JSON.parse(fs.readFileSync(path.join(this.userDataPath, 'Plugins', args, 'package.json')));
-			installedPlugin[args] = {
+			installedPlugin[args] = Object.assign({
 				repoName: pluginPkgInfo.name,
 				name: pluginPkgInfo.fet.name || pluginPkgInfo.name,
 				desc: pluginPkgInfo.fet.desc || pluginPkgInfo.description,
-				entry: pluginPkgInfo.fet.entry,
-				version: pluginPkgInfo.version,
-				status: 1,
-				icon: pluginPkgInfo.fet.icon || '',
-				bg: pluginPkgInfo.fet.bg || ''
-			};
+				status: 1
+			}, pluginPkgInfo.fet);
 			setTimeout(() => {
 				this.showCheck = false;
 			}, 1000);
