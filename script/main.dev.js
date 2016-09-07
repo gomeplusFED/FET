@@ -16,5 +16,5 @@ console.log(chalk.cyan.bold('\nProcessing start electron dev main process ... \n
 
 injectAppInfo()
 	.then(() => {
-		exec(`${customConfig.electron.path} src/main/app.babel.js --debug=${customConfig.electron.port} --env=dev`);
+		exec(`${customConfig.electron.path} src/main/app.babel.js --debug=${customConfig.electron.debugPort} --env=dev`);
 	})
