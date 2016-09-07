@@ -131,7 +131,6 @@ ipcMain.on('plugin-start', (ev, args) => {
 	let allWindows = BrowserWindow.getAllWindows();
 	allWindows.forEach((item) => {
 		let entryRegex = new RegExp(item.getURL());
-		console.log(entryRegex.test(entry));
 		if (entryRegex.test(entry)) {
 			currentWin = item;
 			currentWin.show();
