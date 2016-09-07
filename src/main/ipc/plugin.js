@@ -92,6 +92,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 								showGouhao: true,
 								msg: `${obj.action || '安装'}成功`
 							});
+							tempWin.close();
 							ev.sender.send('plugin-installed', pluginWholeName);
 							fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
 							fs.unlinkSync(pluginDownloadFileName);
@@ -130,6 +131,7 @@ ipcMain.on('plugin-start', (ev, args) => {
 	let allWindows = BrowserWindow.getAllWindows();
 	allWindows.forEach((item) => {
 		let entryRegex = new RegExp(item.getURL());
+		console.log(entryRegex.test(entry));
 		if (entryRegex.test(entry)) {
 			currentWin = item;
 			currentWin.show();
