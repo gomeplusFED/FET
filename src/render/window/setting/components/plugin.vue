@@ -286,6 +286,16 @@ export default {
 	},
 	ready() {
 		ipcRenderer.on('plugin-installing', (ev, args) => {
+			if (args.erro) {
+				switch (args.erro.type) {
+				case 'request-timeout':
+					this.showCheck = true;
+					this.checkInfo = '下载超时';
+					this.showClose = true;
+					break;
+				}
+				return;
+			}
 			this.showCheck = args.showCheck || false;
 			this.showGouhao = args.showGouhao || false;
 			this.showClose = args.showClose || false;

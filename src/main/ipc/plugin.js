@@ -4,7 +4,7 @@ import path from 'path';
 import { app, ipcMain, BrowserWindow } from 'electron';
 import fetch from 'node-fetch';
 import unzip from 'unzip';
-import rmdir from 'rmdir';
+import { removeSync as rmdir } from 'fs-extra';
 
 import { formatFileSize } from '../util/common.js';
 import { createWindowForPlugin } from '../util/window.js';
@@ -37,72 +37,77 @@ ipcMain.on('plugin-install', (ev, obj) => {
 		showLoading: true,
 		msg: `正在${obj.action || '安装'}插件`
 	});
-	fetch(`${pluginPath}/archive/fet.zip`)
-		.then((res) => {
-			if (res.status === 404) {
-				ev.sender.send('plugin-installing', {
-					showCheck: true,
-					showClose: true,
-					msg: '插件不存在，请检查插件地址'
-				});
-				throw new BreakSignal();
+	fetch(`${pluginPath}/archive/fet.zip`, {
+		timeout: 10000
+	}).then((res) => {
+		if (res.status === 404) {
+			ev.sender.send('plugin-installing', {
+				showCheck: true,
+				showClose: true,
+				msg: '插件不存在，请检查插件地址'
+			});
+			throw new BreakSignal();
+		}
+	})
+	.then(() => {
+		tempWin = new BrowserWindow({
+			width: 0,
+			height: 0
+		});
+		tempWin.webContents.session.once('will-download', (event, item, webContents) => {
+			let userDataPath = app.getPath('userData');
+			let pluginContentPath = path.join(userDataPath, 'Plugins');
+			let pluginDownloadFileName = path.join(userDataPath, 'Plugins', pluginWholeName + '.zip');
+			let pluginDownloadPath = path.join(userDataPath, 'Plugins', pluginWholeName);
+
+			if (!fs.existsSync(pluginContentPath)) {
+				fs.mkdirSync(pluginContentPath);
 			}
-		})
-		.then(() => {
-			tempWin = new BrowserWindow({
-				width: 0,
-				height: 0
+			if (fs.existsSync(pluginDownloadPath)) {
+				rmdir(pluginDownloadPath);
+			}
+
+			item.setSavePath(pluginDownloadFileName);
+			item.on('updated', (event, state) => {
+				if (state === 'progressing') {
+					ev.sender.send('plugin-installing', {
+						showCheck: true,
+						showLoading: true,
+						msg: `正在下载 ${formatFileSize(item.getReceivedBytes())}/${formatFileSize(item.getTotalBytes())}`
+					});
+				}
 			});
-			tempWin.webContents.session.once('will-download', (event, item, webContents) => {
-				let userDataPath = app.getPath('userData');
-				let pluginContentPath = path.join(userDataPath, 'Plugins');
-				let pluginDownloadFileName = path.join(userDataPath, 'Plugins', pluginWholeName + '.zip');
-				let pluginDownloadPath = path.join(userDataPath, 'Plugins', pluginWholeName);
-
-				if (!fs.existsSync(pluginContentPath)) {
-					fs.mkdirSync(pluginContentPath);
-				}
-				if (fs.existsSync(pluginDownloadPath)) {
-					rmdir(pluginDownloadPath);
-				}
-
-				item.setSavePath(pluginDownloadFileName);
-				item.on('updated', (event, state) => {
-					if (state === 'progressing') {
-						ev.sender.send('plugin-installing', {
-							showCheck: true,
-							showLoading: true,
-							msg: `正在下载 ${formatFileSize(item.getReceivedBytes())}/${formatFileSize(item.getTotalBytes())}`
-						});
-					}
-				});
-				item.once('done', (event, state) => {
-					if (state === 'completed') {
-						ev.sender.send('plugin-installing', {
-							showCheck: true,
-							showLoading: true,
-							msg: '下载完成，正在解压'
-						});
-						fs.createReadStream(pluginDownloadFileName)
-							.pipe(unzip.Extract({ path: pluginContentPath }))
-							.on('close', () => {
-								ev.sender.send('plugin-installing', {
-									showCheck: true,
-									showGouhao: true,
-									msg: `${obj.action || '安装'}成功`
-								});
-								ev.sender.send('plugin-installed', pluginWholeName);
-								fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
-								fs.unlinkSync(pluginDownloadFileName);
+			item.once('done', (event, state) => {
+				if (state === 'completed') {
+					ev.sender.send('plugin-installing', {
+						showCheck: true,
+						showLoading: true,
+						msg: '下载完成，正在解压'
+					});
+					fs.createReadStream(pluginDownloadFileName)
+						.pipe(unzip.Extract({ path: pluginContentPath }))
+						.on('close', () => {
+							ev.sender.send('plugin-installing', {
+								showCheck: true,
+								showGouhao: true,
+								msg: `${obj.action || '安装'}成功`
 							});
-					}
-				});
-			});
-			tempWin.webContents.downloadURL(`${pluginPath}/archive/fet.zip`);
-			tempWin.on('closed', function() {
-				tempWin = null;
+							ev.sender.send('plugin-installed', pluginWholeName);
+							fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
+							fs.unlinkSync(pluginDownloadFileName);
+						});
+				}
 			});
 		});
+		tempWin.webContents.downloadURL(`${pluginPath}/archive/fet.zip`);
+		tempWin.on('closed', function() {
+			tempWin = null;
+		});
+	}).catch((e) => {
+		ev.sender.send('plugin-installing', {
+			erro: e
+		});
+	});
 });
 
 // 插件安装或更新后通知所有页面
