@@ -37,7 +37,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 		showLoading: true,
 		msg: `正在${obj.action || '安装'}插件`
 	});
-	fetch(`${pluginPath}/archive/fet.zip`, {
+	fetch(`https://raw.githubusercontent.com/${pluginAuthor}/${pluginName}/fet/package.json`, {
 		timeout: 10000
 	}).then((res) => {
 		if (res.status === 404) {
