@@ -20,6 +20,7 @@
 	line-height: 32px;
 	position: absolute;
 	right: 10px;
+	-webkit-app-region: no-drag;
 }
 .head i:hover{
 	color: #fff;
