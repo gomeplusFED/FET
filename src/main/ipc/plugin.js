@@ -37,7 +37,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 		showLoading: true,
 		msg: `正在${obj.action || '安装'}插件`
 	});
-	fetch(`${pluginPath}/archive/fet.zip`, {
+	fetch(`https://raw.githubusercontent.com/${pluginAuthor}/${pluginName}/fet/package.json`, {
 		timeout: 10000
 	}).then((res) => {
 		if (res.status === 404) {
@@ -52,7 +52,8 @@ ipcMain.on('plugin-install', (ev, obj) => {
 	.then(() => {
 		tempWin = new BrowserWindow({
 			width: 0,
-			height: 0
+			height: 0,
+			show: false
 		});
 		tempWin.webContents.session.once('will-download', (event, item, webContents) => {
 			let userDataPath = app.getPath('userData');
@@ -134,14 +135,10 @@ ipcMain.on('plugin-start', (ev, args) => {
 		if (entryRegex.test(entry)) {
 			currentWin = item;
 			currentWin.show();
-			currentWin.focus();
 		}
 	});
 	if (currentWin === null) {
 		currentWin = createWindowForPlugin(args);
 		currentWin.loadURL(entry);
 	}
-	currentWin.on('close', () => {
-		currentWin = null;
-	});
 });

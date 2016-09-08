@@ -16,7 +16,8 @@ let browserOptions = {
 	resizable: false,
 	maximizable: false,
 	fullscreen: false,
-	fullscreenable: false
+	fullscreenable: false,
+	show: false
 };
 
 if (process.platform === 'win32') {
@@ -55,6 +56,10 @@ const createWindow = function() {
 		initTray();
 	}
 
+	mainWindow.webContents.on('did-finish-load', () => {
+		mainWindow.show();
+	});
+
 	if (env === 'dev') {
 		mainWindow.loadURL(pathConfig.renderPath.dev);
 		mainWindow.webContents.openDevTools();
@@ -65,14 +70,9 @@ const createWindow = function() {
 		mainWindow.loadURL(pathConfig.renderPath.production);
 	}
 	mainWindow.on('close', function(e) {
-		if (process.platform === 'drawin') {
-			e.preventDefault();
-			mainWindow.hide();
-		}
-	});
-
-	mainWindow.on('closed', function() {
-		mainWindow = null;
+		// mainWindow = null;
+		e.preventDefault();
+		mainWindow.hide();
 	});
 };
 
@@ -80,6 +80,7 @@ app.on('ready', () => {
 	createWindow();
 });
 
-app.on('activate', (ev, hasVisibleWindows) => {
-	mainWindow === null ? createWindow() : mainWindow.show();
+app.on('activate', (e) => {
+	e.preventDefault();
+	mainWindow.show();
 });
