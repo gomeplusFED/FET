@@ -70,9 +70,9 @@ const createWindow = function() {
 		mainWindow.loadURL(pathConfig.renderPath.production);
 	}
 	mainWindow.on('close', function(e) {
-		// mainWindow = null;
-		e.preventDefault();
-		mainWindow.hide();
+		mainWindow = null;
+		// e.preventDefault();
+		// mainWindow.hide();
 	});
 };
 
@@ -80,7 +80,7 @@ app.on('ready', () => {
 	createWindow();
 });
 
-app.on('activate', (e) => {
-	e.preventDefault();
-	mainWindow.show();
-});
+// app.on('activate', (e) => {
+// 	e.preventDefault();
+// 	mainWindow.show();
+// });
