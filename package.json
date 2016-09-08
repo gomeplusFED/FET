@@ -65,7 +65,6 @@
 		"json-loader": "^0.5.4",
 		"less": "^2.7.1",
 		"less-loader": "^2.2.3",
-		"minimist": "^1.2.0",
 		"ora": "^0.3.0",
 		"qiniu": "^6.1.11",
 		"shelljs": "^0.7.3",

@@ -25,9 +25,6 @@ ipcMain.on('setting-will-open', (ev, obj) => {
 			webContents.send('setting-opened-tab', obj.argvs);
 		});
 	}
-	settingWin.on('close', () => {
-		settingWin = null;
-	});
 
 	if (env === 'dev') {
 		settingWin.webContents.openDevTools();

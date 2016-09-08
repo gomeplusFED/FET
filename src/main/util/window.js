@@ -10,7 +10,8 @@ export const createNewFramlessAndAutoSizeWindow = (screen) => {
 	});
 	let mainWinPosition = mainWin.getPosition();
 	let middle = mainWinPosition[0] + 282 / 2 - screen.availLeft;
-	return new BrowserWindow({
+	let currentWin = null;
+	currentWin = new BrowserWindow({
 		x: middle >= screen.availWidth / 2 ? screen.availLeft + mainWinPosition[0] - screen.availLeft - 717 : screen.availLeft + mainWinPosition[0] - screen.availLeft + 282,
 		y: mainWinPosition[1],
 		center: true,
@@ -19,8 +20,16 @@ export const createNewFramlessAndAutoSizeWindow = (screen) => {
 		width: 717,
 		height: 717,
 		fullscreen: false,
-		fullscreenable: false
+		fullscreenable: false,
+		show: false
 	});
+	currentWin.webContents.on('did-finish-load', () => {
+		currentWin.show();
+	});
+	currentWin.on('close', function(e) {
+		currentWin = null;
+	});
+	return currentWin;
 };
 
 export const createWindowForPlugin = (params) => {
@@ -38,5 +47,13 @@ export const createWindowForPlugin = (params) => {
 	} else {
 		resultParams.center = true;
 	}
-	return new BrowserWindow(resultParams);
+	let currentWin = null;
+	currentWin = new BrowserWindow(resultParams);
+	currentWin.webContents.on('did-finish-load', () => {
+		currentWin.show();
+	});
+	currentWin.on('close', function(e) {
+		currentWin = null;
+	});
+	return currentWin;
 };

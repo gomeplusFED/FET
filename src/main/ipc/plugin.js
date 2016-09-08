@@ -52,7 +52,8 @@ ipcMain.on('plugin-install', (ev, obj) => {
 	.then(() => {
 		tempWin = new BrowserWindow({
 			width: 0,
-			height: 0
+			height: 0,
+			show: false
 		});
 		tempWin.webContents.session.once('will-download', (event, item, webContents) => {
 			let userDataPath = app.getPath('userData');
@@ -134,14 +135,10 @@ ipcMain.on('plugin-start', (ev, args) => {
 		if (entryRegex.test(entry)) {
 			currentWin = item;
 			currentWin.show();
-			currentWin.focus();
 		}
 	});
 	if (currentWin === null) {
 		currentWin = createWindowForPlugin(args);
 		currentWin.loadURL(entry);
 	}
-	currentWin.on('close', () => {
-		currentWin = null;
-	});
 });
