@@ -310,7 +310,8 @@ export default {
 				repoName: pluginPkgInfo.name,
 				name: pluginPkgInfo.fet.name || pluginPkgInfo.name,
 				desc: pluginPkgInfo.fet.desc || pluginPkgInfo.description,
-				status: 1
+				status: 1,
+				version: pluginPkgInfo.version
 			}, pluginPkgInfo.fet);
 			setTimeout(() => {
 				this.showCheck = false;
