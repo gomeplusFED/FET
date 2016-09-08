@@ -245,6 +245,7 @@
 .installed-list li .bottom .right a:nth-child(2) i {
 	margin-top: 2px;
 }
+
 .installed-list li .bottom .right a:nth-child(3) i {
 	margin-top: 2px;
 }
@@ -257,7 +258,6 @@
 }
 </style>
 <script>
-import fs from 'fs';
 import path from 'path';
 
 import {
@@ -266,7 +266,9 @@ import {
 } from 'electron';
 
 import storage from 'utils/storage.js';
-import { openUrl } from 'utils/common.js';
+import {
+	openUrl
+} from 'utils/common.js';
 
 export default {
 	name: 'Setting-Plugin',
@@ -304,9 +306,10 @@ export default {
 		});
 		ipcRenderer.on('plugin-installed', (ev, args) => {
 			// 插件安装完成，触发插件系统更新操作
+			let pluginName = args.pluginName;
+			let pluginPkgInfo = args.pluginPkgInfo;
 			let installedPlugin = storage.get('installedPlugin') || {};
-			let pluginPkgInfo = JSON.parse(fs.readFileSync(path.join(this.userDataPath, 'Plugins', args, 'package.json')));
-			installedPlugin[args] = Object.assign({
+			installedPlugin[pluginName] = Object.assign({
 				repoName: pluginPkgInfo.name,
 				name: pluginPkgInfo.fet.name || pluginPkgInfo.name,
 				desc: pluginPkgInfo.fet.desc || pluginPkgInfo.description,

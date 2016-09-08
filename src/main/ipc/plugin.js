@@ -94,9 +94,12 @@ ipcMain.on('plugin-install', (ev, obj) => {
 								msg: `${obj.action || '安装'}成功`
 							});
 							tempWin.close();
-							ev.sender.send('plugin-installed', pluginWholeName);
 							fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
 							fs.unlinkSync(pluginDownloadFileName);
+							ev.sender.send('plugin-installed', {
+								pluginName: pluginWholeName,
+								pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
+							});
 						});
 				}
 			});
