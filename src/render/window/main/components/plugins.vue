@@ -136,7 +136,6 @@ import {
 	nativeImage
 } from 'electron';
 
-import fs from 'fs';
 import path from 'path';
 
 import Vue from 'vue';

@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { shell } from 'electron';
 
 export const openUrl = (url) => {
