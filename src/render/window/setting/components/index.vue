@@ -61,8 +61,6 @@ export default {
 		};
 	},
 	ready() {
-		const currentWindow = remote.getCurrentWindow();
-		currentWindow.removeAllListeners();
 		ipcRenderer.on('setting-opened-tab', (ev, argvs) => {
 			this.tab = argvs;
 		});

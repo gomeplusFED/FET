@@ -34,10 +34,6 @@ export default {
 		'm-introduction': Introduction,
 		'm-plugin': Plugin,
 		'm-bottom-menu': ButtomMenu
-	},
-	ready() {
-		const currentWindow = remote.getCurrentWindow();
-		currentWindow.removeAllListeners();
 	}
 };
 </script>
