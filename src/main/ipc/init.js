@@ -49,7 +49,8 @@ ipcMain.on('app-init', (ev) => {
 			}
 			tempWin = new BrowserWindow({
 				width: 0,
-				height: 0
+				height: 0,
+				show: false
 			});
 			tempWin.webContents.session.on('will-download', (event, item, webContents) => {
 				item.setSavePath(asarFileName);
