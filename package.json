@@ -95,6 +95,13 @@
 				"y": 250,
 				"type": "file"
 			}]
+		},
+		"win": {
+			"target": ["nsis"],
+			"iconUrl": "https://github.com/gomeplusFED/FET/blob/master/build/icon.ico?raw=true"
+		},
+		"nsis": {
+			"runAfterFinish": false
 		}
 	},
 	"directories": {
