@@ -153,6 +153,11 @@ const currentWindow = remote.getCurrentWindow();
 export default {
 	name: 'TopContextMenu',
 	props: ['show'],
+	ready() {
+		ipcRenderer.on('setting-will-open-from-main-process', () => {
+			this.newWin('setting.html', 'plugin');
+		});
+	},
 	methods: {
 		newWin(view, tab) {
 			let root = currentWindow.getURL().replace(/main\.html/, '');

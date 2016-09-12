@@ -33,15 +33,22 @@ if (process.platform === 'win32') {
 function initTray() {
 	appIcon = new Tray(path.join(__dirname, './assets/img/icon.png'));
 	appIcon.on('click', () => {
-		(mainWindow.isVisible()) ? mainWindow.hide() : mainWindow.show();
+		if (!mainWindow.isVisible()) {
+			mainWindow.show();
+		}
 	});
 	var contextMenu = Menu.buildFromTemplate([{
 		label: '打开主面板',
 		click: () => {
-			(mainWindow.isVisible()) ? null : mainWindow.show();
+			if (!mainWindow.isVisible()) {
+				mainWindow.show();
+			}
 		}
 	}, {
-		label: '设置'
+		label: '设置',
+		click: () => {
+			mainWindow.webContents.send('setting-will-open-from-main-process');
+		}
 	}, {
 		label: '退出',
 		click: () => {
