@@ -7,8 +7,11 @@ import './ipc/index.js';
 import pathConfig from './config/path.config.js';
 import env from './config/env.config.js';
 
+import { debug } from './util/debug.js';
+
 let mainWindow = null;
 let appIcon = null;
+let forceQuit = false;
 
 let browserOptions = {
 	width: 282,
@@ -42,6 +45,7 @@ function initTray() {
 	}, {
 		label: '退出',
 		click: () => {
+			forceQuit = true;
 			app.quit();
 		}
 	}]);
@@ -49,7 +53,7 @@ function initTray() {
 	appIcon.setContextMenu(contextMenu);
 }
 
-const createWindow = function() {
+function createWindow() {
 	mainWindow = new BrowserWindow(browserOptions);
 
 	if (process.platform === 'win32') {
@@ -69,18 +73,30 @@ const createWindow = function() {
 	} else {
 		mainWindow.loadURL(pathConfig.renderPath.production);
 	}
-	mainWindow.on('close', function(e) {
-		mainWindow = null;
-		// e.preventDefault();
-		// mainWindow.hide();
-	});
-};
 
-app.on('ready', () => {
-	createWindow();
+	mainWindow.on('close', (e) => {
+		if (!forceQuit) {
+			e.preventDefault();
+			mainWindow.hide();
+			return;
+		}
+		mainWindow = null;
+		app.quit();
+	});
+}
+
+app.on('ready', createWindow);
+
+app.on('window-all-closed', function() {
+	if (process.platform !== 'darwin') {
+		app.quit();
+	};
 });
 
-// app.on('activate', (e) => {
-// 	e.preventDefault();
-// 	mainWindow.show();
-// });
+app.on('activate', function() {
+	mainWindow.show();
+});
+
+app.on('before-quit', function() {
+	forceQuit = true;
+});
