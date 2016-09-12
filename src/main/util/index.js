@@ -11,7 +11,9 @@ utils.mixin = (source, target) => {
 
 import * as common from './common.js';
 import * as window from './window.js';
+import * as debug from './debug.js';
 utils.mixin(utils, common);
 utils.mixin(utils, window);
+utils.mixin(utils, debug);
 
 export default utils;
