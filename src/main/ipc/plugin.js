@@ -5,6 +5,7 @@ import { app, ipcMain, BrowserWindow } from 'electron';
 import fetch from 'node-fetch';
 import unzip from 'unzip';
 import { removeSync as rmdir } from 'fs-extra';
+import { exec } from 'child_process';
 
 import { formatFileSize } from '../util/common.js';
 import { createWindowForPlugin } from '../util/window.js';
@@ -39,7 +40,8 @@ ipcMain.on('plugin-install', (ev, obj) => {
 	});
 	fetch(`https://raw.githubusercontent.com/${pluginAuthor}/${pluginName}/fet/package.json`, {
 		timeout: 10000
-	}).then((res) => {
+	})
+	.then((res) => {
 		if (res.status === 404) {
 			ev.sender.send('plugin-installing', {
 				showCheck: true,
@@ -50,6 +52,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 		}
 	})
 	.then(() => {
+		// 实例化下载窗口并隐藏
 		tempWin = new BrowserWindow({
 			width: 0,
 			height: 0,
@@ -83,27 +86,36 @@ ipcMain.on('plugin-install', (ev, obj) => {
 					ev.sender.send('plugin-installing', {
 						showCheck: true,
 						showLoading: true,
-						msg: '下载完成，正在解压'
+						msg: '下载成功，正在初始化'
 					});
+					// 解压
 					fs.createReadStream(pluginDownloadFileName)
 						.pipe(unzip.Extract({ path: pluginContentPath }))
 						.on('close', () => {
-							ev.sender.send('plugin-installing', {
-								showCheck: true,
-								showGouhao: true,
-								msg: `${obj.action || '安装'}成功`
-							});
-							tempWin.close();
 							fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
 							fs.unlinkSync(pluginDownloadFileName);
-							ev.sender.send('plugin-installed', {
-								pluginName: pluginWholeName,
-								pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
+							// 安装依赖
+							exec(`cd '${pluginDownloadPath}' && npm install -d`, (error, stout, sterr) => {
+								if (error) {
+
+								}
+								ev.sender.send('plugin-installing', {
+									showCheck: true,
+									showGouhao: true,
+									msg: `${obj.action || '安装'}成功`
+								});
+								// 关闭窗口
+								tempWin.close();
+								ev.sender.send('plugin-installed', {
+									pluginName: pluginWholeName,
+									pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
+								});
 							});
 						});
 				}
 			});
 		});
+		// 下载
 		tempWin.webContents.downloadURL(`${pluginPath}/archive/fet.zip`);
 		tempWin.on('closed', function() {
 			tempWin = null;
@@ -121,6 +133,11 @@ ipcMain.on('plugin-list-should-update', (ev) => {
 	allWindows.forEach((item) => {
 		item.webContents.send('plugin-list-should-update');
 	});
+});
+
+// 取消插件安装或更新
+ipcMain.on('plugin-action-cancel', (ev) => {
+
 });
 
 // 打开插件

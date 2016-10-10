@@ -1,5 +1,5 @@
 export default {
-	'name': 'fet-tools',
+	'name': 'fe-tools',
 	'version': '0.0.7',
 	'description': '前端工具集',
 	'author': [{
