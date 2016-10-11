@@ -173,5 +173,5 @@ function runWebPlugin(options) {
 
 function runAppPlugin(options) {
 	let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
-	console.log(options);
+	let child = exec(`${process.execPath} '${entry}'`);
 }
