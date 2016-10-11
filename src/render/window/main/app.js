@@ -38,16 +38,9 @@ function VM() {
 			'm-index': Index,
 			'm-debug': Debug
 		},
-		ready() {
-			ipcRenderer.send('debug-ready');
-			ipcRenderer.on('debug', (ev, msg) => {
-				console.log(msg);
-				this.debugInfo = msg;
-			});
-		},
 		template: `
 		<div>
-			<m-debug :debug="debugInfo"></m-debug>
+			<m-debug></m-debug>
 			<m-index></m-index>
 		</div>
 		`

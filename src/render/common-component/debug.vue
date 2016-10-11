@@ -22,13 +22,22 @@
 }
 </style>
 <script>
+import {
+	ipcRenderer
+} from 'electron';
 export default {
 	name: 'Debug',
-	props: ['debug'],
 	data() {
 		return {
-			env: process.env
+			env: process.env,
+			debug: ''
 		};
+	},
+	ready() {
+		ipcRenderer.on('debug', (ev, msg) => {
+			console.log(msg);
+			this.debug = msg;
+		});
 	}
 };
 </script>
