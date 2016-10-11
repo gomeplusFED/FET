@@ -273,6 +273,9 @@ import {
 } from 'electron';
 
 import appInfo from '../../../config/info.config.js';
+
+import { copyObj } from 'utils/common.js';
+
 export default {
 	name: 'Bottom-Menu',
 	data() {
@@ -308,6 +311,9 @@ export default {
 			this.loading = args.loading;
 			this.shouldUpdate = args.shouldUpdate || false;
 			this.net = args.net || true;
+		});
+		ipcRenderer.on('app-want-get-localstorage', (ev) => {
+			ipcRenderer.send('app-localstorage', copyObj(localStorage));
 		});
 	},
 	methods: {

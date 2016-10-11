@@ -266,6 +266,7 @@ import {
 } from 'electron';
 
 import storage from 'utils/storage.js';
+
 import {
 	openUrl
 } from 'utils/common.js';
