@@ -142,12 +142,20 @@ ipcMain.on('plugin-action-cancel', (ev) => {
 
 // 打开插件
 ipcMain.on('plugin-start', (ev, args) => {
+	if (args.type === 'web') {
+		runWebPlugin(args);
+	} else if (args.type === 'app') {
+		runAppPlugin(args);
+	}
+});
+
+function runWebPlugin(options) {
 	let currentWin = null;
 	let entry = null;
-	if (/^http/.test(args.entry)) {
-		entry = args.entry;
+	if (/^http/.test(options.entry)) {
+		entry = options.entry;
 	} else {
-		entry = `file://${path.join(app.getPath('userData'), 'Plugins', args.key, args.entry)}`;
+		entry = `file://${path.join(app.getPath('userData'), 'Plugins', options.key, options.entry)}`;
 	}
 	let allWindows = BrowserWindow.getAllWindows();
 	allWindows.forEach((item) => {
@@ -158,7 +166,12 @@ ipcMain.on('plugin-start', (ev, args) => {
 		}
 	});
 	if (currentWin === null) {
-		currentWin = createWindowForPlugin(args);
+		currentWin = createWindowForPlugin(options);
 		currentWin.loadURL(entry);
 	}
-});
+}
+
+function runAppPlugin(options) {
+	let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
+	console.log(options);
+}

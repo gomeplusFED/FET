@@ -309,13 +309,24 @@ export default {
 			let pluginName = args.pluginName;
 			let pluginPkgInfo = args.pluginPkgInfo;
 			let installedPlugin = storage.get('installedPlugin') || {};
-			installedPlugin[pluginName] = Object.assign({
+			// 兼容未规定 type 的前期 plugin
+			if (!pluginPkgInfo.fet.type) {
+				pluginPkgInfo.fet.type = 'web';
+			}
+
+			let specOptions = {
 				repoName: pluginPkgInfo.name,
 				name: pluginPkgInfo.fet.name || pluginPkgInfo.name,
 				desc: pluginPkgInfo.fet.desc || pluginPkgInfo.description,
 				status: 1,
 				version: pluginPkgInfo.version
-			}, pluginPkgInfo.fet);
+			};
+
+			if (pluginPkgInfo.fet.type === 'app') {
+				specOptions.entry = pluginPkgInfo.main;
+			}
+
+			installedPlugin[pluginName] = Object.assign(specOptions, pluginPkgInfo.fet);
 			setTimeout(() => {
 				this.showCheck = false;
 			}, 1000);

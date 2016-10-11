@@ -5,7 +5,7 @@ Contribute plugin for FET
 
 #### Complete functions in your plugin
 
-your plugin can be pure web app or electron app.
+your plugin can be ** pure web app ** or ** electron app **.
 
 #### Configure `package.json`
 
@@ -13,7 +13,21 @@ your plugin can be pure web app or electron app.
 
 * all options
 
-	##### name
+	#### type
+
+	* Type: String
+
+	* Default: null
+
+	* Required: ** true **
+
+	* Description: plugin type. Can be list of `app` `web`
+
+		`app`: If your plugin is an electron app, you should set type to be `app`, and ensure that `package.json->main` is right. Then you don't have to set other options include `entry` `size` `position`.
+
+		`web`: If your plugin is a pure web app, you should set other options as follow.
+
+	#### name
 
 	* Type: String
 
@@ -23,7 +37,7 @@ your plugin can be pure web app or electron app.
 
 	* Description: Plugin name, if empty, will use `package.json->name`
 
-	##### desc
+	#### desc
 
 	* Type: String
 
@@ -33,17 +47,17 @@ your plugin can be pure web app or electron app.
 
 	* Description: Plugin desc, if empty, will ues `package.json->description`
 
-	##### entry
+	#### entry (only `web`)
 
 	* Type: String
 
 	* Default Value: ''
 
-	* Required: true
+	* Required: ** true **
 
 	* Description: Plugin entry. Can be `http://` or relative path.
 
-	##### icon
+	#### icon
 
 	* Type: String
 
@@ -53,7 +67,7 @@ your plugin can be pure web app or electron app.
 
 	* Description: Plugin icon. Can be `http://` or relative path. If empty, will use first character of plugin name.
 
-	##### size
+	#### size (only `web`)
 
 	* Type: String
 
@@ -69,7 +83,7 @@ your plugin can be pure web app or electron app.
 
 		`custom`: Custom. You should set `width` and `height`.
 
-	##### width
+	#### width (only `web`)
 
 	* Type: Number
 
@@ -79,7 +93,7 @@ your plugin can be pure web app or electron app.
 
 	* Description: Plugin main window width. It will work while `size` is `custom`.
 
-	##### height
+	#### height (only `web`)
 
 	* Type: Number
 
@@ -89,7 +103,7 @@ your plugin can be pure web app or electron app.
 
 	* Description: Plugin main window height. It will work while `size` is `custom`.
 
-	##### position
+	#### position (only `web`)
 
 	* Type: String
 
@@ -103,7 +117,7 @@ your plugin can be pure web app or electron app.
 
 		`custom`: Custom. You should set `X` and `Y`.
 
-	##### X
+	#### X (only `web`)
 
 	* Type: Number
 
@@ -113,7 +127,7 @@ your plugin can be pure web app or electron app.
 
 	* Description: Plugin main window position of X. It will work while `position` is `custom`.
 
-	##### Y
+	#### Y (only `web`)
 
 	* Type: Number
 

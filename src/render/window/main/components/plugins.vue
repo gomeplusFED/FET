@@ -174,6 +174,10 @@ export default {
 		},
 		generateAvatarList() {
 			Object.keys(this.installedPluginList).forEach((item) => {
+				if (!this.installedPluginList[item].icon) {
+					Vue.set(this.avatar, item, '');
+					return;
+				}
 				if (/^http/.test(this.installedPluginList[item].icon)) {
 					Vue.set(this.avatar, item, this.installedPluginList[item].icon());
 				} else {
