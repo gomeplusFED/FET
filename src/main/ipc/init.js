@@ -65,23 +65,31 @@ ipcMain.on('app-init', (ev) => {
 				item.once('done', (event, state) => {
 					if (state === 'completed') {
 						ev.sender.send('app-initing', {
-							msg: '下载完成，重启生效',
-							loading: false,
-							shouldUpdate: true
+							msg: '下载完成，初始化中',
+							loading: true
 						});
-						let appAsarFilePath = null;
-						if (originalFs.existsSync(path.join(app.getAppPath(), '../app.asar'))) {
-							appAsarFilePath = path.join(app.getAppPath(), '../app.asar');
-						} else if (originalFs.existsSync(path.join(app.getAppPath(), '../default_app.asar'))) {
-							appAsarFilePath = path.join(app.getAppPath(), '../default_app.asar');
-						}
-						let readAble = originalFs.createReadStream(asarFileName);
-						let writeAble = originalFs.createWriteStream(appAsarFilePath);
-						readAble.pipe(writeAble);
-						writeAble.on('finish', () => {
-							if (originalFs.existsSync(asarFileName)) {
-								originalFs.unlinkSync(asarFileName);
+						ev.sender.send('app-want-get-localstorage');
+						ipcMain.once('app-localstorage', (ev, obj) => {
+							originalFs.writeFileSync(path.join(app.getPath('userData'), 'localStorage.json'), JSON.stringify(obj));
+							let appAsarFilePath = null;
+							if (originalFs.existsSync(path.join(app.getAppPath(), '../app.asar'))) {
+								appAsarFilePath = path.join(app.getAppPath(), '../app.asar');
+							} else if (originalFs.existsSync(path.join(app.getAppPath(), '../default_app.asar'))) {
+								appAsarFilePath = path.join(app.getAppPath(), '../default_app.asar');
 							}
+							let readAble = originalFs.createReadStream(asarFileName);
+							let writeAble = originalFs.createWriteStream(appAsarFilePath);
+							readAble.pipe(writeAble);
+							writeAble.on('finish', () => {
+								if (originalFs.existsSync(asarFileName)) {
+									originalFs.unlinkSync(asarFileName);
+								}
+								ev.sender.send('app-initing', {
+									msg: '万事俱备，重启生效',
+									loading: false,
+									shouldUpdate: true
+								});
+							});
 						});
 					}
 				});

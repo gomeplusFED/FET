@@ -27,12 +27,12 @@ if (!test('-e', distPath)) {
 let packExec = '';
 
 const run = function(answers) {
-	buildStatic()
-		.then(() => {
-			return generatePorductionPackageJson();
-		})
+	generatePorductionPackageJson()
 		.then(() => {
 			return injectAppInfo();
+		})
+		.then(() => {
+			return buildStatic();
 		})
 		.then(() => {
 			return copyMainFile();
