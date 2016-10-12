@@ -92,6 +92,18 @@ function createWindow() {
 	});
 }
 
+// ensure only one instance is runing
+const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+	if (mainWindow) {
+		if (mainWindow.isMinimized()) mainWindow.restore();
+		mainWindow.focus();
+	}
+});
+
+if (shouldQuit) {
+	app.quit();
+}
+
 app.on('ready', createWindow);
 
 app.on('window-all-closed', function() {
