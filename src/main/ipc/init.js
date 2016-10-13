@@ -107,6 +107,6 @@ ipcMain.on('app-init', (ev) => {
 });
 
 ipcMain.on('app-restart', (ev) => {
-	exec(process.argv.join(' '));
-	app.quit();
+	app.relaunch({args: process.argv.slice(1).concat(['--relaunch'])});
+	app.exit(0);
 });
