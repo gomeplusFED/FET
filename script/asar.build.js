@@ -2,7 +2,7 @@ import { generatePorductionPackageJson, buildStatic, copyMainFile, installModule
 
 generatePorductionPackageJson()
     .then(() => {
-        return injectAppInfo();
+		return injectAppInfo();
     })
     .then(() => {
         return buildStatic();

@@ -1,6 +1,6 @@
 export default {
 	'name': 'fe-tools',
-	'version': '0.0.7',
+	'version': '0.0.9',
 	'description': '前端工具集',
 	'author': [{
 		'name': 'luoye',

@@ -9,6 +9,7 @@ import { exec } from 'child_process';
 
 import { formatFileSize } from '../util/common.js';
 import { createWindowForPlugin } from '../util/window.js';
+import { debug } from '../util/debug.js';
 import env from '../config/env.config.js';
 
 function BreakSignal() {}
@@ -173,5 +174,5 @@ function runWebPlugin(options) {
 
 function runAppPlugin(options) {
 	let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
-	let child = exec(`${process.execPath} '${entry}'`);
+	let child = exec(`${process.argv} '${entry}'`);
 }
