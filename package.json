@@ -1,7 +1,7 @@
 {
 	"name": "fe-tools",
 	"app-name": "FE-Tools",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"description": "前端工具集",
 	"main": "./src/main/app.babel.js",
 	"engines": {
