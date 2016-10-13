@@ -13,6 +13,8 @@ import { js as jsbeautify } from 'js-beautify';
 
 import customConfig from '../config/custom.config.js';
 
+import { babelDir } from './common.js';
+
 let srcMainPath = path.join(__dirname, '../src/main');
 let srcRenderPath = path.join(__dirname, '../src/render');
 let distPath = path.join(__dirname, '../dist');
@@ -36,26 +38,6 @@ function uploadFile(uptoken, key, localFile, cb) {
 	});
 }
 
-// 打包 render 资源
-export const buildStatic = function() {
-	return new Promise((resolve, reject) => {
-		let spinner = ora('Building staic resource ...').start();
-		exec(`node ${path.join(__dirname, '../script/render.build.babel.js')} --env=production`, () => {
-			spinner.stop();
-			resolve();
-		})
-	})
-};
-
-// 拷贝 src/main 文件夹到 dist 目录
-export const copyMainFile = function() {
-	return new Promise((resolve, reject) => {
-		exec(`cp -rf ${ srcMainPath} ${distPath}`, () => {
-			resolve();
-		})
-	})
-};
-
 // 生成生产环境的 package.json
 export const generatePorductionPackageJson = function() {
 	return new Promise((resolve, reject) => {
@@ -69,7 +51,7 @@ export const generatePorductionPackageJson = function() {
 			}
 		});
 
-		proPackageJson.main = './main/app.babel.js';
+		proPackageJson.main = './main/app.js';
 
 		// delete vue production dependencies
 		Object.keys(proPackageJson.dependencies).forEach((item) => {
@@ -83,6 +65,33 @@ export const generatePorductionPackageJson = function() {
 		}), 'utf-8', function() {
 			resolve();
 		});
+	})
+};
+
+// 打包 render 资源
+export const buildStatic = function() {
+	return new Promise((resolve, reject) => {
+		let spinner = ora('Building staic resource ...').start();
+		exec(`node ${path.join(__dirname, '../script/render.build.babel.js')} --env=production`, () => {
+			spinner.stop();
+			resolve();
+		})
+	})
+};
+
+// 编译 src/main 文件夹到 dist 目录
+export const babelMainFile = function() {
+	return new Promise((resolve, reject) => {
+		let spinner = ora('Transform file by babel ...').start();
+		babelDir(path.join(__dirname, '../', 'src/main'), path.join(__dirname, '../', 'dist/main'))
+			.then(() => {
+				spinner.stop();
+				resolve();
+			})
+			.catch((err) => {
+				spinner.stop();
+				reject(err);
+			})
 	})
 };
 

@@ -10,7 +10,7 @@ import minimist from 'minimist';
 import inquirer from 'inquirer';
 import { js as jsbeautify } from 'js-beautify';
 
-import { generatePorductionPackageJson, buildStatic, copyMainFile, installModule, packageApp, injectAppInfo, buildAsar, pushNewTagAndUploadQiniu } from '../support/build.process.js';
+import { generatePorductionPackageJson, buildStatic, babelMainFile, installModule, packageApp, injectAppInfo, buildAsar, pushNewTagAndUploadQiniu } from '../support/build.process.js';
 
 import pkinfo from '../package.json';
 
@@ -35,7 +35,7 @@ const run = function(answers) {
 			return buildStatic();
 		})
 		.then(() => {
-			return copyMainFile();
+			return babelMainFile();
 		}).then(() => {
 			return installModule();
 		}).then(() => {

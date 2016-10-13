@@ -1,18 +1,18 @@
-import { generatePorductionPackageJson, buildStatic, copyMainFile, installModule, buildAsar, injectAppInfo } from '../support/build.process.js';
+import { generatePorductionPackageJson, buildStatic, babelMainFile, installModule, buildAsar, injectAppInfo } from '../support/build.process.js';
 
 generatePorductionPackageJson()
-    .then(() => {
+	.then(() => {
 		return injectAppInfo();
-    })
-    .then(() => {
-        return buildStatic();
-    })
-    .then(() => {
-        return copyMainFile();
-    }).then(() => {
-        return installModule();
-    }).then(() => {
-        return buildAsar();
-    }).catch((e) => {
-        throw e;
-    });
+	})
+	.then(() => {
+		return buildStatic();
+	})
+	.then(() => {
+		return babelMainFile();
+	}).then(() => {
+		return installModule();
+	}).then(() => {
+		return buildAsar();
+	}).catch((e) => {
+		throw e;
+	});
