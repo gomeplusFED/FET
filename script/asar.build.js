@@ -1,3 +1,4 @@
+import logger from '../support/logger.js';
 import { generatePorductionPackageJson, buildStatic, babelMainFile, installModule, buildAsar, injectAppInfo } from '../support/build.process.js';
 
 generatePorductionPackageJson()
@@ -13,6 +14,9 @@ generatePorductionPackageJson()
 		return installModule();
 	}).then(() => {
 		return buildAsar();
+	})
+	.then(() => {
+		logger.success('All succeed.');
 	}).catch((e) => {
 		throw e;
 	});

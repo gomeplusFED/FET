@@ -10,6 +10,8 @@ import minimist from 'minimist';
 import inquirer from 'inquirer';
 import { js as jsbeautify } from 'js-beautify';
 
+import logger from '../support/logger.js';
+
 import { generatePorductionPackageJson, buildStatic, babelMainFile, installModule, packageApp, injectAppInfo, buildAsar, pushNewTagAndUploadQiniu } from '../support/build.process.js';
 
 import pkinfo from '../package.json';
@@ -46,6 +48,9 @@ const run = function(answers) {
 			if (answers.release) {
 				return pushNewTagAndUploadQiniu(answers.version);
 			}
+		})
+		.then(() => {
+			logger.success('All succeed.');
 		}).catch((e) => {
 			throw e;
 		})

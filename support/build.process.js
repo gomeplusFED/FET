@@ -1,19 +1,22 @@
 /* eslint-disable */
-import 'shelljs/global';
-
 import fs from 'fs';
 import path from 'path';
+import { exec } from 'child_process';
 
 import asar from 'asar';
 
 import ora from 'ora';
 import chalk from 'chalk';
 import qiniu from 'qiniu';
+import webpack from 'webpack';
 import { js as jsbeautify } from 'js-beautify';
 
+import webpackConfig from '../config/webpack.build.config.js';
 import customConfig from '../config/custom.config.js';
 
 import { babelDir } from './common.js';
+
+import logger from './logger.js';
 
 let srcMainPath = path.join(__dirname, '../src/main');
 let srcRenderPath = path.join(__dirname, '../src/render');
@@ -41,6 +44,7 @@ function uploadFile(uptoken, key, localFile, cb) {
 // 生成生产环境的 package.json
 export const generatePorductionPackageJson = function() {
 	return new Promise((resolve, reject) => {
+		let spinner = ora('Generate production package.json ...').start();
 		let excludeField = ['scripts', 'devDependencies', 'build', 'directories'];
 		let proPackageJson = {};
 		let currentPkgInfo = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
@@ -63,67 +67,10 @@ export const generatePorductionPackageJson = function() {
 			'indent_with_tabs': true,
 			'indent_size': 4,
 		}), 'utf-8', function() {
-			resolve();
-		});
-	})
-};
-
-// 打包 render 资源
-export const buildStatic = function() {
-	return new Promise((resolve, reject) => {
-		let spinner = ora('Building staic resource ...').start();
-		exec(`node ${path.join(__dirname, '../script/render.build.babel.js')} --env=production`, () => {
 			spinner.stop();
-			resolve();
-		})
-	})
-};
-
-// 编译 src/main 文件夹到 dist 目录
-export const babelMainFile = function() {
-	return new Promise((resolve, reject) => {
-		let spinner = ora('Transform file by babel ...').start();
-		babelDir(path.join(__dirname, '../', 'src/main'), path.join(__dirname, '../', 'dist/main'))
-			.then(() => {
-				spinner.stop();
-				resolve();
-			})
-			.catch((err) => {
-				spinner.stop();
-				reject(err);
-			})
-	})
-};
-
-// 安装生产环境依赖
-export const installModule = function() {
-	return new Promise((resolve, reject) => {
-		let installSpinner = ora('Installing node modules ...').start();
-		exec(`cd ${distPath} && npm install`, () => {
-			installSpinner.stop();
+			logger.success('Generate production package.json succeed.');
 			resolve();
 		});
-	})
-};
-
-// 打包成安装程序
-export const packageApp = function(packExec) {
-	return new Promise((resovel, reject) => {
-		exec(packExec, (code, stdout, stderr) => {
-			console.log(chalk.green.bold('\nBuild success'));
-			resovel();
-		})
-	})
-};
-
-// 打包 asar 文件，可供更新
-export const buildAsar = function() {
-	return new Promise((resolve, reject) => {
-		let currentPkgInfo = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
-		asar.createPackage(distPath, path.join(__dirname, `../asar/app-${currentPkgInfo.version}.asar`), function() {
-			console.log(chalk.green.bold('\nCreate asar success'));
-			resolve();
-		})
 	})
 };
 
@@ -148,42 +95,124 @@ export const injectAppInfo = function() {
 	})
 };
 
+// 打包 render 资源
+export const buildStatic = function() {
+	return new Promise((resolve, reject) => {
+		let spinner = ora('Building staic resource ...').start();
+		webpack(webpackConfig, function(err, stats) {
+			if (err) {
+				reject(err);
+				logger.fatal(err);
+			};
+			spinner.stop();
+			logger.success('Build static resource succeed.')
+			resolve();
+		});
+	})
+};
+
+// 编译 src/main 文件夹到 dist 目录
+export const babelMainFile = function() {
+	return new Promise((resolve, reject) => {
+		let spinner = ora('Transform file by babel ...').start();
+		babelDir(path.join(__dirname, '../', 'src/main'), path.join(__dirname, '../', 'dist/main'))
+			.then(() => {
+				spinner.stop();
+				logger.success('Transform file succeed.')
+				resolve();
+			})
+			.catch((err) => {
+				spinner.stop();
+				logger.fatal(err);
+				reject(err);
+			})
+	})
+};
+
+// 安装生产环境依赖
+export const installModule = function() {
+	return new Promise((resolve, reject) => {
+		let spinner = ora('Installing node modules ...').start();
+		exec(`cd ${distPath} && npm install`, (err) => {
+			if (err) {
+				reject(err);
+				logger.fatal(err);
+			};
+			spinner.stop();
+			logger.success('Install node modules succeed.')
+			resolve();
+		});
+	})
+};
+
+// 打包成安装程序
+export const packageApp = function(packExec) {
+	return new Promise((resovel, reject) => {
+		let spinner = ora('Packaging app ...').start();
+		exec(packExec, (err, stdout, stderr) => {
+			if (err) {
+				reject(err);
+				logger.fatal(err);
+			};
+			spinner.stop();
+			logger.success('Packag app successd.');
+			resovel();
+		})
+	})
+};
+
+// 打包 asar 文件，可供更新
+export const buildAsar = function() {
+	return new Promise((resolve, reject) => {
+		let spinner = ora('Building asar file ...').start();
+		let currentPkgInfo = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
+		asar.createPackage(distPath, path.join(__dirname, `../asar/app-${currentPkgInfo.version}.asar`), function() {
+			spinner.stop();
+			logger.success('Building asar file successd.');
+			resolve();
+		})
+	})
+};
+
 // 创建新 tag 并且推送相关文件到 七牛
 export const pushNewTagAndUploadQiniu = function(version) {
 	return new Promise((resolve, reject) => {
-		exec(`git tag v${version}`);
-		let pushSpinner = ora('Pushing tag to github ...').start();
-		exec('git commit -am "Releas new version." && git push origin master', { silent: true }, (e, stout) => {
-			exec(`git push --tags`, { silent: true }, (e, stout) => {
-				if (e) {
-					reject(e);
-				}
-				pushSpinner.stop();
-				console.log(chalk.green.bold('Push success.'));
+		exec(`git tag v${version}`, () => {
+			let spinner1 = ora('Pushing tag to github ...').start();
+			exec('git commit -am "Releas new version."', { silent: true }, (e, stout) => {
+				exec(`git push origin master && git push --tags`, { silent: true }, (e, stout) => {
+					if (e) {
+						reject(e);
+						logger.fatal(e);
+					};
+					spinner1.stop();
+					logger.success('Push tag succeed.');
 
-				let bucket = 'luoye';
-				let key = `app-${version}.asar`;
+					let bucket = 'luoye';
+					let key = `app-${version}.asar`;
 
-				let token = uptoken(bucket, key);
-				let filePath = path.join(__dirname, `../asar/app-${version}.asar`);
-				let spinner = ora('Uploading asar to qiniu ...').start();
-				uploadFile(token, key, filePath, (err) => {
-					if (err) {
-						reject(err);
-					} else {
-						spinner.stop();
-						console.log(chalk.green.bold('Upload success.'));
-						if (!test('-e', path.join(__dirname, '../temp'))) {
-							mkdir( path.join(__dirname, '../temp'));
-						}
-						fs.writeFile(path.join(__dirname, '../temp/info.json'), `{"version": "v${version}"}`, (err) => {
-							uploadFile(uptoken(bucket, 'info.json'), 'info.json', path.join(__dirname, '../temp/info.json'), () => {
-								resolve();
+					let token = uptoken(bucket, key);
+					let filePath = path.join(__dirname, `../asar/app-${version}.asar`);
+					let spinner2 = ora('Uploading asar to qiniu ...').start();
+					uploadFile(token, key, filePath, (err) => {
+						if (err) {
+							reject(err);
+							logger.fatal(e);
+						} else {
+							spinner2.stop();
+							logger.success('Upload asar file succeed.');
+							if (!test('-e', path.join(__dirname, '../temp'))) {
+								mkdir( path.join(__dirname, '../temp'));
+							}
+							fs.writeFile(path.join(__dirname, '../temp/info.json'), `{"version": "v${version}"}`, (err) => {
+								uploadFile(uptoken(bucket, 'info.json'), 'info.json', path.join(__dirname, '../temp/info.json'), () => {
+									resolve();
+								});
 							});
-						});
-					}
-				});
+						}
+					});
+				})
 			})
-		})
+		});
 	})
 };
