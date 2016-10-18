@@ -96,21 +96,16 @@ ipcMain.on('plugin-install', (ev, obj) => {
 							fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
 							fs.unlinkSync(pluginDownloadFileName);
 							// 安装依赖
-							exec(`cd '${pluginDownloadPath}' && npm install -d`, (error, stout, sterr) => {
-								if (error) {
-
-								}
-								ev.sender.send('plugin-installing', {
-									showCheck: true,
-									showGouhao: true,
-									msg: `${obj.action || '安装'}成功`
-								});
-								// 关闭窗口
-								tempWin.close();
-								ev.sender.send('plugin-installed', {
-									pluginName: pluginWholeName,
-									pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
-								});
+							ev.sender.send('plugin-installing', {
+								showCheck: true,
+								showGouhao: true,
+								msg: `${obj.action || '安装'}成功`
+							});
+							// 关闭窗口
+							tempWin.close();
+							ev.sender.send('plugin-installed', {
+								pluginName: pluginWholeName,
+								pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
 							});
 						});
 				}
