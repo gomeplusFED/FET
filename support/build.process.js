@@ -12,6 +12,7 @@ import webpack from 'webpack';
 import { js as jsbeautify } from 'js-beautify';
 
 import webpackConfig from '../config/webpack.build.config.js';
+import baseConfig from '../config/webpack.common.js';
 import customConfig from '../config/custom.config.js';
 
 import { babelDir } from './common.js';
@@ -65,16 +66,16 @@ export const generatePorductionPackageJson = function() {
 		});
 		fs.writeFile(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson), {
 			'indent_with_tabs': true,
-			'indent_size': 4,
+			'indent_size': 4
 		}), 'utf-8', function() {
 			spinner.stop();
 			logger.success('Generate production package.json succeed.');
 			resolve();
 		});
-	})
+	});
 };
 
-//注入 app 的相关信息，会在开发或者打包之前写 src/main/config/info.config.js 文件
+// 注入 app 的相关信息，会在开发或者打包之前写 src/main/config/info.config.js 文件
 export const injectAppInfo = function() {
 	return new Promise((resolve, reject) => {
 		let result = {};
@@ -82,33 +83,48 @@ export const injectAppInfo = function() {
 		let currentPkgInfo = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
 		requiredFied.forEach((item) => {
 			result[item] = currentPkgInfo[item];
-		})
+		});
 		let info = jsbeautify(`export default ${JSON.stringify(result)};`, {
 			'indent_with_tabs': true,
-			'indent_size': 4,
-		}).replace(/\"/g, `'`) + '\n';
+			'indent_size': 4
+		}).replace(/"/g, "'") + '\n';
 		fs.writeFile(path.join(srcMainPath, './config/info.config.js'), info, (err) => {
+			if (err) {
+				reject(err);
+				logger.fatal(err);
+			};
 			fs.writeFile(path.join(srcRenderPath, './config/info.config.js'), info, (err) => {
+				if (err) {
+					reject(err);
+					logger.fatal(err);
+				};
 				resolve();
 			});
 		});
-	})
+	});
 };
 
 // 打包 render 资源
 export const buildStatic = function() {
 	return new Promise((resolve, reject) => {
 		let spinner = ora('Building staic resource ...').start();
-		webpack(webpackConfig, function(err, stats) {
+		const assetsPath = path.join(baseConfig.assetsRoot, './');
+		exec('rm -r ' + assetsPath, function(err, stdout, stderr) {
 			if (err) {
 				reject(err);
 				logger.fatal(err);
 			};
-			spinner.stop();
-			logger.success('Build static resource succeed.')
-			resolve();
+			webpack(webpackConfig, function(err, stats) {
+				if (err) {
+					reject(err);
+					logger.fatal(err);
+				};
+				spinner.stop();
+				logger.success('Build static resource succeed.');
+				resolve();
+			});
 		});
-	})
+	});
 };
 
 // 编译 src/main 文件夹到 dist 目录
@@ -118,15 +134,15 @@ export const babelMainFile = function() {
 		babelDir(path.join(__dirname, '../', 'src/main'), path.join(__dirname, '../', 'dist/main'))
 			.then(() => {
 				spinner.stop();
-				logger.success('Transform file succeed.')
+				logger.success('Transform file succeed.');
 				resolve();
 			})
 			.catch((err) => {
 				spinner.stop();
 				logger.fatal(err);
 				reject(err);
-			})
-	})
+			});
+	});
 };
 
 // 安装生产环境依赖
@@ -139,15 +155,15 @@ export const installModule = function() {
 				logger.fatal(err);
 			};
 			spinner.stop();
-			logger.success('Install node modules succeed.')
+			logger.success('Install node modules succeed.');
 			resolve();
 		});
-	})
+	});
 };
 
 // 打包成安装程序
 export const packageApp = function(packExec) {
-	return new Promise((resovel, reject) => {
+	return new Promise((resolve, reject) => {
 		let spinner = ora('Packaging app ...').start();
 		exec(packExec, (err, stdout, stderr) => {
 			if (err) {
@@ -156,9 +172,9 @@ export const packageApp = function(packExec) {
 			};
 			spinner.stop();
 			logger.success('Packag app successd.');
-			resovel();
-		})
-	})
+			resolve();
+		});
+	});
 };
 
 // 打包 asar 文件，可供更新
@@ -170,8 +186,8 @@ export const buildAsar = function() {
 			spinner.stop();
 			logger.success('Building asar file successd.');
 			resolve();
-		})
-	})
+		});
+	});
 };
 
 // 创建新 tag 并且推送相关文件到 七牛
@@ -180,7 +196,7 @@ export const pushNewTagAndUploadQiniu = function(version) {
 		exec(`git tag v${version}`, () => {
 			let spinner1 = ora('Pushing tag to github ...').start();
 			exec('git commit -am "Releas new version."', { silent: true }, (e, stout) => {
-				exec(`git push origin master && git push --tags`, { silent: true }, (e, stout) => {
+				exec('git push origin master && git push --tags', { silent: true }, (e, stout) => {
 					if (e) {
 						reject(e);
 						logger.fatal(e);
@@ -211,8 +227,8 @@ export const pushNewTagAndUploadQiniu = function(version) {
 							});
 						}
 					});
-				})
-			})
+				});
+			});
 		});
-	})
+	});
 };
