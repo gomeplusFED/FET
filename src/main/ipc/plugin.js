@@ -168,6 +168,6 @@ function runWebPlugin(options) {
 }
 
 function runAppPlugin(options) {
-	let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
-	let child = exec(`${process.argv} '${entry}'`);
+	// let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
+	// let child = exec(`${process.argv} '${entry}'`);
 }

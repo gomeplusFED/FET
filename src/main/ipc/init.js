@@ -69,7 +69,7 @@ ipcMain.on('app-init', (ev) => {
 							loading: true
 						});
 						ev.sender.send('app-want-get-localstorage');
-						ipcMain.once('app-localstorage', (ev, obj) => {
+						ipcMain.on('app-localstorage', (ev, obj) => {
 							originalFs.writeFileSync(path.join(app.getPath('userData'), 'localStorage.json'), JSON.stringify(obj));
 							let appAsarFilePath = null;
 							if (originalFs.existsSync(path.join(app.getAppPath(), '../app.asar'))) {
