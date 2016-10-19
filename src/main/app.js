@@ -1,16 +1,18 @@
 import path from 'path';
 import { app, BrowserWindow, Tray, Menu } from 'electron';
 
-// ipc
-import './ipc/index.js';
-
 import pathConfig from './config/path.config.js';
 import env from './config/env.config.js';
 
 import { debug } from './util/debug.js';
 
+import initTray from './tray.js';
+import menuTemplate from './menu.js';
+
+// ipc
+import './ipc/index.js';
+
 let mainWindow = null;
-let appIcon = null;
 let forceQuit = false;
 
 let browserOptions = {
@@ -29,43 +31,16 @@ if (process.platform === 'win32') {
 	browserOptions.titleBarStyle = 'hidden';
 };
 
-// win 托盘
-function initTray() {
-	appIcon = new Tray(path.join(__dirname, './assets/img/icon.png'));
-	appIcon.on('click', () => {
-		if (!mainWindow.isVisible()) {
-			mainWindow.show();
-		}
-	});
-	var contextMenu = Menu.buildFromTemplate([{
-		label: '打开主面板',
-		click: () => {
-			if (!mainWindow.isVisible()) {
-				mainWindow.show();
-			}
-		}
-	}, {
-		label: '设置',
-		click: () => {
-			mainWindow.webContents.send('setting-will-open-from-main-process');
-		}
-	}, {
-		label: '退出',
-		click: () => {
-			forceQuit = true;
-			app.quit();
-		}
-	}]);
-	appIcon.setToolTip('FE-Tools');
-	appIcon.setContextMenu(contextMenu);
-}
-
 function createWindow() {
 	mainWindow = new BrowserWindow(browserOptions);
 
+	// win 下初始化托盘
 	if (process.platform === 'win32') {
 		initTray();
 	}
+
+	// 菜单
+	Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate(app)));
 
 	mainWindow.webContents.on('did-finish-load', () => {
 		mainWindow.show();
