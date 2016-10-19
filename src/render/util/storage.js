@@ -1,7 +1,9 @@
 let storage = {};
 
 storage.set = (item, obj) => {
-	localStorage.setItem(item, JSON.stringify(obj));
+	let result;
+	typeof obj === 'string' ? result = obj : result = JSON.stringify(obj);
+	localStorage.setItem(item, result);
 };
 
 storage.get = (item) => {
