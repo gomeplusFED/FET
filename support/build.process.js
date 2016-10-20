@@ -195,7 +195,7 @@ export const pushNewTagAndUploadQiniu = function(version) {
 	return new Promise((resolve, reject) => {
 		exec(`git tag v${version}`, () => {
 			let spinner1 = ora('Pushing tag to github ...').start();
-			exec('git commit -am "Releas new version."', { silent: true }, (e, stout) => {
+			exec('git commit -am "Release new version."', { silent: true }, (e, stout) => {
 				exec('git push origin master && git push --tags', { silent: true }, (e, stout) => {
 					if (e) {
 						reject(e);
