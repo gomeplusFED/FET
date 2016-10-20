@@ -14,3 +14,7 @@ FET
 ### How to contribute plugin to FET
 
 Please read [this document](./docs/Plugin.md).
+
+### Changelog
+
+Changelog in [here](./CHANGELOG.md).
