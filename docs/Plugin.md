@@ -19,7 +19,7 @@ your plugin can be ** pure web app ** or ** electron app **.
 
 	* Default: null
 
-	* Required: ** true **
+	* Required: **true**
 
 	* Description: plugin type. Can be list of `app` `web`
 
@@ -53,7 +53,7 @@ your plugin can be ** pure web app ** or ** electron app **.
 
 	* Default Value: ''
 
-	* Required: ** true **
+	* Required: **true**
 
 	* Description: Plugin entry. Can be `http://` or relative path.
 
