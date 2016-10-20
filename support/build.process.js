@@ -90,11 +90,13 @@ export const injectAppInfo = function() {
 		}).replace(/"/g, "'") + '\n';
 		fs.writeFile(path.join(srcMainPath, './config/info.config.js'), info, (err) => {
 			if (err) {
+				spinner.stop();
 				reject(err);
 				logger.fatal(err);
 			};
 			fs.writeFile(path.join(srcRenderPath, './config/info.config.js'), info, (err) => {
 				if (err) {
+					spinner.stop();
 					reject(err);
 					logger.fatal(err);
 				};
@@ -109,13 +111,15 @@ export const buildStatic = function() {
 	return new Promise((resolve, reject) => {
 		let spinner = ora('Building staic resource ...').start();
 		const assetsPath = path.join(baseConfig.assetsRoot, './');
-		exec('rm -r ' + assetsPath, function(err, stdout, stderr) {
+		exec('rm -rf ' + assetsPath, function(err, stdout, stderr) {
 			if (err) {
+				spinner.stop();
 				reject(err);
 				logger.fatal(err);
 			};
 			webpack(webpackConfig, function(err, stats) {
 				if (err) {
+					spinner.stop();
 					reject(err);
 					logger.fatal(err);
 				};
@@ -151,6 +155,7 @@ export const installModule = function() {
 		let spinner = ora('Installing node modules ...').start();
 		exec(`cd ${distPath} && npm install`, (err) => {
 			if (err) {
+				spinner.stop();
 				reject(err);
 				logger.fatal(err);
 			};
@@ -167,6 +172,7 @@ export const packageApp = function(packExec) {
 		let spinner = ora('Packaging app ...').start();
 		exec(packExec, (err, stdout, stderr) => {
 			if (err) {
+				spinner.stop();
 				reject(err);
 				logger.fatal(err);
 			};
@@ -212,6 +218,7 @@ export const pushNewTagAndUploadQiniu = function(version) {
 					let spinner2 = ora('Uploading asar to qiniu ...').start();
 					uploadFile(token, key, filePath, (err) => {
 						if (err) {
+							spinner.stop();
 							reject(err);
 							logger.fatal(e);
 						} else {
