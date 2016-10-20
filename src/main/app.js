@@ -36,7 +36,7 @@ function createWindow() {
 
 	// win 下初始化托盘
 	if (process.platform === 'win32') {
-		initTray();
+		initTray(app, mainWindow);
 	}
 
 	// 菜单
