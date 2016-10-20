@@ -5,7 +5,7 @@ Contribute plugin for FET
 
 #### Complete functions in your plugin
 
-your plugin can be ** pure web app ** or ** electron app **.
+your plugin can be **pure web app** or **electron app**.
 
 #### Configure `package.json`
 
