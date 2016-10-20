@@ -21,7 +21,8 @@
 		"dev:render": "node script/render.dev.babel.js --env=dev",
 		"dev:main": "node script/main.dev.babel.js --env=dev",
 		"build": "node script/main.build.babel.js --env=production",
-		"asar": "node script/asar.build.babel.js --env=production"
+		"asar": "node script/asar.build.babel.js --env=production",
+		"changelog": "node script/changelog.js"
 	},
 	"repository": {
 		"type": "git",
