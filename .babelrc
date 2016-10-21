@@ -1,5 +1,5 @@
 {
-	"presets": ["es2015", "stage-2"],
+	"presets": ["latest"],
 	"ignore": ["electron.asar", "node_modules"],
 	"plugins": ["transform-runtime"],
 	"comments": false
