@@ -37,24 +37,29 @@ const run = async function(answers) {
 			return injectAppInfo();
 		})
 		.then(() => {
+			return installModule();
+		})
+		.then(() => {
 			return buildStatic();
 		})
 		.then(() => {
 			return babelMainFile();
-		}).then(() => {
-			return installModule();
-		}).then(() => {
+		})
+		.then(() => {
 			return buildAsar();
-		}).then(() => {
+		})
+		.then(() => {
 			return packageApp(packExec);
-		}).then(() => {
+		})
+		.then(() => {
 			if (answers.release) {
 				return pushNewTagAndUploadQiniu(answers.version);
 			}
 		})
 		.then(() => {
 			logger.success('All succeed.');
-		}).catch((e) => {
+		})
+		.catch((e) => {
 			throw e;
 		})
 };

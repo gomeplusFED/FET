@@ -5,9 +5,9 @@ const run = async function() {
 	await cleanDistPath();
 	await generatePorductionPackageJson();
 	await injectAppInfo();
+	await installModule();
 	await buildStatic();
 	await babelMainFile();
-	await installModule();
 	await buildAsar();
 	await logger.success('All succeed.');
 };

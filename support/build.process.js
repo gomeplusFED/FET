@@ -147,17 +147,24 @@ export const buildStatic = function() {
 export const babelMainFile = function() {
 	return new Promise((resolve, reject) => {
 		let spinner = ora('Transform main process resource ...').start();
-		babelDir(path.join(__dirname, '../', 'src/main'), path.join(__dirname, '../', 'dist/main'))
-			.then(() => {
-				spinner.stop();
-				logger.success('Transform main process resource succeed.');
-				resolve();
-			})
-			.catch((err) => {
-				spinner.stop();
-				logger.fatal(err);
-				reject(err);
-			});
+
+		if (!fs.existsSync(path.join(__dirname, '../', 'dist/main'))) {
+			fs.mkdirSync(path.join(__dirname, '../', 'dist/main'));
+		}
+
+		exec(`cp -rf ${path.join(__dirname, '../', 'src/main')} ${path.join(__dirname, '../', 'dist')}}`, () => {
+			babelDir(path.join(__dirname, '../', 'dist/main'), path.join(__dirname, '../', 'dist/main'))
+				.then(() => {
+					spinner.stop();
+					logger.success('Transform main process resource succeed.');
+					resolve();
+				})
+				.catch((err) => {
+					spinner.stop();
+					logger.fatal(err);
+					reject(err);
+				});
+		});
 	});
 };
 
