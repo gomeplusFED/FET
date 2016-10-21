@@ -130,23 +130,15 @@ export const injectAppInfo = function() {
 export const buildStatic = function() {
 	return new Promise((resolve, reject) => {
 		let spinner = ora('Building render process resource ...').start();
-		const assetsPath = path.join(baseConfig.assetsRoot, './');
-		exec('rm -rf ' + assetsPath, function(err, stdout, stderr) {
+		webpack(webpackConfig, function(err, stats) {
 			if (err) {
 				spinner.stop();
 				reject(err);
 				logger.fatal(err);
 			};
-			webpack(webpackConfig, function(err, stats) {
-				if (err) {
-					spinner.stop();
-					reject(err);
-					logger.fatal(err);
-				};
-				spinner.stop();
-				logger.success('Build render process resource succeed.');
-				resolve();
-			});
+			spinner.stop();
+			logger.success('Build render process resource succeed.');
+			resolve();
 		});
 	});
 };
@@ -245,7 +237,7 @@ export const pushNewTagAndUploadQiniu = function(version) {
 							spinner2.stop();
 							logger.success('Upload asar file succeed.');
 							if (!test('-e', path.join(__dirname, '../temp'))) {
-								mkdir( path.join(__dirname, '../temp'));
+								mkdir(path.join(__dirname, '../temp'));
 							}
 							fs.writeFile(path.join(__dirname, '../temp/info.json'), `{"version": "v${version}"}`, (err) => {
 								uploadFile(uptoken(bucket, 'info.json'), 'info.json', path.join(__dirname, '../temp/info.json'), () => {
