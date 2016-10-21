@@ -1,115 +1,122 @@
 {
-	"name": "fe-tools",
-	"app-name": "FE-Tools",
-	"version": "0.0.15",
-	"description": "前端工具集",
-	"main": "./src/main/app.babel.js",
-	"engines": {
-		"node": ">=4.4.2"
-	},
-	"electronVersion": "1.3.2",
-	"author": [{
-		"name": "luoye",
-		"email": "842891024@qq.com",
-		"github": "https://github.com/luoye-fe"
-	}, {
-		"name": "liangxiao",
-		"email": "495361365@qq.com",
-		"github": "https://github.com/xiaopili"
-	}],
-	"scripts": {
-		"dev:render": "node script/render.dev.babel.js --env=dev",
-		"dev:main": "node script/main.dev.babel.js --env=dev",
-		"build": "node script/main.build.babel.js --env=production",
-		"asar": "node script/asar.build.babel.js --env=production",
-		"changelog": "node script/changelog.js"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/gomeplusFED/FET.git"
-	},
-	"homepage": "https://github.com/gomeplusFED/FET",
-	"bugs": "https://github.com/gomeplusFED/FET/issues",
-	"dependencies": {
-		"babel-runtime": "^6.11.6",
-		"fs-extra": "^0.30.0",
-		"minimist": "^1.2.0",
-		"node-fetch": "^1.6.0",
-		"unzip": "^0.1.11",
-		"vue": "^1.0.26",
-		"vue-electron": "^1.0.4",
-		"vue-resource": "^0.9.3"
-	},
-	"devDependencies": {
-		"asar": "^0.12.1",
-		"babel-core": "^6.13.2",
-		"babel-loader": "^6.2.4",
-		"babel-plugin-transform-runtime": "^6.12.0",
-		"babel-preset-es2015": "^6.13.2",
-		"babel-preset-stage-2": "^6.13.0",
-		"chalk": "^1.1.3",
-		"css-loader": "^0.23.1",
-		"electron-builder": "next",
-		"eslint": "^3.2.2",
-		"eslint-config-standard": "^5.3.5",
-		"eslint-friendly-formatter": "^2.0.6",
-		"eslint-loader": "^1.5.0",
-		"eslint-plugin-html": "^1.5.2",
-		"eslint-plugin-promise": "^2.0.1",
-		"eslint-plugin-standard": "^2.0.0",
-		"eventsource-polyfill": "^0.9.6",
-		"express": "^4.14.0",
-		"extract-text-webpack-plugin": "^1.0.1",
-		"file-loader": "^0.9.0",
-		"html-webpack-plugin": "^2.22.0",
-		"inquirer": "^1.1.2",
-		"js-beautify": "^1.6.3",
-		"json-loader": "^0.5.4",
-		"less": "^2.7.1",
-		"less-loader": "^2.2.3",
-		"ora": "^0.3.0",
-		"qiniu": "^6.1.11",
-		"rd": "0.0.2",
-		"shelljs": "^0.7.3",
-		"url-loader": "^0.5.7",
-		"vue-hot-reload-api": "^1.2.0",
-		"vue-html-loader": "^1.2.3",
-		"vue-loader": "^8.5.3",
-		"vue-style-loader": "^1.0.0",
-		"webpack": "^1.13.1",
-		"webpack-dev-middleware": "^1.6.1",
-		"webpack-hot-middleware": "^2.12.2",
-		"webpack-merge": "^0.14.1"
-	},
-	"build": {
-		"productName": "FE-Tools",
-		"copyright": "Copyright © 2016 gomeplusFED",
-		"dmg": {
-			"title": "FE-Tool",
-			"icon": "./build/icon.icns",
-			"background": "./build/background.png",
-			"contents": [{
-				"x": 460,
-				"y": 250,
-				"type": "link",
-				"path": "/Applications"
-			}, {
-				"x": 150,
-				"y": 250,
-				"type": "file"
-			}]
-		},
-		"win": {
-			"target": ["nsis"],
-			"iconUrl": "https://github.com/gomeplusFED/FET/blob/master/build/icon.ico?raw=true"
-		},
-		"nsis": {
-			"runAfterFinish": false
-		}
-	},
-	"directories": {
-		"output": "./app/",
-		"app": "./dist/"
-	},
-	"license": "MIT"
+  "name": "fe-tools",
+  "app-name": "FE-Tools",
+  "version": "0.0.15",
+  "description": "前端工具集",
+  "main": "./src/main/app.babel.js",
+  "engines": {
+    "node": ">=4.4.2"
+  },
+  "electronVersion": "1.3.2",
+  "author": [
+    {
+      "name": "luoye",
+      "email": "842891024@qq.com",
+      "github": "https://github.com/luoye-fe"
+    },
+    {
+      "name": "liangxiao",
+      "email": "495361365@qq.com",
+      "github": "https://github.com/xiaopili"
+    }
+  ],
+  "scripts": {
+    "dev:render": "node script/render.dev.babel.js --env=dev",
+    "dev:main": "node script/main.dev.babel.js --env=dev",
+    "build": "node script/main.build.babel.js --env=production",
+    "asar": "node script/asar.build.babel.js --env=production",
+    "changelog": "node script/changelog.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gomeplusFED/FET.git"
+  },
+  "homepage": "https://github.com/gomeplusFED/FET",
+  "bugs": "https://github.com/gomeplusFED/FET/issues",
+  "dependencies": {
+    "babel-runtime": "^6.11.6",
+    "fs-extra": "^0.30.0",
+    "minimist": "^1.2.0",
+    "node-fetch": "^1.6.0",
+    "unzip": "^0.1.11",
+    "vue": "^1.0.26",
+    "vue-electron": "^1.0.4",
+    "vue-resource": "^0.9.3"
+  },
+  "devDependencies": {
+    "asar": "^0.12.1",
+    "babel-core": "^6.13.2",
+    "babel-eslint": "^7.0.0",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-runtime": "^6.12.0",
+    "babel-preset-latest": "^6.16.0",
+    "chalk": "^1.1.3",
+    "css-loader": "^0.23.1",
+    "electron-builder": "next",
+    "eslint": "^3.2.2",
+    "eslint-config-standard": "^5.3.5",
+    "eslint-friendly-formatter": "^2.0.6",
+    "eslint-loader": "^1.5.0",
+    "eslint-plugin-promise": "^2.0.1",
+    "eslint-plugin-standard": "^2.0.0",
+    "eventsource-polyfill": "^0.9.6",
+    "express": "^4.14.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
+    "html-webpack-plugin": "^2.22.0",
+    "inquirer": "^1.1.2",
+    "js-beautify": "^1.6.3",
+    "json-loader": "^0.5.4",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
+    "ora": "^0.3.0",
+    "qiniu": "^6.1.11",
+    "rd": "0.0.2",
+    "shelljs": "^0.7.3",
+    "url-loader": "^0.5.7",
+    "vue-hot-reload-api": "^1.2.0",
+    "vue-html-loader": "^1.2.3",
+    "vue-loader": "^8.5.3",
+    "vue-style-loader": "^1.0.0",
+    "webpack": "^1.13.1",
+    "webpack-dev-middleware": "^1.6.1",
+    "webpack-hot-middleware": "^2.12.2",
+    "webpack-merge": "^0.14.1"
+  },
+  "build": {
+    "productName": "FE-Tools",
+    "copyright": "Copyright © 2016 gomeplusFED",
+    "dmg": {
+      "title": "FE-Tool",
+      "icon": "./build/icon.icns",
+      "background": "./build/background.png",
+      "contents": [
+        {
+          "x": 460,
+          "y": 250,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 150,
+          "y": 250,
+          "type": "file"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "iconUrl": "https://github.com/gomeplusFED/FET/blob/master/build/icon.ico?raw=true"
+    },
+    "nsis": {
+      "runAfterFinish": false
+    }
+  },
+  "directories": {
+    "output": "./app/",
+    "app": "./dist/"
+  },
+  "license": "MIT"
 }
