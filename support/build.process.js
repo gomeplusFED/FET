@@ -152,7 +152,7 @@ export const babelMainFile = function() {
 			fs.mkdirSync(path.join(__dirname, '../', 'dist/main'));
 		}
 
-		exec(`cp -rf ${path.join(__dirname, '../', 'src/main')} ${path.join(__dirname, '../', 'dist')}}`, () => {
+		exec(`cp -rf ${path.join(__dirname, '../', 'src/main')} ${path.join(__dirname, '../', 'dist')}`, () => {
 			babelDir(path.join(__dirname, '../', 'dist/main'), path.join(__dirname, '../', 'dist/main'))
 				.then(() => {
 					spinner.stop();
