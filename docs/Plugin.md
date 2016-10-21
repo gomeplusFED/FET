@@ -1,4 +1,4 @@
-Contribute plugin for FET
+Contribute plugin to FET
 --------------------------------------------------
 #### Create a new repo in your github
 

@@ -11,6 +11,10 @@ FET
 
 * [Meixin Proxy](https://github.com/gomeplusFED/fet-meixin-h5-proxy) `https://github.com/gomeplusFED/fet-meixin-h5-proxy`
 
+### How to start developing ?
+
+Please read [this document](./docs/Develop.md).
+
 ### How to contribute plugin to FET
 
 Please read [this document](./docs/Plugin.md).
