@@ -65,7 +65,7 @@ export const generatePorductionPackageJson = function() {
 			}
 		});
 		let distPath = path.join(__dirname, '../dist/package.json');
-		if (fs.existsSync(path.join(__dirname, '../dist'))) {
+		if (!fs.existsSync(path.join(__dirname, '../dist'))) {
 			fs.mkdirSync(path.join(__dirname, '../dist'));
 		}
 		fs.writeFile(distPath, jsbeautify(JSON.stringify(proPackageJson), {
