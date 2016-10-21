@@ -64,7 +64,11 @@ export const generatePorductionPackageJson = function() {
 				delete proPackageJson.dependencies[item];
 			}
 		});
-		fs.writeFile(path.join(__dirname, '../dist/package.json'), jsbeautify(JSON.stringify(proPackageJson), {
+		let distPath = path.join(__dirname, '../dist/package.json');
+		if (fs.existsSync(path.join(__dirname, '../dist'))) {
+			fs.mkdirSync(path.join(__dirname, '../dist'));
+		}
+		fs.writeFile(distPath, jsbeautify(JSON.stringify(proPackageJson), {
 			'indent_with_tabs': true,
 			'indent_size': 4
 		}), 'utf-8', function() {
