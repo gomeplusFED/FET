@@ -1,22 +1,15 @@
 import logger from '../support/logger.js';
-import { generatePorductionPackageJson, buildStatic, babelMainFile, installModule, buildAsar, injectAppInfo } from '../support/build.process.js';
+import { cleanDistPath, generatePorductionPackageJson, buildStatic, babelMainFile, installModule, buildAsar, injectAppInfo } from '../support/build.process.js';
 
-generatePorductionPackageJson()
-	.then(() => {
-		return injectAppInfo();
-	})
-	.then(() => {
-		return buildStatic();
-	})
-	.then(() => {
-		return babelMainFile();
-	}).then(() => {
-		return installModule();
-	}).then(() => {
-		return buildAsar();
-	})
-	.then(() => {
-		logger.success('All succeed.');
-	}).catch((e) => {
-		throw e;
-	});
+const run = async function() {
+	await cleanDistPath();
+	await generatePorductionPackageJson();
+	await injectAppInfo();
+	await buildStatic();
+	await babelMainFile();
+	await installModule();
+	await buildAsar();
+	await logger.success('All succeed.');
+};
+
+run();

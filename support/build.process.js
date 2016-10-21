@@ -42,6 +42,22 @@ function uploadFile(uptoken, key, localFile, cb) {
 	});
 }
 
+export const cleanDistPath = function() {
+	return new Promise((resolve, reject) => {
+		let spinner = ora('Cleaning dist path ...').start();
+		exec(`rm -rf ${path.join(__dirname, '../dist')}`, (err, stdout, stderr) => {
+			if (err) {
+				spinner.stop();
+				reject(err);
+				logger.fatal(err);
+			};
+			spinner.stop();
+			logger.success('Clean dist path succeed.');
+			resolve();
+		})
+	})
+};
+
 // 生成生产环境的 package.json
 export const generatePorductionPackageJson = function() {
 	return new Promise((resolve, reject) => {
@@ -113,7 +129,7 @@ export const injectAppInfo = function() {
 // 打包 render 资源
 export const buildStatic = function() {
 	return new Promise((resolve, reject) => {
-		let spinner = ora('Building staic resource ...').start();
+		let spinner = ora('Building render process resource ...').start();
 		const assetsPath = path.join(baseConfig.assetsRoot, './');
 		exec('rm -rf ' + assetsPath, function(err, stdout, stderr) {
 			if (err) {
@@ -128,7 +144,7 @@ export const buildStatic = function() {
 					logger.fatal(err);
 				};
 				spinner.stop();
-				logger.success('Build static resource succeed.');
+				logger.success('Build render process resource succeed.');
 				resolve();
 			});
 		});
@@ -138,11 +154,11 @@ export const buildStatic = function() {
 // 编译 src/main 文件夹到 dist 目录
 export const babelMainFile = function() {
 	return new Promise((resolve, reject) => {
-		let spinner = ora('Transform file by babel ...').start();
+		let spinner = ora('Transform main process resource ...').start();
 		babelDir(path.join(__dirname, '../', 'src/main'), path.join(__dirname, '../', 'dist/main'))
 			.then(() => {
 				spinner.stop();
-				logger.success('Transform file succeed.');
+				logger.success('Transform main process resource succeed.');
 				resolve();
 			})
 			.catch((err) => {
@@ -181,7 +197,7 @@ export const packageApp = function(packExec) {
 				logger.fatal(err);
 			};
 			spinner.stop();
-			logger.success('Packag app successd.');
+			logger.success('Package app successd.');
 			resolve();
 		});
 	});
@@ -204,7 +220,7 @@ export const buildAsar = function() {
 export const pushNewTagAndUploadQiniu = function(version) {
 	return new Promise((resolve, reject) => {
 		exec(`git tag v${version}`, () => {
-			let spinner1 = ora('Pushing tag to github ...').start();
+			let spinner1 = ora('Pushing to github ...').start();
 			exec(`git commit -am "Release new version v${version}."`, { silent: true }, (e, stout) => {
 				exec('git push origin master && git push --tags', { silent: true }, (e, stout) => {
 					if (e) {
@@ -212,14 +228,14 @@ export const pushNewTagAndUploadQiniu = function(version) {
 						logger.fatal(e);
 					};
 					spinner1.stop();
-					logger.success('Push tag succeed.');
+					logger.success('Push succeed.');
 
 					let bucket = 'luoye';
 					let key = `app-${version}.asar`;
 
 					let token = uptoken(bucket, key);
 					let filePath = path.join(__dirname, `../asar/app-${version}.asar`);
-					let spinner2 = ora('Uploading asar to qiniu ...').start();
+					let spinner2 = ora('Uploading asar file to qiniu ...').start();
 					uploadFile(token, key, filePath, (err) => {
 						if (err) {
 							spinner.stop();

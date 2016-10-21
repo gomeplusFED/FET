@@ -12,7 +12,7 @@ import { js as jsbeautify } from 'js-beautify';
 
 import logger from '../support/logger.js';
 
-import { generatePorductionPackageJson, buildStatic, babelMainFile, installModule, packageApp, injectAppInfo, buildAsar, pushNewTagAndUploadQiniu } from '../support/build.process.js';
+import { cleanDistPath, generatePorductionPackageJson, buildStatic, babelMainFile, installModule, packageApp, injectAppInfo, buildAsar, pushNewTagAndUploadQiniu } from '../support/build.process.js';
 
 import pkinfo from '../package.json';
 
@@ -28,8 +28,11 @@ if (!test('-e', distPath)) {
 
 let packExec = '';
 
-const run = function(answers) {
-	generatePorductionPackageJson()
+const run = async function(answers) {
+	cleanDistPath()
+		.then(() => {
+			return generatePorductionPackageJson();
+		})
 		.then(() => {
 			return injectAppInfo();
 		})
