@@ -44,6 +44,8 @@ export default {
 		let electronPath = storage.get('electronPath');
 		if (electronPath === null || !fs.existsSync(electronPath)) {
 			this.show = true;
+		} else {
+			return;
 		}
 		ipcRenderer.on('install-electron-ing', (ev, args) => {
 			this.showStatus = args.showStatus;

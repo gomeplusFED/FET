@@ -8,9 +8,11 @@ storage.set = (item, obj) => {
 
 storage.get = (item) => {
 	let curr = localStorage.getItem(item);
-	let result;
-	typeof curr === 'string' ? result = curr : result = JSON.parse(curr);
-	return result;
+	try {
+		return JSON.parse(curr);
+	} catch (e) {
+		return curr;
+	}
 };
 
 storage.clear = localStorage.clear;

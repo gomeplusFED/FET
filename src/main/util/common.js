@@ -1,7 +1,7 @@
 import path from 'path';
 import { exec } from 'child_process';
 
-import DecompressZip from 'decompress-zip';
+import extract from 'extract-zip';
 
 export const formatFileSize = (bytes) => {
 	let val = bytes / 1024;
@@ -37,21 +37,12 @@ export const unzip = (file, target, cb) => {
 			cb();
 		});
 	} else {
-		const zip = new DecompressZip(file);
-		zip.on('error', function(err) {
-			if (err) cb(err);
-		});
-		zip.on('extract', function(log) {
-			console.log('Finished extracting');
-		});
-		zip.on('progress', function(fileIndex, fileCount) {
-			console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
-		});
-		zip.on('extract', () => {
+		extract(file, { dir: target }, function(err) {
+			if (err) {
+				cb(err);
+				return;
+			}
 			cb();
-		});
-		zip.extract({
-			path: target
 		});
 	}
 };
