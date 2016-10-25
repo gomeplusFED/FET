@@ -15,6 +15,7 @@ import storage from 'utils/storage.js';
 const localStoragePath = path.join(remote.app.getPath('userData'), 'localStorage.json');
 
 function Init() {
+	// 判断本地 localstorage 文件是否存在，写到浏览器 localstorage 中
 	if (fs.existsSync(localStoragePath)) {
 		let cur = JSON.parse(fs.readFileSync(localStoragePath, 'utf-8'));
 		localStorage.clear();

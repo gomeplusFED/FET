@@ -68,8 +68,10 @@ ipcMain.on('app-init', (ev) => {
 							msg: '下载完成，初始化中',
 							loading: true
 						});
+						// 需更新，获取 localstorage
 						ev.sender.send('app-want-get-localstorage');
 						ipcMain.on('app-localstorage', (ev, obj) => {
+							// 写 localstorage 到本地文件
 							originalFs.writeFileSync(path.join(app.getPath('userData'), 'localStorage.json'), JSON.stringify(obj));
 							let appAsarFilePath = null;
 							if (originalFs.existsSync(path.join(app.getAppPath(), '../app.asar'))) {

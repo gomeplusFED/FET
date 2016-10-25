@@ -3,7 +3,7 @@ import path from 'path';
 
 import { app, ipcMain, BrowserWindow } from 'electron';
 import fetch from 'node-fetch';
-import unzip from 'unzip';
+import extract from 'extract-zip';
 import { removeSync as rmdir } from 'fs-extra';
 import { exec } from 'child_process';
 
@@ -90,24 +90,23 @@ ipcMain.on('plugin-install', (ev, obj) => {
 						msg: '下载成功，正在初始化'
 					});
 					// 解压
-					fs.createReadStream(pluginDownloadFileName)
-						.pipe(unzip.Extract({ path: pluginContentPath }))
-						.on('close', () => {
-							fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
-							fs.unlinkSync(pluginDownloadFileName);
-							// 安装依赖
-							ev.sender.send('plugin-installing', {
-								showCheck: true,
-								showGouhao: true,
-								msg: `${obj.action || '安装'}成功`
-							});
-							// 关闭窗口
-							tempWin.close();
-							ev.sender.send('plugin-installed', {
-								pluginName: pluginWholeName,
-								pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
-							});
+					extract(pluginDownloadFileName, { dir: pluginContentPath }, function(err) {
+						if (err) throw err;
+						fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
+						fs.unlinkSync(pluginDownloadFileName);
+						// 安装依赖
+						ev.sender.send('plugin-installing', {
+							showCheck: true,
+							showGouhao: true,
+							msg: `${obj.action || '安装'}成功`
 						});
+						// 关闭窗口
+						tempWin.close();
+						ev.sender.send('plugin-installed', {
+							pluginName: pluginWholeName,
+							pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
+						});
+					});
 				}
 			});
 		});
