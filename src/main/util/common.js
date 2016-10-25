@@ -26,23 +26,23 @@ export const formatFileSize = (bytes) => {
 };
 
 export const unzip = (file, target, cb) => {
-	if (process.platform === 'darwin') {
-		// The zip archive of darwin build contains symbol links, only the "unzip"
-		// command can handle it correctly.
-		exec(`unzip '${file}' -d '${target}'`, (err) => {
-			if (err) {
-				cb(err);
-				return;
-			}
-			cb();
-		});
-	} else {
-		extract(file, { dir: target }, function(err) {
-			if (err) {
-				cb(err);
-				return;
-			}
-			cb();
-		});
-	}
+	// if (process.platform === 'darwin') {
+	// The zip archive of darwin build contains symbol links, only the "unzip"
+	// command can handle it correctly.
+	exec(`unzip '${file}' -d '${target}'`, (err) => {
+		if (err) {
+			cb(err);
+			return;
+		}
+		cb();
+	});
+	// } else {
+	// 	extract(file, { dir: target }, function(err) {
+	// 		if (err) {
+	// 			cb(err);
+	// 			return;
+	// 		}
+	// 		cb();
+	// 	});
+	// }
 };
