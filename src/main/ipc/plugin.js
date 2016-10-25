@@ -3,11 +3,10 @@ import path from 'path';
 
 import { app, ipcMain, BrowserWindow } from 'electron';
 import fetch from 'node-fetch';
-import extract from 'extract-zip';
 import { removeSync as rmdir } from 'fs-extra';
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 
-import { formatFileSize } from '../util/common.js';
+import { formatFileSize, unzip } from '../util/common.js';
 import { createWindowForPlugin } from '../util/window.js';
 import { debug } from '../util/debug.js';
 import env from '../config/env.config.js';
@@ -69,7 +68,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				fs.mkdirSync(pluginContentPath);
 			}
 			if (fs.existsSync(pluginDownloadPath)) {
-				rmdir(pluginDownloadPath);
+				execSync(`rm -rf ${pluginDownloadPath}`);
 			}
 
 			item.setSavePath(pluginDownloadFileName);
@@ -90,9 +89,10 @@ ipcMain.on('plugin-install', (ev, obj) => {
 						msg: '下载成功，正在初始化'
 					});
 					// 解压
-					extract(pluginDownloadFileName, { dir: pluginContentPath }, function(err) {
+					unzip(pluginDownloadFileName, pluginContentPath, function(err) {
 						if (err) throw err;
-						fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
+						// fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
+						execSync(`mv -f '${path.join(userDataPath, 'Plugins', pluginName + '-fet')}' '${pluginDownloadPath}'`);
 						fs.unlinkSync(pluginDownloadFileName);
 						// 安装依赖
 						ev.sender.send('plugin-installing', {
@@ -167,6 +167,7 @@ function runWebPlugin(options) {
 }
 
 function runAppPlugin(options) {
+	console.log(options);
 	// let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
 	// let child = exec(`${process.argv} '${entry}'`);
 }

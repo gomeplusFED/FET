@@ -310,6 +310,7 @@ export default {
 			let pluginName = args.pluginName;
 			let pluginPkgInfo = args.pluginPkgInfo;
 			let installedPlugin = storage.get('installedPlugin') || {};
+			pluginPkgInfo.fet = pluginPkgInfo.fet || {};
 			// 兼容未规定 type 的前期 plugin
 			if (!pluginPkgInfo.fet.type) {
 				pluginPkgInfo.fet.type = 'web';
