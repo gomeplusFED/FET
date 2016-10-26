@@ -27,7 +27,9 @@ export const createNewFramlessAndAutoSizeWindow = (screen) => {
 		currentWin.show();
 	});
 	currentWin.on('close', function(e) {
-		currentWin = null;
+		// currentWin = null;
+		e.preventDefault();
+		currentWin.hide();
 	});
 	return currentWin;
 };
@@ -53,7 +55,9 @@ export const createWindowForPlugin = (params) => {
 		currentWin.show();
 	});
 	currentWin.on('close', function(e) {
-		currentWin = null;
+		// currentWin = null;
+		e.preventDefault();
+		currentWin.hide();
 	});
 	return currentWin;
 };
