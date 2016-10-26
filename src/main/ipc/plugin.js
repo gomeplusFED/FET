@@ -63,12 +63,13 @@ ipcMain.on('plugin-install', (ev, obj) => {
 			let pluginContentPath = path.join(userDataPath, 'Plugins');
 			let pluginDownloadFileName = path.join(userDataPath, 'Plugins', pluginWholeName + '.zip');
 			let pluginDownloadPath = path.join(userDataPath, 'Plugins', pluginWholeName);
+			console.log(pluginDownloadPath);
 
 			if (!fs.existsSync(pluginContentPath)) {
 				fs.mkdirSync(pluginContentPath);
 			}
 			if (fs.existsSync(pluginDownloadPath)) {
-				execSync(`rm -rf ${pluginDownloadPath}`);
+				execSync(`rm -rf '${pluginDownloadPath}'`);
 			}
 
 			item.setSavePath(pluginDownloadFileName);
@@ -167,7 +168,6 @@ function runWebPlugin(options) {
 }
 
 function runAppPlugin(options) {
-	console.log(options);
-	// let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
-	// let child = exec(`${process.argv} '${entry}'`);
+	let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
+	let child = exec(`'${options.electronPath}' '${entry}'`);
 }
