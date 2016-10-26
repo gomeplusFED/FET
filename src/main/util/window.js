@@ -1,4 +1,10 @@
-import { BrowserWindow } from 'electron';
+import { app, BrowserWindow } from 'electron';
+
+let forceQuit = false;
+
+app.on('before-quit', function() {
+	forceQuit = true;
+});
 
 export const createNewFramlessAndAutoSizeWindow = (screen) => {
 	let allWindows = BrowserWindow.getAllWindows();
@@ -28,8 +34,13 @@ export const createNewFramlessAndAutoSizeWindow = (screen) => {
 	});
 	currentWin.on('close', function(e) {
 		// currentWin = null;
-		e.preventDefault();
-		currentWin.hide();
+		if (!forceQuit) {
+			e.preventDefault();
+			currentWin.hide();
+			return;
+		}
+		currentWin = null;
+		app.quit();
 	});
 	return currentWin;
 };
@@ -56,8 +67,13 @@ export const createWindowForPlugin = (params) => {
 	});
 	currentWin.on('close', function(e) {
 		// currentWin = null;
-		e.preventDefault();
-		currentWin.hide();
+		if (!forceQuit) {
+			e.preventDefault();
+			currentWin.hide();
+			return;
+		}
+		currentWin = null;
+		app.quit();
 	});
 	return currentWin;
 };
