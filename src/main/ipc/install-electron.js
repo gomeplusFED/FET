@@ -6,8 +6,11 @@ import { app, ipcMain, BrowserWindow } from 'electron';
 import { formatFileSize, unzip } from '../util/common.js';
 
 let tempWin = null;
+let lock = false;
 
 ipcMain.on('install-electron', (ev) => {
+	if (lock) return;
+	lock = true;
 	ev.sender.send('install-electron-ing', {
 		msg: '开始下载',
 		showStatus: true
@@ -53,6 +56,7 @@ ipcMain.on('install-electron', (ev) => {
 					}
 					tempWin.close();
 					ev.sender.send('install-electron-ed', electronAppPath);
+					lock = false;
 				});
 			}
 		});
