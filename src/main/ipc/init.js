@@ -1,7 +1,6 @@
 import fs from 'fs';
 import originalFs from 'original-fs';
 import path from 'path';
-import { exec } from 'child_process';
 
 import { app, ipcMain, BrowserWindow } from 'electron';
 import fetch from 'node-fetch';
