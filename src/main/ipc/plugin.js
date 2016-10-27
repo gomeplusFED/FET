@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 import { removeSync as rmdir } from 'fs-extra';
 import { exec, execSync } from 'child_process';
 
-import { formatFileSize, unzip } from '../util/common.js';
+import { formatFileSize, unzip, normalizePath } from '../util/common.js';
 import { createWindowForPlugin } from '../util/window.js';
 import { debug } from '../util/debug.js';
 import env from '../config/env.config.js';
@@ -67,7 +67,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				fs.mkdirSync(pluginContentPath);
 			}
 			if (fs.existsSync(pluginDownloadPath)) {
-				execSync(`rm -rf '${pluginDownloadPath}'`);
+				execSync(`rm -rf ${normalizePath(pluginDownloadPath)}`);
 			}
 
 			item.setSavePath(pluginDownloadFileName);
@@ -90,7 +90,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 					// 解压
 					unzip(pluginDownloadFileName, pluginContentPath, function(err) {
 						if (err) throw err;
-						execSync(`mv -f '${path.join(userDataPath, 'Plugins', pluginName + '-fet')}' '${pluginDownloadPath}'`);
+						execSync(`mv -f ${normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet'))} ${normalizePath(pluginDownloadPath)}`);
 						fs.unlinkSync(pluginDownloadFileName);
 						fs.readdir(pluginDownloadPath, (err, files) => {
 							if (err) throw err;
@@ -173,5 +173,9 @@ function runWebPlugin(options) {
 
 function runAppPlugin(options) {
 	let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
-	let child = exec(`'${options.electronPath}' '${entry}'`);
+	exec(`${normalizePath(options.electronPath)} ${normalizePath(entry)}`, (err) => {
+		if (err) {
+			console.log(err);
+		}
+	});
 }
