@@ -3,11 +3,10 @@ import path from 'path';
 
 import { app, ipcMain, BrowserWindow } from 'electron';
 import fetch from 'node-fetch';
-import extract from 'extract-zip';
 import { removeSync as rmdir } from 'fs-extra';
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 
-import { formatFileSize } from '../util/common.js';
+import { formatFileSize, unzip } from '../util/common.js';
 import { createWindowForPlugin } from '../util/window.js';
 import { debug } from '../util/debug.js';
 import env from '../config/env.config.js';
@@ -64,12 +63,11 @@ ipcMain.on('plugin-install', (ev, obj) => {
 			let pluginContentPath = path.join(userDataPath, 'Plugins');
 			let pluginDownloadFileName = path.join(userDataPath, 'Plugins', pluginWholeName + '.zip');
 			let pluginDownloadPath = path.join(userDataPath, 'Plugins', pluginWholeName);
-
 			if (!fs.existsSync(pluginContentPath)) {
 				fs.mkdirSync(pluginContentPath);
 			}
 			if (fs.existsSync(pluginDownloadPath)) {
-				rmdir(pluginDownloadPath);
+				execSync(`rm -rf '${pluginDownloadPath}'`);
 			}
 
 			item.setSavePath(pluginDownloadFileName);
@@ -87,24 +85,31 @@ ipcMain.on('plugin-install', (ev, obj) => {
 					ev.sender.send('plugin-installing', {
 						showCheck: true,
 						showLoading: true,
-						msg: '下载成功，正在初始化'
+						msg: '下载成功，正在初始化，请稍后'
 					});
 					// 解压
-					extract(pluginDownloadFileName, { dir: pluginContentPath }, function(err) {
+					unzip(pluginDownloadFileName, pluginContentPath, function(err) {
 						if (err) throw err;
-						fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
+						execSync(`mv -f '${path.join(userDataPath, 'Plugins', pluginName + '-fet')}' '${pluginDownloadPath}'`);
 						fs.unlinkSync(pluginDownloadFileName);
-						// 安装依赖
-						ev.sender.send('plugin-installing', {
-							showCheck: true,
-							showGouhao: true,
-							msg: `${obj.action || '安装'}成功`
-						});
-						// 关闭窗口
-						tempWin.close();
-						ev.sender.send('plugin-installed', {
-							pluginName: pluginWholeName,
-							pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
+						fs.readdir(pluginDownloadPath, (err, files) => {
+							if (err) throw err;
+							if (files.includes('app.zip')) {
+								unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
+									if (err) throw err;
+									ev.sender.send('plugin-installing', {
+										showCheck: true,
+										showGouhao: true,
+										msg: `${obj.action || '安装'}成功`
+									});
+									// 关闭窗口
+									tempWin.close();
+									ev.sender.send('plugin-installed', {
+										pluginName: pluginWholeName,
+										pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
+									});
+								});
+							}
 						});
 					});
 				}
@@ -167,6 +172,6 @@ function runWebPlugin(options) {
 }
 
 function runAppPlugin(options) {
-	// let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
-	// let child = exec(`${process.argv} '${entry}'`);
+	let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
+	let child = exec(`'${options.electronPath}' '${entry}'`);
 }

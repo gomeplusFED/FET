@@ -193,7 +193,8 @@ export default {
 			}
 			let pluginDetail = Object.assign({
 				key: key,
-				screen: screen
+				screen: screen,
+				electronPath: storage.get('electronPath')
 			}, plugin);
 			ipcRenderer.send('plugin-start', pluginDetail);
 		}
