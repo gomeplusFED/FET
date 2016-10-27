@@ -1,5 +1,6 @@
 // auto generate changelog
 var fs = require('fs');
+var exec = require('child_process').exec;
 var fetch = require('node-fetch');
 
 fs.writeFileSync('./CHANGELOG.md', '# FET Changelog \n\n');
@@ -31,5 +32,6 @@ fetch('https://api.github.com/repos/gomeplusFED/FET/releases')
 			let time = item.created_at;
 			let body = item.body.replace(/###/g, '#####');
 			fs.appendFileSync('./CHANGELOG.md', `### ${tagName}  \n\`${formatTime(time)}\`  \n<hr>  \n${body}  \n\n`);
+			exec('git commit -am "update CHANGELOG.md" && git push origin master');
 		});
 	});
