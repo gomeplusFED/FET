@@ -116,3 +116,8 @@
 ##### 1、新增自动更新功能
 ##### 2、改为从七牛下载  
 
+### v0.0.1  
+`2016/09/02 17:15:17`  
+<hr>  
+Just push a test release for auto-update.  
+
