@@ -1,8 +1,6 @@
 import path from 'path';
 import { exec } from 'child_process';
 
-import extract from 'extract-zip';
-
 export const formatFileSize = (bytes) => {
 	let val = bytes / 1024;
 	let suffix;
