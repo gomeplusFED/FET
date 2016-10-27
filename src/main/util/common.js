@@ -29,7 +29,7 @@ export const unzip = (file, target, cb) => {
 	// if (process.platform === 'darwin') {
 	// The zip archive of darwin build contains symbol links, only the "unzip"
 	// command can handle it correctly.
-	exec(`unzip '${file}' -d '${target}'`, (err) => {
+	exec(`unzip -qo '${file}' -d '${target}'`, { maxBuffer: 1024 * 1024 * 20 }, (err) => {
 		if (err) {
 			cb(err);
 			return;

@@ -63,8 +63,6 @@ ipcMain.on('plugin-install', (ev, obj) => {
 			let pluginContentPath = path.join(userDataPath, 'Plugins');
 			let pluginDownloadFileName = path.join(userDataPath, 'Plugins', pluginWholeName + '.zip');
 			let pluginDownloadPath = path.join(userDataPath, 'Plugins', pluginWholeName);
-			console.log(pluginDownloadPath);
-
 			if (!fs.existsSync(pluginContentPath)) {
 				fs.mkdirSync(pluginContentPath);
 			}
@@ -87,25 +85,31 @@ ipcMain.on('plugin-install', (ev, obj) => {
 					ev.sender.send('plugin-installing', {
 						showCheck: true,
 						showLoading: true,
-						msg: '下载成功，正在初始化'
+						msg: '下载成功，正在初始化，请稍后'
 					});
 					// 解压
 					unzip(pluginDownloadFileName, pluginContentPath, function(err) {
 						if (err) throw err;
-						// fs.renameSync(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath);
 						execSync(`mv -f '${path.join(userDataPath, 'Plugins', pluginName + '-fet')}' '${pluginDownloadPath}'`);
 						fs.unlinkSync(pluginDownloadFileName);
-						// 安装依赖
-						ev.sender.send('plugin-installing', {
-							showCheck: true,
-							showGouhao: true,
-							msg: `${obj.action || '安装'}成功`
-						});
-						// 关闭窗口
-						tempWin.close();
-						ev.sender.send('plugin-installed', {
-							pluginName: pluginWholeName,
-							pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
+						fs.readdir(pluginDownloadPath, (err, files) => {
+							if (err) throw err;
+							if (files.includes('app.zip')) {
+								unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
+									if (err) throw err;
+									ev.sender.send('plugin-installing', {
+										showCheck: true,
+										showGouhao: true,
+										msg: `${obj.action || '安装'}成功`
+									});
+									// 关闭窗口
+									tempWin.close();
+									ev.sender.send('plugin-installed', {
+										pluginName: pluginWholeName,
+										pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
+									});
+								});
+							}
 						});
 					});
 				}
