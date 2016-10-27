@@ -284,7 +284,8 @@ export default {
 			checkInfo: '正在检查插件',
 			pluginAdress: '',
 			userDataPath: remote.app.getPath('userData'),
-			installedPluginList: storage.get('installedPlugin') || {}
+			installedPluginList: storage.get('installedPlugin') || {},
+			lock: false
 		};
 	},
 	ready() {
@@ -306,6 +307,7 @@ export default {
 			this.checkInfo = args.msg || '';
 		});
 		ipcRenderer.on('plugin-installed', (ev, args) => {
+			this.lock = false;
 			// 插件安装完成，触发插件系统更新操作
 			let pluginName = args.pluginName;
 			let pluginPkgInfo = args.pluginPkgInfo;
@@ -341,6 +343,8 @@ export default {
 	},
 	methods: {
 		installPlugin() {
+			if (this.lock) return;
+			this.lock = true;
 			if (!/^https:\/\/github.com\//.test(this.pluginAdress)) {
 				this.checkInfo = '地址不合法';
 				this.showCheck = true;
