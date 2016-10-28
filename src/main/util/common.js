@@ -1,6 +1,9 @@
 import path from 'path';
 import { exec } from 'child_process';
 
+// import extract from 'extract-zip';
+import AdmZip from 'adm-zip-electron';
+
 export const formatFileSize = (bytes) => {
 	let val = bytes / 1024;
 	let suffix;
@@ -34,9 +37,10 @@ export const objType = (obj) => {
 export const execCmd = (command, cb) => {
 	exec(command, {
 		env: {
-			PATH: process.env.PATH,
-			maxBuffer: 1024 * 1024 * 20
-		}
+			PATH: process.env.PATH
+		},
+		maxBuffer: 1024 * 1024 * 20,
+		shell: '/usr/bin/bash'
 	}, (err, stout, sterr) => {
 		if (objType(cb) === 'Function') {
 			cb(err, stout, sterr);
@@ -45,23 +49,26 @@ export const execCmd = (command, cb) => {
 };
 
 export const unzip = (file, target, cb) => {
-	// if (process.platform === 'darwin') {
+	if (process.platform === 'darwin') {
 	// The zip archive of darwin build contains symbol links, only the "unzip"
 	// command can handle it correctly.
-	execCmd(`unzip -qo '${normalizePath(file)}' -d '${normalizePath(target)}'`, (err) => {
-		if (err) {
-			cb(err);
-			return;
-		}
+		execCmd(`unzip -qo '${normalizePath(file)}' -d '${normalizePath(target)}'`, (err) => {
+			if (err) {
+				cb(err);
+				return;
+			}
+			cb();
+		});
+	} else {
+		// extract(file, { dir: target }, function(err) {
+		// 	if (err) {
+		// 		cb(err);
+		// 		return;
+		// 	}
+		// 	cb();
+		// });
+		const zip = new AdmZip(file);
+		zip.extractAllTo(target, true);
 		cb();
-	});
-	// } else {
-	// 	extract(file, { dir: target }, function(err) {
-	// 		if (err) {
-	// 			cb(err);
-	// 			return;
-	// 		}
-	// 		cb();
-	// 	});
-	// }
+	}
 };

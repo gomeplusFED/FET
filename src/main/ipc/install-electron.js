@@ -15,6 +15,7 @@ ipcMain.on('install-electron', (ev) => {
 		msg: '开始下载',
 		showStatus: true
 	});
+
 	tempWin = new BrowserWindow({
 		width: 0,
 		height: 0,
