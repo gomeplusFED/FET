@@ -349,6 +349,7 @@ export default {
 				this.checkInfo = '地址不合法';
 				this.showCheck = true;
 				this.showClose = true;
+				this.lock = false;
 				return;
 			}
 			let installedPlugin = storage.get('installedPlugin') || {};
@@ -358,6 +359,7 @@ export default {
 				this.checkInfo = '插件已存在，不用重复安装';
 				this.showCheck = true;
 				this.showClose = true;
+				this.lock = false;
 				return;
 			}
 			ipcRenderer.send('plugin-install', {
