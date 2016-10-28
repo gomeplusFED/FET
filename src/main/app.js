@@ -1,3 +1,7 @@
+// fix process.env.path on darwin
+import fixPath from 'fix-path';
+fixPath();
+
 import path from 'path';
 import { app, BrowserWindow, Tray, Menu } from 'electron';
 
