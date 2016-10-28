@@ -1,5 +1,13 @@
 # FET Changelog 
 
+### v0.0.20  
+`2016/10/28 16:14:02`  
+<hr>  
+##### 1、修复不同平台压缩 `electron.zip` 问题
+##### 2、修复 `child_process` 中涉及到路径的问题 
+##### 3、兼容 [cmd2app](https://github.com/luoye-fe/cmd2app) 生成的程序
+##### 4、其他优化  
+
 ### v0.0.19  
 `2016/10/27 15:00:43`  
 <hr>  
