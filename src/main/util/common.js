@@ -42,8 +42,7 @@ export const execCmd = (command, cb) => {
 		env: {
 			PATH: process.env.PATH
 		},
-		maxBuffer: 1024 * 1024 * 20,
-		shell: '/usr/bin/bash'
+		maxBuffer: 1024 * 1024 * 20
 	}, (err, stout, sterr) => {
 		if (objType(cb) === 'Function') {
 			cb(err, stout, sterr);
