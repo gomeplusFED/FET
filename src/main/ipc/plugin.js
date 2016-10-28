@@ -70,6 +70,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				execSync(`rm -rf ${normalizePath(pluginDownloadPath)}`);
 			}
 
+
 			item.setSavePath(pluginDownloadFileName);
 			item.on('updated', (event, state) => {
 				if (state === 'progressing') {
@@ -97,23 +98,28 @@ ipcMain.on('plugin-install', (ev, obj) => {
 							if (files.includes('app.zip')) {
 								unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
 									if (err) throw err;
-									ev.sender.send('plugin-installing', {
-										showCheck: true,
-										showGouhao: true,
-										msg: `${obj.action || '安装'}成功`
-									});
-									// 关闭窗口
-									tempWin.close();
-									ev.sender.send('plugin-installed', {
-										pluginName: pluginWholeName,
-										pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
-									});
+									complete();
 								});
+							} else {
+								complete();
 							}
 						});
 					});
 				}
 			});
+			function complete () {
+				ev.sender.send('plugin-installing', {
+					showCheck: true,
+					showGouhao: true,
+					msg: `${obj.action || '安装'}成功`
+				});
+				// 关闭窗口
+				tempWin.close();
+				ev.sender.send('plugin-installed', {
+					pluginName: pluginWholeName,
+					pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
+				});
+			}
 		});
 		// 下载
 		tempWin.webContents.downloadURL(`${pluginPath}/archive/fet.zip`);
