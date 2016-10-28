@@ -27,6 +27,9 @@ export const formatFileSize = (bytes) => {
 };
 
 export const normalizePath = (path) => {
+	if (/\s/.test(path)) {
+		path = "'" + path + "'";
+	}
 	return path.replace(/\\/g, '/');
 };
 
@@ -52,7 +55,7 @@ export const unzip = (file, target, cb) => {
 	if (process.platform === 'darwin') {
 	// The zip archive of darwin build contains symbol links, only the "unzip"
 	// command can handle it correctly.
-		execCmd(`unzip -qo '${normalizePath(file)}' -d '${normalizePath(target)}'`, (err) => {
+		execCmd(`unzip -qo ${normalizePath(file)} -d ${normalizePath(target)}`, (err) => {
 			if (err) {
 				cb(err);
 				return;
