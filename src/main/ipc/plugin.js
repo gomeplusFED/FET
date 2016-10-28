@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 import { removeSync as rmdir } from 'fs-extra';
 import { exec, execSync } from 'child_process';
 
-import { formatFileSize, unzip, normalizePath } from '../util/common.js';
+import { formatFileSize, unzip, normalizePath, execCmd } from '../util/common.js';
 import { createWindowForPlugin } from '../util/window.js';
 import { debug } from '../util/debug.js';
 import env from '../config/env.config.js';
@@ -173,7 +173,7 @@ function runWebPlugin(options) {
 
 function runAppPlugin(options) {
 	let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
-	exec(`${normalizePath(options.electronPath)} ${normalizePath(entry)}`, (err) => {
+	execCmd(`${normalizePath(options.electronPath)} ${normalizePath(entry)}`, (err) => {
 		if (err) {
 			console.log(err);
 		}
