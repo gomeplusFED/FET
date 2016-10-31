@@ -3,7 +3,7 @@ import path from 'path';
 
 import { app, ipcMain, BrowserWindow } from 'electron';
 import fetch from 'node-fetch';
-import { removeSync as rmdir } from 'fs-extra';
+import { removeSync as rmdir, move } from 'fs-extra';
 import { exec, execSync } from 'child_process';
 
 import { formatFileSize, unzip, normalizePath, execCmd } from '../util/common.js';
@@ -67,7 +67,8 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				fs.mkdirSync(pluginContentPath);
 			}
 			if (fs.existsSync(pluginDownloadPath)) {
-				execSync(`rm -rf ${normalizePath(pluginDownloadPath)}`);
+				// execSync(`rm -rf ${normalizePath(pluginDownloadPath)}`);
+				rmdir(normalizePath(pluginDownloadPath));
 			}
 
 
@@ -91,19 +92,22 @@ ipcMain.on('plugin-install', (ev, obj) => {
 					// 解压
 					unzip(pluginDownloadFileName, pluginContentPath, function(err) {
 						if (err) throw err;
-						execSync(`mv -f ${normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet'))} ${normalizePath(pluginDownloadPath)}`);
-						fs.unlinkSync(pluginDownloadFileName);
-						fs.readdir(pluginDownloadPath, (err, files) => {
+						// execSync(`mv -f ${normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet'))} ${normalizePath(pluginDownloadPath)}`);
+						move(normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet')), normalizePath(pluginDownloadPath), (err) => {
 							if (err) throw err;
-							if (files.includes('app.zip')) {
-								unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
-									if (err) throw err;
+							fs.unlinkSync(pluginDownloadFileName);
+							fs.readdir(pluginDownloadPath, (err, files) => {
+								if (err) throw err;
+								if (files.includes('app.zip')) {
+									unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
+										if (err) throw err;
+										complete();
+									});
+								} else {
 									complete();
-								});
-							} else {
-								complete();
-							}
-						});
+								}
+							});
+						})
 					});
 				}
 			});
