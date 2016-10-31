@@ -28,7 +28,7 @@ export const formatFileSize = (bytes) => {
 
 export const normalizePath = (path) => {
 	if (/\s/.test(path)) {
-		path = "'" + path + "'";
+		path = '"' + path + '"';
 	}
 	return path.replace(/\\/g, '/');
 };
@@ -38,7 +38,7 @@ export const objType = (obj) => {
 };
 
 export const execCmd = (command, cb) => {
-	exec(command, {
+	return exec(command, {
 		env: {
 			PATH: process.env.PATH
 		},
