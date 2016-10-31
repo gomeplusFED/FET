@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { app, ipcMain, BrowserWindow } from 'electron';
+import { app, ipcMain, BrowserWindow, dialog } from 'electron';
 import fetch from 'node-fetch';
 import { removeSync as rmdir, move } from 'fs-extra';
 import { exec, execSync } from 'child_process';
@@ -14,6 +14,13 @@ import env from '../config/env.config.js';
 function BreakSignal() {}
 
 let tempWin = null;
+
+let dialogInfoObj = {
+	type: 'info',
+	buttons: [],
+	title: '提示',
+	message: '提示信息'
+};
 
 // 安装插件
 ipcMain.on('plugin-install', (ev, obj) => {
@@ -67,10 +74,12 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				fs.mkdirSync(pluginContentPath);
 			}
 			if (fs.existsSync(pluginDownloadPath)) {
-				// execSync(`rm -rf ${normalizePath(pluginDownloadPath)}`);
-				rmdir(normalizePath(pluginDownloadPath));
+				if (process.platform === 'darwin') {
+					execSync(`rm -rf ${normalizePath(pluginDownloadPath)}`);
+				} else {
+					rmdir(normalizePath(pluginDownloadPath));
+				}
 			}
-
 
 			item.setSavePath(pluginDownloadFileName);
 			item.on('updated', (event, state) => {
@@ -91,23 +100,40 @@ ipcMain.on('plugin-install', (ev, obj) => {
 					});
 					// 解压
 					unzip(pluginDownloadFileName, pluginContentPath, function(err) {
-						if (err) throw err;
-						// execSync(`mv -f ${normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet'))} ${normalizePath(pluginDownloadPath)}`);
-						move(normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet')), normalizePath(pluginDownloadPath), (err) => {
-							if (err) throw err;
+						if (err) console.log(err);
+						if (process.platform === 'darwin') {
+							execSync(`mv -f ${normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet'))} ${normalizePath(pluginDownloadPath)}`);
 							fs.unlinkSync(pluginDownloadFileName);
 							fs.readdir(pluginDownloadPath, (err, files) => {
-								if (err) throw err;
+								if (err) console.log(err);
 								if (files.includes('app.zip')) {
 									unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
-										if (err) throw err;
+										if (err) console.log(err);
 										complete();
 									});
 								} else {
 									complete();
 								}
 							});
-						})
+						} else {
+							move(normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet')), normalizePath(pluginDownloadPath), {
+								clobber: true
+							}, (err) => {
+								if (err) console.log(err);
+								fs.unlinkSync(pluginDownloadFileName);
+								fs.readdir(pluginDownloadPath, (err, files) => {
+									if (err) console.log(err);
+									if (files.includes('app.zip')) {
+										unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
+											if (err) console.log(err);
+											complete();
+										});
+									} else {
+										complete();
+									}
+								});
+							});
+						}
 					});
 				}
 			});
@@ -181,11 +207,23 @@ function runWebPlugin(options) {
 	}
 }
 
+let runningApp = {};
+
 function runAppPlugin(options) {
+	if (runningApp[options.key]) {
+		dialog.showMessageBox(Object.assign({
+			detail: '应用已打开！'
+		}, dialogInfoObj));
+		return;
+	}
+	runningApp[options.key] = true;
 	let entry = path.join(app.getPath('userData'), 'Plugins', options.key, options.entry);
-	execCmd(`${normalizePath(options.electronPath)} ${normalizePath(entry)}`, (err) => {
+	let instance = execCmd(`${normalizePath(options.electronPath)} ${normalizePath(entry)}`, (err) => {
 		if (err) {
 			console.log(err);
 		}
+	});
+	instance.on('close', () => {
+		runningApp[options.key] = false;
 	});
 }
