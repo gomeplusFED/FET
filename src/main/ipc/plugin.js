@@ -269,6 +269,16 @@ ipcMain.on('plugin-list-should-update', (ev) => {
 	});
 });
 
+ipcMain.on('plugin-delete', (ev, key) => {
+	let userDataPath = app.getPath('userData');
+	let pluginDownloadPath = path.join(userDataPath, 'Plugins', key);
+	if (process.platform === 'darwin') {
+		execSync(`rm -rf ${normalizePath(pluginDownloadPath)}`);
+	} else {
+		rmdir(normalizePath(pluginDownloadPath));
+	}
+});
+
 // 取消插件安装或更新
 ipcMain.on('plugin-action-cancel', (ev) => {
 

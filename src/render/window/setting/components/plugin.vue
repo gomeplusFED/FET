@@ -374,6 +374,7 @@ export default {
 			let installedPlugin = storage.get('installedPlugin') || {};
 			delete installedPlugin[key];
 			storage.set('installedPlugin', installedPlugin);
+			ipcRenderer.send('plugin-delete', key);
 			ipcRenderer.send('plugin-list-should-update');
 		},
 		updatePlugin(key) {
