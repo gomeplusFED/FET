@@ -8,18 +8,15 @@
 		"node": ">=4.4.2"
 	},
 	"electronVersion": "1.3.2",
-	"author": [
-		{
-			"name": "luoye",
-			"email": "842891024@qq.com",
-			"github": "https://github.com/luoye-fe"
-		},
-		{
-			"name": "liangxiao",
-			"email": "495361365@qq.com",
-			"github": "https://github.com/xiaopili"
-		}
-	],
+	"author": [{
+		"name": "luoye",
+		"email": "842891024@qq.com",
+		"github": "https://github.com/luoye-fe"
+	}, {
+		"name": "liangxiao",
+		"email": "495361365@qq.com",
+		"github": "https://github.com/xiaopili"
+	}],
 	"scripts": {
 		"dev:render": "node script/render.dev.babel.js --env=dev",
 		"dev:main": "node script/main.dev.babel.js --env=dev",
@@ -94,24 +91,19 @@
 			"title": "FE-Tool",
 			"icon": "./build/icon.icns",
 			"background": "./build/background.png",
-			"contents": [
-				{
-					"x": 460,
-					"y": 250,
-					"type": "link",
-					"path": "/Applications"
-				},
-				{
-					"x": 150,
-					"y": 250,
-					"type": "file"
-				}
-			]
+			"contents": [{
+				"x": 460,
+				"y": 250,
+				"type": "link",
+				"path": "/Applications"
+			}, {
+				"x": 150,
+				"y": 250,
+				"type": "file"
+			}]
 		},
 		"win": {
-			"target": [
-				"nsis"
-			],
+			"target": ["nsis"],
 			"iconUrl": "https://github.com/gomeplusFED/FET/blob/master/build/icon.ico?raw=true"
 		},
 		"nsis": {
