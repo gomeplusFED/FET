@@ -1,7 +1,6 @@
 import path from 'path';
 import { exec } from 'child_process';
 
-// import extract from 'extract-zip';
 import AdmZip from 'adm-zip-electron';
 
 export const formatFileSize = (bytes) => {
@@ -52,9 +51,11 @@ export const execCmd = (command, cb) => {
 
 export const unzip = (file, target, cb) => {
 	if (process.platform === 'darwin') {
-	// The zip archive of darwin build contains symbol links, only the "unzip"
-	// command can handle it correctly.
-		execCmd(`unzip -qo ${normalizePath(file)} -d ${normalizePath(target)}`, (err) => {
+		exec(`unzip -qo ${normalizePath(file)} -d ${normalizePath(target)}`, {
+			env: {
+				PATH: process.env.PATH
+			}
+		}, (err) => {
 			if (err) {
 				cb(err);
 				return;
@@ -62,13 +63,6 @@ export const unzip = (file, target, cb) => {
 			cb();
 		});
 	} else {
-		// extract(file, { dir: target }, function(err) {
-		// 	if (err) {
-		// 		cb(err);
-		// 		return;
-		// 	}
-		// 	cb();
-		// });
 		const zip = new AdmZip(file);
 		zip.extractAllTo(target, true);
 		cb();
