@@ -26,6 +26,13 @@ ipcMain.on('install-electron', (ev) => {
 	let electronDownloadPath = path.join(userDataPath, 'electronDownload');
 	let electronDownloadFileName = path.join(userDataPath, 'electronDownload', 'electron.zip');
 
+	if (!fs.existsSync(electronDownloadPath)) {
+		fs.mkdirSync(electronDownloadPath);
+	}
+	if (fs.existsSync(electronDownloadFileName)) {
+		fs.unlinkSync(electronDownloadFileName);
+	}
+
 	let receivedBytes = 0;
 	let totalBytes = 0;
 
