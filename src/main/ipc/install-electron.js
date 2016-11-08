@@ -17,11 +17,6 @@ ipcMain.on('install-electron', (ev) => {
 		showStatus: true
 	});
 
-	// tempWinElectron = new BrowserWindow({
-	// 	width: 0,
-	// 	height: 0,
-	// 	show: false
-	// });
 	let userDataPath = app.getPath('userData');
 	let electronDownloadPath = path.join(userDataPath, 'electronDownload');
 	let electronDownloadFileName = path.join(userDataPath, 'electronDownload', 'electron.zip');
@@ -57,7 +52,6 @@ ipcMain.on('install-electron', (ev) => {
 	});
 
 	req.on('end', function() {
-		// alert("File succesfully downloaded");
 		ev.sender.send('install-electron-ing', {
 			msg: '下载完成，解压中',
 			showStatus: true
@@ -74,46 +68,4 @@ ipcMain.on('install-electron', (ev) => {
 			lock = false;
 		});
 	});
-
-	// tempWinElectron.webContents.session.on('will-download', (event, item, webContents) => {
-	// 	if (!fs.existsSync(electronDownloadPath)) {
-	// 		fs.mkdirSync(electronDownloadPath);
-	// 	}
-	// 	if (fs.existsSync(electronDownloadFileName)) {
-	// 		fs.unlinkSync(electronDownloadFileName);
-	// 	}
-	// 	item.setSavePath(electronDownloadFileName);
-	// 	item.on('updated', (event, state) => {
-	// 		if (state === 'progressing') {
-	// 			ev.sender.send('install-electron-ing', {
-	// 				msg: `正在下载 ${formatFileSize(item.getReceivedBytes())}/${formatFileSize(item.getTotalBytes())}`,
-	// 				showStatus: true
-	// 			});
-	// 		}
-	// 	});
-	// 	item.once('done', (event, state) => {
-	// 		if (state === 'completed') {
-	// 			ev.sender.send('install-electron-ing', {
-	// 				msg: '下载完成，解压中',
-	// 				showStatus: true
-	// 			});
-	// 			unzip(electronDownloadFileName, path.join(electronDownloadPath, 'electron'), function(err) {
-	// 				if (err) console.log(err);
-	// 				let electronAppPath;
-	// 				if (process.platform === 'darwin') {
-	// 					electronAppPath = path.join(electronDownloadPath, 'electron', '/Electron.app/Contents/MacOS/Electron');
-	// 				} else if (process.platform === 'win32') {
-	// 					electronAppPath = path.join(electronDownloadPath, 'electron', './electron.exe');
-	// 				}
-	// 				tempWinElectron.close();
-	// 				ev.sender.send('install-electron-ed', electronAppPath);
-	// 				lock = false;
-	// 			});
-	// 		}
-	// 	});
-	// });
-	// tempWinElectron.webContents.downloadURL(`http://cdn.npm.taobao.org/dist/electron/1.3.2/electron-v1.3.2-${process.platform}-${process.arch}.zip`);
-	// tempWinElectron.on('closed', function() {
-	// 	tempWinElectron = null;
-	// });
 });
