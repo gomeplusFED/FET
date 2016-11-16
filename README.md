@@ -11,6 +11,8 @@ FET
 
 * [Meixin Proxy](https://github.com/gomeplusFED/fet-meixin-h5-proxy) `https://github.com/gomeplusFED/fet-meixin-h5-proxy`
 
+* [SwitchHosts](https://github.com/luoye-fe/SwitchHosts) `https://github.com/luoye-fe/SwitchHosts`
+
 ### How to start developing ?
 
 Please read [this document](./docs/Develop.md).
