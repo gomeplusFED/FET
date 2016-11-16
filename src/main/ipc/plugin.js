@@ -105,28 +105,13 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				showLoading: true,
 				msg: '下载成功，正在初始化，请稍后'
 			});
-			// 解压
-			unzip(pluginDownloadFileName, pluginContentPath, function(err) {
-				if (err) console.log(err);
-				if (process.platform === 'darwin') {
-					execSync(`mv -f ${normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet'))} ${normalizePath(pluginDownloadPath)}`);
-					fs.unlinkSync(pluginDownloadFileName);
-					fs.readdir(pluginDownloadPath, (err, files) => {
-						if (err) console.log(err);
-						if (files.includes('app.zip')) {
-							unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
-								if (err) console.log(err);
-								complete();
-							});
-						} else {
-							complete();
-						}
-					});
-				} else {
-					move(normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet')), normalizePath(pluginDownloadPath), {
-						clobber: true
-					}, (err) => {
-						if (err) console.log(err);
+			// stream finish
+			out.on('finish', () => {
+				// 解压
+				unzip(pluginDownloadFileName, pluginContentPath, function(err) {
+					if (err) console.log(err);
+					if (process.platform === 'darwin') {
+						execSync(`mv -f ${normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet'))} ${normalizePath(pluginDownloadPath)}`);
 						fs.unlinkSync(pluginDownloadFileName);
 						fs.readdir(pluginDownloadPath, (err, files) => {
 							if (err) console.log(err);
@@ -139,20 +124,38 @@ ipcMain.on('plugin-install', (ev, obj) => {
 								complete();
 							}
 						});
-					});
-				}
-				function complete() {
-					ev.sender.send('plugin-installing', {
-						showCheck: true,
-						showGouhao: true,
-						msg: `${obj.action || '安装'}成功`
-					});
-					// 关闭窗口
-					ev.sender.send('plugin-installed', {
-						pluginName: pluginWholeName,
-						pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
-					});
-				}
+					} else {
+						move(normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet')), normalizePath(pluginDownloadPath), {
+							clobber: true
+						}, (err) => {
+							if (err) console.log(err);
+							fs.unlinkSync(pluginDownloadFileName);
+							fs.readdir(pluginDownloadPath, (err, files) => {
+								if (err) console.log(err);
+								if (files.includes('app.zip')) {
+									unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
+										if (err) console.log(err);
+										complete();
+									});
+								} else {
+									complete();
+								}
+							});
+						});
+					}
+					function complete() {
+						ev.sender.send('plugin-installing', {
+							showCheck: true,
+							showGouhao: true,
+							msg: `${obj.action || '安装'}成功`
+						});
+						// 关闭窗口
+						ev.sender.send('plugin-installed', {
+							pluginName: pluginWholeName,
+							pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
+						});
+					}
+				});
 			});
 		});
 	}).catch((e) => {
@@ -176,6 +179,7 @@ ipcMain.on('plugin-delete', (ev, key) => {
 	if (process.platform === 'darwin') {
 		execSync(`rm -rf ${normalizePath(pluginDownloadPath)}`);
 	} else {
+		// execSync(`rmdir ${normalizePath(pluginDownloadPath)} /s /q`)
 		rmdir(normalizePath(pluginDownloadPath));
 	}
 });
