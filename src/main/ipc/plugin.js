@@ -48,90 +48,73 @@ ipcMain.on('plugin-install', (ev, obj) => {
 		msg: `正在${obj.action || '安装'}插件`
 	});
 	fetch(`https://raw.githubusercontent.com/${pluginAuthor}/${pluginName}/fet/package.json`, {
-		timeout: 10000
-	})
-	.then((res) => {
-		if (res.status === 404) {
-			ev.sender.send('plugin-installing', {
-				showCheck: true,
-				showClose: true,
-				msg: '插件不存在，请检查插件地址'
-			});
-			throw new BreakSignal();
-		}
-	})
-	.then(() => {
-		let userDataPath = app.getPath('userData');
-		let pluginContentPath = path.join(userDataPath, 'Plugins');
-		let pluginDownloadFileName = path.join(userDataPath, 'Plugins', pluginWholeName + '.zip');
-		let pluginDownloadPath = path.join(userDataPath, 'Plugins', pluginWholeName);
-		if (!fs.existsSync(pluginContentPath)) {
-			fs.mkdirSync(pluginContentPath);
-		}
-		if (fs.existsSync(pluginDownloadPath)) {
-			if (process.platform === 'darwin') {
-				sudo.exec(`rm -rf ${normalizePath(pluginDownloadPath)}`, {
-					name: 'Delete FET plugin'
+			timeout: 10000
+		})
+		.then((res) => {
+			if (res.status === 404) {
+				ev.sender.send('plugin-installing', {
+					showCheck: true,
+					showClose: true,
+					msg: '插件不存在，请检查插件地址'
 				});
-			} else {
-				rmdir(normalizePath(pluginDownloadPath));
+				throw new BreakSignal();
 			}
-		}
+		})
+		.then(() => {
+			let userDataPath = app.getPath('userData');
+			let pluginContentPath = path.join(userDataPath, 'Plugins');
+			let pluginDownloadFileName = path.join(userDataPath, 'Plugins', pluginWholeName + '.zip');
+			let pluginDownloadPath = path.join(userDataPath, 'Plugins', pluginWholeName);
+			if (!fs.existsSync(pluginContentPath)) {
+				fs.mkdirSync(pluginContentPath);
+			}
+			if (fs.existsSync(pluginDownloadPath)) {
+				if (process.platform === 'darwin') {
+					sudo.exec(`rm -rf ${normalizePath(pluginDownloadPath)}`, {
+						name: 'Delete FET plugin'
+					});
+				} else {
+					rmdir(normalizePath(pluginDownloadPath));
+				}
+			}
 
-		let receivedBytes = 0;
-		let totalBytes = 0;
+			let receivedBytes = 0;
+			let totalBytes = 0;
 
-		let req = request({
-			method: 'GET',
-			uri: `${pluginPath}/archive/fet.zip`
-		});
-
-		let out = fs.createWriteStream(pluginDownloadFileName);
-		req.pipe(out);
-
-		req.on('response', function(data) {
-			totalBytes = parseInt(data.headers['content-length']);
-		});
-
-		req.on('data', function(chunk) {
-			receivedBytes += chunk.length;
-			ev.sender.send('plugin-installing', {
-				showCheck: true,
-				showLoading: true,
-				msg: `正在下载 ${formatFileSize(receivedBytes)}/${formatFileSize(totalBytes)}`
+			let req = request({
+				method: 'GET',
+				uri: `${pluginPath}/archive/fet.zip`
 			});
-		});
 
-		req.on('end', function() {
-			ev.sender.send('plugin-installing', {
-				showCheck: true,
-				showLoading: true,
-				msg: '下载成功，正在初始化，请稍后'
+			let out = fs.createWriteStream(pluginDownloadFileName);
+			req.pipe(out);
+
+			req.on('response', function(data) {
+				totalBytes = parseInt(data.headers['content-length']);
 			});
-			// stream finish
-			out.on('finish', () => {
-				// 解压
-				unzip(pluginDownloadFileName, pluginContentPath, function(err) {
-					if (err) console.log(err);
-					if (process.platform === 'darwin') {
-						execSync(`mv -f ${normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet'))} ${normalizePath(pluginDownloadPath)}`);
-						fs.unlinkSync(pluginDownloadFileName);
-						fs.readdir(pluginDownloadPath, (err, files) => {
-							if (err) console.log(err);
-							if (files.includes('app.zip')) {
-								unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
-									if (err) console.log(err);
-									complete();
-								});
-							} else {
-								complete();
-							}
-						});
-					} else {
-						move(normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet')), normalizePath(pluginDownloadPath), {
-							clobber: true
-						}, (err) => {
-							if (err) console.log(err);
+
+			req.on('data', function(chunk) {
+				receivedBytes += chunk.length;
+				ev.sender.send('plugin-installing', {
+					showCheck: true,
+					showLoading: true,
+					msg: `正在下载 ${formatFileSize(receivedBytes)}/${formatFileSize(totalBytes)}`
+				});
+			});
+
+			req.on('end', function() {
+				ev.sender.send('plugin-installing', {
+					showCheck: true,
+					showLoading: true,
+					msg: '下载成功，正在初始化，请稍后'
+				});
+				// stream finish
+				out.on('finish', () => {
+					// 解压
+					unzip(pluginDownloadFileName, pluginContentPath, function(err) {
+						if (err) console.log(err);
+						if (process.platform === 'darwin') {
+							execSync(`mv -f ${normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet'))} ${normalizePath(pluginDownloadPath)}`);
 							fs.unlinkSync(pluginDownloadFileName);
 							fs.readdir(pluginDownloadPath, (err, files) => {
 								if (err) console.log(err);
@@ -144,28 +127,46 @@ ipcMain.on('plugin-install', (ev, obj) => {
 									complete();
 								}
 							});
-						});
-					}
-					function complete() {
-						ev.sender.send('plugin-installing', {
-							showCheck: true,
-							showGouhao: true,
-							msg: `${obj.action || '安装'}成功`
-						});
-						// 关闭窗口
-						ev.sender.send('plugin-installed', {
-							pluginName: pluginWholeName,
-							pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
-						});
-					}
+						} else {
+							move(normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet')), normalizePath(pluginDownloadPath), {
+								clobber: true
+							}, (err) => {
+								if (err) console.log(err);
+								fs.unlinkSync(pluginDownloadFileName);
+								fs.readdir(pluginDownloadPath, (err, files) => {
+									if (err) console.log(err);
+									if (files.includes('app.zip')) {
+										unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
+											if (err) console.log(err);
+											complete();
+										});
+									} else {
+										complete();
+									}
+								});
+							});
+						}
+
+						function complete() {
+							ev.sender.send('plugin-installing', {
+								showCheck: true,
+								showGouhao: true,
+								msg: `${obj.action || '安装'}成功`
+							});
+							// 关闭窗口
+							ev.sender.send('plugin-installed', {
+								pluginName: pluginWholeName,
+								pluginPkgInfo: JSON.parse(fs.readFileSync(path.join(pluginDownloadPath, 'package.json'), 'utf-8'))
+							});
+						}
+					});
 				});
 			});
+		}).catch((e) => {
+			ev.sender.send('plugin-installing', {
+				erro: e
+			});
 		});
-	}).catch((e) => {
-		ev.sender.send('plugin-installing', {
-			erro: e
-		});
-	});
 });
 
 // 插件安装或更新后通知所有页面
@@ -180,7 +181,9 @@ ipcMain.on('plugin-delete', (ev, key) => {
 	let userDataPath = app.getPath('userData');
 	let pluginDownloadPath = path.join(userDataPath, 'Plugins', key);
 	if (process.platform === 'darwin') {
-		execSync(`rm -rf ${normalizePath(pluginDownloadPath)}`);
+		sudo.exec(`rm -rf ${normalizePath(pluginDownloadPath)}`, {
+			name: 'Delete FET plugin'
+		});
 	} else {
 		// execSync(`rmdir ${normalizePath(pluginDownloadPath)} /s /q`)
 		rmdir(normalizePath(pluginDownloadPath));
