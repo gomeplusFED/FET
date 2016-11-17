@@ -29,40 +29,39 @@ if (!test('-e', distPath)) {
 let packExec = '';
 
 const run = async function(answers) {
-	pushNewTagAndUploadQiniu(answers.version);
-	// cleanDistPath()
-	// 	.then(() => {
-	// 		return generatePorductionPackageJson();
-	// 	})
-	// 	.then(() => {
-	// 		return injectAppInfo();
-	// 	})
-	// 	.then(() => {
-	// 		return installModule();
-	// 	})
-	// 	.then(() => {
-	// 		return buildStatic();
-	// 	})
-	// 	.then(() => {
-	// 		return babelMainFile();
-	// 	})
-	// 	.then(() => {
-	// 		return buildAsar();
-	// 	})
-	// 	.then(() => {
-	// 		return packageApp(packExec);
-	// 	})
-	// 	.then(() => {
-	// 		if (answers.release) {
-				// return pushNewTagAndUploadQiniu(answers.version);
-		// 	}
-		// })
-		// .then(() => {
-		// 	logger.success('All succeed.');
-		// })
-		// .catch((e) => {
-		// 	throw e;
-		// })
+	cleanDistPath()
+		.then(() => {
+			return generatePorductionPackageJson();
+		})
+		.then(() => {
+			return injectAppInfo();
+		})
+		.then(() => {
+			return installModule();
+		})
+		.then(() => {
+			return buildStatic();
+		})
+		.then(() => {
+			return babelMainFile();
+		})
+		.then(() => {
+			return buildAsar();
+		})
+		.then(() => {
+			return packageApp(packExec);
+		})
+		.then(() => {
+			if (answers.release) {
+				return pushNewTagAndUploadQiniu(answers.version);
+			}
+		})
+		.then(() => {
+			logger.success('All succeed.');
+		})
+		.catch((e) => {
+			throw e;
+		})
 };
 
 function BreakSignal() { }

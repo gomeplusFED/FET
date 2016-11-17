@@ -241,13 +241,18 @@ export const pushNewTagAndUploadQiniu = function(version) {
 							reject(err);
 							logger.fatal(e);
 						} else {
-							spinner2.stop();
-							logger.success('Upload asar file succeed.');
 							if (!test('-e', path.join(__dirname, '../temp'))) {
 								mkdir(path.join(__dirname, '../temp'));
 							}
 							fs.writeFile(path.join(__dirname, '../temp/info.json'), `{"version": "v${version}"}`, (err) => {
-								uploadFile(uptoken(bucket, 'info.json'), 'info.json', path.join(__dirname, '../temp/info.json'), () => {
+								uploadFile(uptoken(bucket, 'info.json'), 'info.json', path.join(__dirname, '../temp/info.json'), (ex) => {
+									if (err) {
+										spinner2.stop();
+										reject(err);
+										logger.fatal(e);
+									}
+									spinner2.stop();
+									logger.success('Upload asar file succeed.');
 									resolve();
 								});
 							});
