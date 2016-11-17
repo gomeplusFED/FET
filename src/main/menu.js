@@ -1,6 +1,4 @@
-import { Menu } from 'electron';
-
-const menuTemplate = (app) => {
+export default (app) => {
 	return [{
 		label: 'Application',
 		submenu: [
@@ -34,5 +32,3 @@ const menuTemplate = (app) => {
 		}]
 	}];
 };
-
-export default menuTemplate;
