@@ -6,6 +6,7 @@ import fetch from 'node-fetch';
 import { removeSync as rmdir, move } from 'fs-extra';
 import { exec, execSync } from 'child_process';
 import request from 'request';
+import sudo from 'sudo-prompt';
 
 import { formatFileSize, unzip, normalizePath, execCmd } from '../util/common.js';
 import { createWindowForPlugin } from '../util/window.js';
@@ -69,7 +70,9 @@ ipcMain.on('plugin-install', (ev, obj) => {
 		}
 		if (fs.existsSync(pluginDownloadPath)) {
 			if (process.platform === 'darwin') {
-				execSync(`rm -rf ${normalizePath(pluginDownloadPath)}`);
+				sudo.exec(`rm -rf ${normalizePath(pluginDownloadPath)}`, {
+					name: 'Delete FET plugin'
+				});
 			} else {
 				rmdir(normalizePath(pluginDownloadPath));
 			}
