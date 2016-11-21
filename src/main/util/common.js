@@ -66,9 +66,9 @@ export const unzip = (file, target, cb) => {
 		let zip = null;
 		try {
 			zip = new AdmZip(normalizePath(file));
-		} catch(e) {
+		} catch (e) {
 			console.log(e);
-			cb (e);
+			cb(e);
 			return;
 		}
 		zip.extractAllTo(target, true);

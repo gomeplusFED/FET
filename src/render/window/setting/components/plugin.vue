@@ -6,23 +6,18 @@
 				<span>安装插件</span>
 			</div>
 			<input class="input" type="text" v-model="pluginAdress" placeholder="请输入插件地址（github项目地址），回车安装" @keypress.enter="installPlugin()">
-			<div class="check-plugin" v-show="showCheck">
-				<i class="tip-icon iconfont icon-gouhao" v-show="showGouhao"></i>
-				<i class="tip-icon iconfont icon-close01" v-show="showClose"></i>
-				<i class="iconfont icon-loading" v-show="showLoading"></i>
-				<span>{{checkInfo}}</span>
+			<div class="check-plugin" v-show="tipsMap.show">
+				<div class="left">
+					<i class="tip-icon iconfont icon-gouhao" v-show="tipsMap.a"></i>
+					<i class="tip-icon iconfont icon-close01" v-show="tipsMap.b"></i>
+					<i class="iconfont icon-loading" v-show="tipsMap.c"></i>
+					<span>{{tipsMap['info']}}</span>
+				</div>
+				<div class="right">
+					<em @click="cancelPlugin" v-show="tipsMap.d">取消</em>
+				</div>
 			</div>
 		</li>
-		<!-- <li>
-			<div class="head" @click="showRecommendPlugin = !showRecommendPlugin">
-				<i class="iconfont icon-chatouplug"></i>
-				<span>推荐插件</span>
-				<i class="shouqi iconfont icon-caidanshouqi" :class="{'open': showRecommendPlugin}"></i>
-			</div>
-			<ul class="recommend">
-				<li></li>
-			</ul>
-		</li> -->
 		<li>
 			<div class="head" @click="showInstalledPlugin = !showInstalledPlugin">
 				<i class="iconfont icon-chatouplug"></i>
@@ -67,6 +62,156 @@
 		</li>
 	</ul>
 </template>
+<script>
+import path from 'path';
+
+import {
+	remote,
+	ipcRenderer
+} from 'electron';
+
+import storage from 'utils/storage.js';
+
+import {
+	openUrl
+} from 'utils/common.js';
+
+export default {
+	name: 'Setting-Plugin',
+	data() {
+		return {
+			showRecommendPlugin: true,
+			showInstalledPlugin: true,
+			tipsMap: {
+				show: false,
+				a: false, // icon 对
+				b: false, // icon 错
+				c: false, // icon 加载中
+				d: false, // 取消按钮
+				info: '' // 提示语
+			},
+			pluginAdress: '',
+			userDataPath: remote.app.getPath('userData'),
+			installedPluginList: storage.get('installedPlugin') || {},
+			lock: false
+		};
+	},
+	ready() {
+		ipcRenderer.on('plugin-installing', (ev, args) => {
+			let defaultTipsMap = {
+				show: false,
+				a: false, // icon 对
+				b: false, // icon 错
+				c: false, // icon 加载中
+				d: false, // 取消按钮
+				info: '' // 提示语
+			};
+
+			this.tipsMap = Object.assign(defaultTipsMap, args);
+
+			if (this.tipsMap.b) {
+				this.lock = false;
+				setTimeout(() => {
+					this.tipsMap.show = false;
+				}, 1000);
+			}
+		});
+		ipcRenderer.on('plugin-installed', (ev, args) => {
+			this.lock = false;
+			// 插件安装完成，触发插件系统更新操作
+			let pluginName = args.pluginName;
+			let pluginPkgInfo = args.pluginPkgInfo;
+			let installedPlugin = storage.get('installedPlugin') || {};
+			pluginPkgInfo.fet = pluginPkgInfo.fet || {};
+			// 兼容未规定 type 的前期 plugin
+			if (!pluginPkgInfo.fet.type) {
+				pluginPkgInfo.fet.type = 'web';
+			}
+
+			let specOptions = {
+				repoName: pluginPkgInfo.name,
+				name: pluginPkgInfo.fet.name || pluginPkgInfo.name,
+				desc: pluginPkgInfo.fet.desc || pluginPkgInfo.description,
+				status: 1,
+				version: pluginPkgInfo.version
+			};
+
+			if (pluginPkgInfo.fet.type === 'app') {
+				specOptions.entry = pluginPkgInfo.main;
+			}
+
+			installedPlugin[pluginName] = Object.assign(specOptions, pluginPkgInfo.fet);
+			setTimeout(() => {
+				this.tipsMap.show = false;
+			}, 1000);
+			storage.set('installedPlugin', installedPlugin);
+			ipcRenderer.send('plugin-list-should-update');
+		});
+		ipcRenderer.on('plugin-list-should-update', () => {
+			this.installedPluginList = storage.get('installedPlugin');
+		});
+	},
+	methods: {
+		installPlugin() {
+			let defaultTipsMap = {
+				show: false,
+				a: false, // icon 对
+				b: false, // icon 错
+				c: false, // icon 加载中
+				d: false, // 取消按钮
+				info: '' // 提示语
+			};
+			if (this.lock) return;
+			this.lock = true;
+			let installedPlugin = storage.get('installedPlugin') || {};
+			let regxResulr = this.pluginAdress.match(/https:\/\/github.com\/(.*)\/(.*)/);
+			let pluginAuthor = regxResulr[1];
+			let pluginName = regxResulr[2];
+			if (installedPlugin[pluginAuthor + '~' + pluginName]) {
+				this.tipsMap = Object.assign(defaultTipsMap, {
+					show: true,
+					b: true,
+					info: '插件已存在，请勿重复安装'
+				});
+				this.lock = false;
+				setTimeout(() => {
+					this.tipsMap.show = false;
+				}, 1000);
+				return;
+			}
+			ipcRenderer.send('plugin-install', {
+				path: this.pluginAdress,
+				action: '安装'
+			});
+		},
+		openUrl(path) {
+			openUrl(path);
+		},
+		delPlugin(key) {
+			let installedPlugin = storage.get('installedPlugin') || {};
+			delete installedPlugin[key];
+			storage.set('installedPlugin', installedPlugin);
+			ipcRenderer.send('plugin-delete', key);
+			ipcRenderer.send('plugin-list-should-update');
+		},
+		updatePlugin(key) {
+			ipcRenderer.send('plugin-install', {
+				path: `https://github.com/${key.split('~')[0]}/${key.split('~')[1]}`,
+				action: '更新'
+			});
+		},
+		togglePlugin(key) {
+			let installedPlugin = storage.get('installedPlugin') || {};
+			installedPlugin[key].status = installedPlugin[key].status ? 0 : 1;
+			storage.set('installedPlugin', installedPlugin);
+			ipcRenderer.send('plugin-list-should-update');
+		},
+		cancelPlugin() {
+			ipcRenderer.send('plugin-install-cancel');
+		}
+	}
+};
+</script>
 <style scoped>
 .input {
 	display: block;
@@ -92,6 +237,11 @@
 	font-size: 0;
 	position: absolute;
 	bottom: -28px;
+	width: 100%;
+	display: flex;
+}
+.check-plugin .left {
+	flex: 1;
 }
 
 .check-plugin i {
@@ -107,6 +257,19 @@
 	line-height: 28px;
 	display: inline-block;
 	vertical-align: middle;
+}
+.check-plugin em {
+	font-size: 12px;
+	font-style: normal;
+	background: #1e2228;
+	display: inline-block;vertical-align: middle;
+	line-height: 12px;
+	padding: 5px 10px;
+	border-radius: 6px;
+	cursor: pointer;
+}
+.check-plugin em:hover {
+	color: #fff;
 }
 
 .icon-loading {
@@ -257,138 +420,4 @@
 	color: #9da5b4;
 }
 </style>
-<script>
-import path from 'path';
 
-import {
-	remote,
-	ipcRenderer
-} from 'electron';
-
-import storage from 'utils/storage.js';
-
-import {
-	openUrl
-} from 'utils/common.js';
-
-export default {
-	name: 'Setting-Plugin',
-	data() {
-		return {
-			showRecommendPlugin: true,
-			showInstalledPlugin: true,
-			showCheck: false,
-			showGouhao: false,
-			showClose: false,
-			showLoading: false,
-			checkInfo: '正在检查插件',
-			pluginAdress: '',
-			userDataPath: remote.app.getPath('userData'),
-			installedPluginList: storage.get('installedPlugin') || {},
-			lock: false
-		};
-	},
-	ready() {
-		ipcRenderer.on('plugin-installing', (ev, args) => {
-			if (args.erro) {
-				switch (args.erro.type) {
-				case 'request-timeout':
-					this.showCheck = true;
-					this.checkInfo = '下载超时';
-					this.showClose = true;
-					break;
-				}
-				return;
-			}
-			this.showCheck = args.showCheck || false;
-			this.showGouhao = args.showGouhao || false;
-			this.showClose = args.showClose || false;
-			this.showLoading = args.showLoading || false;
-			this.checkInfo = args.msg || '';
-		});
-		ipcRenderer.on('plugin-installed', (ev, args) => {
-			this.lock = false;
-			// 插件安装完成，触发插件系统更新操作
-			let pluginName = args.pluginName;
-			let pluginPkgInfo = args.pluginPkgInfo;
-			let installedPlugin = storage.get('installedPlugin') || {};
-			pluginPkgInfo.fet = pluginPkgInfo.fet || {};
-			// 兼容未规定 type 的前期 plugin
-			if (!pluginPkgInfo.fet.type) {
-				pluginPkgInfo.fet.type = 'web';
-			}
-
-			let specOptions = {
-				repoName: pluginPkgInfo.name,
-				name: pluginPkgInfo.fet.name || pluginPkgInfo.name,
-				desc: pluginPkgInfo.fet.desc || pluginPkgInfo.description,
-				status: 1,
-				version: pluginPkgInfo.version
-			};
-
-			if (pluginPkgInfo.fet.type === 'app') {
-				specOptions.entry = pluginPkgInfo.main;
-			}
-
-			installedPlugin[pluginName] = Object.assign(specOptions, pluginPkgInfo.fet);
-			setTimeout(() => {
-				this.showCheck = false;
-			}, 1000);
-			storage.set('installedPlugin', installedPlugin);
-			ipcRenderer.send('plugin-list-should-update');
-		});
-		ipcRenderer.on('plugin-list-should-update', () => {
-			this.installedPluginList = storage.get('installedPlugin');
-		});
-	},
-	methods: {
-		installPlugin() {
-			if (this.lock) return;
-			this.lock = true;
-			if (!/^https:\/\/github.com\//.test(this.pluginAdress)) {
-				this.checkInfo = '地址不合法';
-				this.showCheck = true;
-				this.showClose = true;
-				this.lock = false;
-				return;
-			}
-			let installedPlugin = storage.get('installedPlugin') || {};
-			let pluginAuthor = this.pluginAdress.match(/https:\/\/github.com\/(.*)\/(.*)/)[1];
-			let pluginName = this.pluginAdress.match(/https:\/\/github.com\/(.*)\/(.*)/)[2];
-			if (installedPlugin[pluginAuthor + '~' + pluginName]) {
-				this.checkInfo = '插件已存在，不用重复安装';
-				this.showCheck = true;
-				this.showClose = true;
-				this.lock = false;
-				return;
-			}
-			ipcRenderer.send('plugin-install', {
-				path: this.pluginAdress,
-				action: '安装'
-			});
-		},
-		openUrl(path) {
-			openUrl(path);
-		},
-		delPlugin(key) {
-			let installedPlugin = storage.get('installedPlugin') || {};
-			delete installedPlugin[key];
-			storage.set('installedPlugin', installedPlugin);
-			ipcRenderer.send('plugin-delete', key);
-			ipcRenderer.send('plugin-list-should-update');
-		},
-		updatePlugin(key) {
-			ipcRenderer.send('plugin-install', {
-				path: `https://github.com/${key.split('~')[0]}/${key.split('~')[1]}`,
-				action: '更新'
-			});
-		},
-		togglePlugin(key) {
-			let installedPlugin = storage.get('installedPlugin') || {};
-			installedPlugin[key].status = installedPlugin[key].status ? 0 : 1;
-			storage.set('installedPlugin', installedPlugin);
-			ipcRenderer.send('plugin-list-should-update');
-		}
-	}
-};
-</script>

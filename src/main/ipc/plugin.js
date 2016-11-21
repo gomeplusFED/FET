@@ -9,6 +9,7 @@ import request from 'request';
 import sudo from 'sudo-prompt';
 
 import { formatFileSize, unzip, normalizePath, execCmd } from '../util/common.js';
+import { rm, mv } from '../util/command.js';
 import { createWindowForPlugin } from '../util/window.js';
 import { debug } from '../util/debug.js';
 import env from '../config/env.config.js';
@@ -27,35 +28,32 @@ let dialogInfoObj = {
 // 安装插件
 ipcMain.on('plugin-install', (ev, obj) => {
 	let pluginPath = obj.path;
-	let pluginAuthor;
-	let pluginName;
-	try {
-		pluginAuthor = pluginPath.match(/https:\/\/github.com\/(.*)\/(.*)/)[1];
-		pluginName = pluginPath.match(/https:\/\/github.com\/(.*)\/(.*)/)[2];
-	} catch (e) {
+
+	if (!/^https:\/\/github.com\//.test(obj.path)) {
 		ev.sender.send('plugin-installing', {
-			showCheck: true,
-			showClose: true,
-			msg: '地址不合法'
+			show: true,
+			b: true,
+			info: '地址不合法'
 		});
 		return;
 	}
+	let regxResulr = obj.path.match(/https:\/\/github.com\/(.*)\/(.*)/);
+	let pluginAuthor = regxResulr[1];
+	let pluginName = regxResulr[2];
 
 	let pluginWholeName = pluginAuthor + '~' + pluginName;
 	ev.sender.send('plugin-installing', {
-		showCheck: true,
-		showLoading: true,
-		msg: `正在${obj.action || '安装'}插件`
+		show: true,
+		c: true,
+		info: `正在${obj.action || '安装'}插件`
 	});
-	fetch(`https://raw.githubusercontent.com/${pluginAuthor}/${pluginName}/fet/package.json`, {
-			timeout: 10000
-		})
+	fetch(`https://raw.githubusercontent.com/${pluginAuthor}/${pluginName}/fet/package.json`, { timeout: 10000 })
 		.then((res) => {
 			if (res.status === 404) {
 				ev.sender.send('plugin-installing', {
-					showCheck: true,
-					showClose: true,
-					msg: '插件不存在，请检查插件地址'
+					show: true,
+					b: true,
+					info: '插件不存在，请检查插件地址'
 				});
 				throw new BreakSignal();
 			}
@@ -69,13 +67,9 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				fs.mkdirSync(pluginContentPath);
 			}
 			if (fs.existsSync(pluginDownloadPath)) {
-				if (process.platform === 'darwin') {
-					sudo.exec(`rm -rf ${normalizePath(pluginDownloadPath)}`, {
-						name: 'Delete FET plugin'
-					});
-				} else {
-					rmdir(normalizePath(pluginDownloadPath));
-				}
+				sudo.exec(rm(pluginDownloadPath), {
+					name: 'Delete FET plugin'
+				});
 			}
 
 			let receivedBytes = 0;
@@ -89,6 +83,14 @@ ipcMain.on('plugin-install', (ev, obj) => {
 			let out = fs.createWriteStream(pluginDownloadFileName);
 			req.pipe(out);
 
+			ipcMain.once('plugin-install-cancel', () => {
+				req.abort();
+				execSync(rm(pluginDownloadFileName));
+				ev.sender.send('plugin-installing', {
+					show: false
+				});
+			});
+
 			req.on('response', function(data) {
 				totalBytes = parseInt(data.headers['content-length']);
 			});
@@ -96,20 +98,21 @@ ipcMain.on('plugin-install', (ev, obj) => {
 			req.on('data', function(chunk) {
 				receivedBytes += chunk.length;
 				ev.sender.send('plugin-installing', {
-					showCheck: true,
-					showLoading: true,
-					msg: `正在下载 ${formatFileSize(receivedBytes)}/${formatFileSize(totalBytes)}`
+					show: true,
+					c: true,
+					d: true,
+					info: `正在下载 ${formatFileSize(receivedBytes)}/${formatFileSize(totalBytes)}`
 				});
 			});
 
 			req.on('end', function() {
-				ev.sender.send('plugin-installing', {
-					showCheck: true,
-					showLoading: true,
-					msg: '下载成功，正在初始化，请稍后'
-				});
 				// stream finish
 				out.on('finish', () => {
+					ev.sender.send('plugin-installing', {
+						show: true,
+						c: true,
+						info: '下载成功，正在初始化，请稍后'
+					});
 					// 解压
 					unzip(pluginDownloadFileName, pluginContentPath, function(err) {
 						if (err) console.log(err);
@@ -149,9 +152,9 @@ ipcMain.on('plugin-install', (ev, obj) => {
 
 						function complete() {
 							ev.sender.send('plugin-installing', {
-								showCheck: true,
-								showGouhao: true,
-								msg: `${obj.action || '安装'}成功`
+								show: true,
+								a: true,
+								info: `${obj.action || '安装'}成功`
 							});
 							// 关闭窗口
 							ev.sender.send('plugin-installed', {
@@ -163,9 +166,19 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				});
 			});
 		}).catch((e) => {
-			ev.sender.send('plugin-installing', {
-				erro: e
-			});
+			if (e.type === 'request-timeout') {
+				ev.sender.send('plugin-installing', {
+					show: true,
+					b: true,
+					info: '出错啦'
+				});
+			} else {
+				ev.sender.send('plugin-installing', {
+					show: true,
+					b: true,
+					info: '下载超时'
+				});
+			}
 		});
 });
 
@@ -180,14 +193,9 @@ ipcMain.on('plugin-list-should-update', (ev) => {
 ipcMain.on('plugin-delete', (ev, key) => {
 	let userDataPath = app.getPath('userData');
 	let pluginDownloadPath = path.join(userDataPath, 'Plugins', key);
-	if (process.platform === 'darwin') {
-		sudo.exec(`rm -rf ${normalizePath(pluginDownloadPath)}`, {
-			name: 'Delete FET plugin'
-		});
-	} else {
-		// execSync(`rmdir ${normalizePath(pluginDownloadPath)} /s /q`)
-		rmdir(normalizePath(pluginDownloadPath));
-	}
+	sudo.exec(rm(pluginDownloadPath), {
+		name: 'Delete FET plugin'
+	});
 });
 
 // 取消插件安装或更新
