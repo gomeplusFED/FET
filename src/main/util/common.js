@@ -25,11 +25,12 @@ export const formatFileSize = (bytes) => {
 	return val.toFixed(2) + suffix;
 };
 
-export const normalizePath = (path) => {
+export const normalizePath = (targetPath) => {
+	targetPath = path.normalize(targetPath);
 	if (/\s/.test(path)) {
-		path = '"' + path + '"';
+		targetPath = '"' + targetPath + '"';
 	}
-	return path.replace(/\\/g, '/');
+	return targetPath;
 };
 
 export const objType = (obj) => {

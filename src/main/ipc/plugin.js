@@ -3,13 +3,12 @@ import path from 'path';
 
 import { app, ipcMain, BrowserWindow, dialog } from 'electron';
 import fetch from 'node-fetch';
-import { removeSync as rmdir, move } from 'fs-extra';
+import { move } from 'fs-extra';
 import { exec, execSync } from 'child_process';
 import request from 'request';
-import sudo from 'sudo-prompt';
 
-import { formatFileSize, unzip, normalizePath, execCmd } from '../util/common.js';
-import { rm, mv } from '../util/command.js';
+import { formatFileSize, unzip, normalizePath } from '../util/common.js';
+import { rm, mv, sudoRm } from '../util/command.js';
 import { createWindowForPlugin } from '../util/window.js';
 import { debug } from '../util/debug.js';
 import env from '../config/env.config.js';
@@ -67,9 +66,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				fs.mkdirSync(pluginContentPath);
 			}
 			if (fs.existsSync(pluginDownloadPath)) {
-				sudo.exec(rm(pluginDownloadPath), {
-					name: 'Delete FET plugin'
-				});
+				sudoRm(rm(pluginDownloadPath));
 			}
 
 			let receivedBytes = 0;
@@ -193,9 +190,7 @@ ipcMain.on('plugin-list-should-update', (ev) => {
 ipcMain.on('plugin-delete', (ev, key) => {
 	let userDataPath = app.getPath('userData');
 	let pluginDownloadPath = path.join(userDataPath, 'Plugins', key);
-	sudo.exec(rm(pluginDownloadPath), {
-		name: 'Delete FET plugin'
-	});
+	sudoRm(rm(pluginDownloadPath));
 });
 
 // 取消插件安装或更新

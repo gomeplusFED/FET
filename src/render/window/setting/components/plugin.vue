@@ -207,6 +207,7 @@ export default {
 			ipcRenderer.send('plugin-list-should-update');
 		},
 		cancelPlugin() {
+			this.lock = false;
 			ipcRenderer.send('plugin-install-cancel');
 		}
 	}
