@@ -1,5 +1,5 @@
 /*
- * generate diff platform exec command
+ * generate diff platform exec command, just command!!!
  */
 import fs from 'fs';
 import { execSync } from 'child_process';
@@ -33,5 +33,9 @@ export const sudoRm = (target) => {
 };
 
 export const mv = (from, to) => {
-	return process.platform === 'darwin';
+	if (process.platform === 'darwin') {
+		return `mv -f ${normalizePath(from)} ${normalizePath(to)}`;
+	} else {
+		return `move ${normalizePath(from)} ${normalizePath(to)}`;
+	}
 };

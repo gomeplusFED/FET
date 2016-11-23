@@ -66,7 +66,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				fs.mkdirSync(pluginContentPath);
 			}
 			if (fs.existsSync(pluginDownloadPath)) {
-				sudoRm(rm(pluginDownloadPath));
+				sudoRm(pluginDownloadPath);
 			}
 
 			let receivedBytes = 0;
@@ -113,39 +113,19 @@ ipcMain.on('plugin-install', (ev, obj) => {
 					// 解压
 					unzip(pluginDownloadFileName, pluginContentPath, function(err) {
 						if (err) console.log(err);
-						if (process.platform === 'darwin') {
-							execSync(`mv -f ${normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet'))} ${normalizePath(pluginDownloadPath)}`);
-							fs.unlinkSync(pluginDownloadFileName);
-							fs.readdir(pluginDownloadPath, (err, files) => {
-								if (err) console.log(err);
-								if (files.includes('app.zip')) {
-									unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
-										if (err) console.log(err);
-										complete();
-									});
-								} else {
-									complete();
-								}
-							});
-						} else {
-							move(normalizePath(path.join(userDataPath, 'Plugins', pluginName + '-fet')), normalizePath(pluginDownloadPath), {
-								clobber: true
-							}, (err) => {
-								if (err) console.log(err);
-								fs.unlinkSync(pluginDownloadFileName);
-								fs.readdir(pluginDownloadPath, (err, files) => {
+						execSync(mv(path.join(userDataPath, 'Plugins', pluginName + '-fet'), pluginDownloadPath));
+						execSync(rm(pluginDownloadFileName));
+						fs.readdir(pluginDownloadPath, (err, files) => {
+							if (err) console.log(err);
+							if (files.includes('app.zip')) {
+								unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
 									if (err) console.log(err);
-									if (files.includes('app.zip')) {
-										unzip(path.join(pluginDownloadPath, 'app.zip'), pluginDownloadPath, (err) => {
-											if (err) console.log(err);
-											complete();
-										});
-									} else {
-										complete();
-									}
+									complete();
 								});
-							});
-						}
+							} else {
+								complete();
+							}
+						});
 
 						function complete() {
 							ev.sender.send('plugin-installing', {
@@ -190,7 +170,7 @@ ipcMain.on('plugin-list-should-update', (ev) => {
 ipcMain.on('plugin-delete', (ev, key) => {
 	let userDataPath = app.getPath('userData');
 	let pluginDownloadPath = path.join(userDataPath, 'Plugins', key);
-	sudoRm(rm(pluginDownloadPath));
+	sudoRm(pluginDownloadPath);
 });
 
 // 取消插件安装或更新
