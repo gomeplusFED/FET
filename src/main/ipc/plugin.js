@@ -82,9 +82,11 @@ ipcMain.on('plugin-install', (ev, obj) => {
 
 			ipcMain.once('plugin-install-cancel', () => {
 				req.abort();
-				execSync(rm(pluginDownloadFileName));
-				ev.sender.send('plugin-installing', {
-					show: false
+				out.on('close', () => {
+					execSync(rm(pluginDownloadFileName));
+					ev.sender.send('plugin-installing', {
+						show: false
+					});
 				});
 			});
 
@@ -102,7 +104,7 @@ ipcMain.on('plugin-install', (ev, obj) => {
 				});
 			});
 
-			req.on('end', function() {
+			req.on('complete', function() {
 				// stream finish
 				out.on('finish', () => {
 					ev.sender.send('plugin-installing', {
