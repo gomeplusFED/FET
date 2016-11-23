@@ -25,6 +25,7 @@ export const formatFileSize = (bytes) => {
 	return val.toFixed(2) + suffix;
 };
 
+// 当需要exec一个命令的时候，路径需要格式化
 export const normalizePath = (targetPath) => {
 	targetPath = path.normalize(targetPath);
 	if (/\s/.test(path)) {
@@ -66,7 +67,7 @@ export const unzip = (file, target, cb) => {
 	} else {
 		let zip = null;
 		try {
-			zip = new AdmZip(normalizePath(file));
+			zip = new AdmZip(file);
 		} catch (e) {
 			console.log(e);
 			cb(e);
