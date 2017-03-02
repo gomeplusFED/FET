@@ -3,6 +3,15 @@
 FET
 -----------------
 
+###
+
+<div>
+	<img src="./docs/1.png" width="600">
+</div>
+<div><img src="./docs/2.png" width="300"></div>
+<div><img src="./docs/3.png" width="600"></div>
+
+
 ### List of plugins
 
 * [Meixin FE Tag](https://github.com/luoye-fe/fet-meixin-tag) `https://github.com/luoye-fe/fet-meixin-tag`
